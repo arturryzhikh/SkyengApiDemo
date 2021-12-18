@@ -49,9 +49,19 @@ final class SearchViewController: UIViewController {
         return tv
     }()
     //MARK: Other Properties
-    private let viewModel = SearchViewModel()
+    private let viewModel: SearchViewModel!
     
     //MARK:  Life cycle
+    init(viewModel: SearchViewModel)  {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+  
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
