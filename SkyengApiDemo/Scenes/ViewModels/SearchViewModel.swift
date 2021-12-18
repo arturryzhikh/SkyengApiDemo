@@ -40,12 +40,6 @@ extension SearchViewModel: NetworkSearching {
             onSearchError?()
             return
         }
-        if text.isEmpty {
-            clear()
-            onSearchSucceed?()
-            return
-        }
-        //
         let request = SearchRequest(text)
         
         networkService.request(request) { result in

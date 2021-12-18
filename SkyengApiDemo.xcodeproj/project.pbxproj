@@ -15,7 +15,7 @@
 		34125120276D6DF4007F2DFD /* TableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412511F276D6DF4007F2DFD /* TableViewModel.swift */; };
 		34125122276D6E1C007F2DFD /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125121276D6E1C007F2DFD /* SearchViewModel.swift */; };
 		34125126276D6E60007F2DFD /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125125276D6E60007F2DFD /* RealmManager.swift */; };
-		34125128276D6E79007F2DFD /* NetworkSeatching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125127276D6E79007F2DFD /* NetworkSeatching.swift */; };
+		34125128276D6E79007F2DFD /* NetworkSearching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125127276D6E79007F2DFD /* NetworkSearching.swift */; };
 		3412512A276D6E95007F2DFD /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125129276D6E95007F2DFD /* Networking.swift */; };
 		3412512C276D6EB4007F2DFD /* NetworkDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412512B276D6EB4007F2DFD /* NetworkDataRequest.swift */; };
 		3412512E276D6ECE007F2DFD /* MeaningHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412512D276D6ECE007F2DFD /* MeaningHeaderCell.swift */; };
@@ -31,6 +31,7 @@
 		34125143276D70FF007F2DFD /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125142276D70FF007F2DFD /* BackgroundView.swift */; };
 		34125145276D712F007F2DFD /* ApiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125144276D712F007F2DFD /* ApiService.swift */; };
 		34125147276D71A1007F2DFD /* SearchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125146276D71A1007F2DFD /* SearchRequest.swift */; };
+		34125152276D760B007F2DFD /* SectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125151276D760B007F2DFD /* SectionViewModel.swift */; };
 		344C7DE1276B5C05005B72C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344C7DE0276B5C05005B72C4 /* AppDelegate.swift */; };
 		344C7DE3276B5C05005B72C4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344C7DE2276B5C05005B72C4 /* SceneDelegate.swift */; };
 		344C7DE5276B5C05005B72C4 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344C7DE4276B5C05005B72C4 /* SearchViewController.swift */; };
@@ -67,7 +68,7 @@
 		3412511F276D6DF4007F2DFD /* TableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewModel.swift; sourceTree = "<group>"; };
 		34125121276D6E1C007F2DFD /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		34125125276D6E60007F2DFD /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
-		34125127276D6E79007F2DFD /* NetworkSeatching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSeatching.swift; sourceTree = "<group>"; };
+		34125127276D6E79007F2DFD /* NetworkSearching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSearching.swift; sourceTree = "<group>"; };
 		34125129276D6E95007F2DFD /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 		3412512B276D6EB4007F2DFD /* NetworkDataRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataRequest.swift; sourceTree = "<group>"; };
 		3412512D276D6ECE007F2DFD /* MeaningHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeaningHeaderCell.swift; sourceTree = "<group>"; };
@@ -81,6 +82,7 @@
 		34125142276D70FF007F2DFD /* BackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
 		34125144276D712F007F2DFD /* ApiService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiService.swift; sourceTree = "<group>"; };
 		34125146276D71A1007F2DFD /* SearchRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchRequest.swift; sourceTree = "<group>"; };
+		34125151276D760B007F2DFD /* SectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionViewModel.swift; sourceTree = "<group>"; };
 		344C7DDD276B5C05005B72C4 /* SkyengApiDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SkyengApiDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		344C7DE0276B5C05005B72C4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		344C7DE2276B5C05005B72C4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -134,7 +136,7 @@
 			isa = PBXGroup;
 			children = (
 				34125144276D712F007F2DFD /* ApiService.swift */,
-				34125127276D6E79007F2DFD /* NetworkSeatching.swift */,
+				34125127276D6E79007F2DFD /* NetworkSearching.swift */,
 				34125129276D6E95007F2DFD /* Networking.swift */,
 				3412512B276D6EB4007F2DFD /* NetworkDataRequest.swift */,
 				34125135276D6F40007F2DFD /* ImageFetching.swift */,
@@ -179,6 +181,7 @@
 			isa = PBXGroup;
 			children = (
 				3412511F276D6DF4007F2DFD /* TableViewModel.swift */,
+				34125151276D760B007F2DFD /* SectionViewModel.swift */,
 				34125121276D6E1C007F2DFD /* SearchViewModel.swift */,
 			);
 			path = ViewModels;
@@ -397,6 +400,7 @@
 			files = (
 				3412511A276D6D84007F2DFD /* UView+Exrensions.swift in Sources */,
 				344C7DE5276B5C05005B72C4 /* SearchViewController.swift in Sources */,
+				34125152276D760B007F2DFD /* SectionViewModel.swift in Sources */,
 				3412513A276D6F70007F2DFD /* FileStoreManaging.swift in Sources */,
 				34125116276D6CFC007F2DFD /* Colors.swift in Sources */,
 				3412511E276D6DD9007F2DFD /* Translation.swift in Sources */,
@@ -410,7 +414,7 @@
 				34125132276D6F0F007F2DFD /* Meaning2.swift in Sources */,
 				34125147276D71A1007F2DFD /* SearchRequest.swift in Sources */,
 				3412512E276D6ECE007F2DFD /* MeaningHeaderCell.swift in Sources */,
-				34125128276D6E79007F2DFD /* NetworkSeatching.swift in Sources */,
+				34125128276D6E79007F2DFD /* NetworkSearching.swift in Sources */,
 				34125145276D712F007F2DFD /* ApiService.swift in Sources */,
 				3412512C276D6EB4007F2DFD /* NetworkDataRequest.swift in Sources */,
 				34125130276D6EEF007F2DFD /* MeaningCell.swift in Sources */,
