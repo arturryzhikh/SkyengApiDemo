@@ -5,35 +5,28 @@
 //  Created by Artur Ryzhikh on 18.12.2021.
 //
 
-protocol SectionBuilding {
-    
-    associatedtype Model
-    associatedtype Section: SectionViewModel
-    static func makeSectionsOutOf(models: [Model],
-                                  completion: ([Section]) -> Void)
-}
 
-class SectionBuilder: SectionBuilding {
-    
-    static func makeSectionsOutOf(models: [Word],
-                                  completion: ([MeaningSectionViewModel]) -> Void) {
-        
-        
-        let result = models.map { word in
-            MeaningSectionViewModel(word: word)
-        }
-        completion(result)
-    }
-}
 
 struct MeaningSectionViewModel: SectionWithHeaderViewModel {
     
     let word: Word
     
-    var headerViewModel: MeaningsHeaderViewModel? {
-        return cellViewModels.count > 1 ? makeHeader() : nil
+    private var expandable: Bool {
+        return word.meanings.count > 1
     }
-    
+    var count: Int {
+        if expandable {
+            return collapsed ? 0 : cellViewModels.count
+        } else {
+            return cellViewModels.count
+        }
+    }
+    var collapsed: Bool = true
+    var headerViewModel: MeaningsHeaderViewModel?  {
+        return expandable  ? makeHeader() : nil
+        
+    }
+   
     var cellViewModels: [MeaningViewModel] {
         makeMeaningViewModels()
     }
@@ -46,7 +39,9 @@ struct MeaningSectionViewModel: SectionWithHeaderViewModel {
     
 }
 extension MeaningSectionViewModel {
+    
     private func makeMeaningViewModels() -> [MeaningViewModel] {
+        
         let wordText = word.meanings.count > 1 ? "" : word.text
         return word.meanings.map { meaning in
             //check if the meaning already exists in db
@@ -63,12 +58,12 @@ extension MeaningSectionViewModel {
     }
     
     private func joinTranslationsIntoOneString(length: Int) -> String {
-        var result = (cellViewModels.first?.translation ?? "") + ", "
+        var result = (word.meanings.first?.translation?.text ?? "") + ", "
         //show only a FEW translations in on string ,separated by a comma
         var start = 1
-        for index in start..<cellViewModels.count {
+        for index in start..<word.meanings.count {
             guard result.count < length else { return result }
-            let translation = cellViewModels[index].translation
+            let translation = word.meanings[index].translation?.text ?? ""
                 //add comma or don't if sting larger then 30
                 let separator = (result.count + translation.count < length) ? ", " : ""
                 result.append(translation + separator)
@@ -81,7 +76,7 @@ extension MeaningSectionViewModel {
         return result
     }
     private func makeHeader() -> MeaningsHeaderViewModel {
-        let count = "\(cellViewModels.count)"
+        let count = "\(word.meanings.count)"
         let translations = joinTranslationsIntoOneString(length: 30)
         return MeaningsHeaderViewModel(word: word.text,
                                        wordsCount: count,

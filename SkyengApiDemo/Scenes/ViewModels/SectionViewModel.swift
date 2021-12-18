@@ -7,6 +7,7 @@
 
 public protocol SectionViewModel {
     associatedtype CellViewModel
+    
     var cellViewModels: [CellViewModel] { get }
 }
 

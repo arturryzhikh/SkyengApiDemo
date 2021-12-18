@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 final class SearchViewModel: TableViewModel {
    
@@ -20,17 +21,21 @@ final class SearchViewModel: TableViewModel {
     
     var onSavingSucceed: ((IndexPath) -> Void)?
     var onSavingError: (() -> Void)?
+    var onRowsReload: ((_ sections: [IndexPath]) -> Void)?
     //MARK: Life cycle
     
     init(networkService: Networking = ApiService.shared) {
         self.networkService = networkService
     }
     //MARK:  special methods
-    func headerViewModel(at section: Int) -> MeaningsHeaderViewModel? {
-        return sections[section].headerViewModel
-    }
     func clear() {
         sections.removeAll()
+    }
+    func toggleSection(_ section: Int) {
+        
+    }
+    func numberOfRowsIn(section: Int) -> Int {
+        return sections[section].count
     }
     
 }
@@ -38,7 +43,6 @@ final class SearchViewModel: TableViewModel {
 extension SearchViewModel: NetworkSearching {
     //MARK: Searching
     func search(_ text: String) {
-        print(text.count)
         guard text.first != " ", text.last != " " else {
             clear()
             onSearchError?()
@@ -50,6 +54,11 @@ extension SearchViewModel: NetworkSearching {
         networkService.request(request) { result in
             switch result {
             case .success(let words):
+                guard !words.isEmpty else {
+                    self.clear()
+                    self.onSearchError?()
+                    return
+                }
                 SectionBuilder.makeSectionsOutOf(models: words) { sections in
                     self.sections = sections
                     self.onSearchSucceed?()

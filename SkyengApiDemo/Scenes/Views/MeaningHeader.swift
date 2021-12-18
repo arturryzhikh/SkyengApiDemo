@@ -15,6 +15,11 @@ final class MeaningHeader: UITableViewCell, ReuseIdentifiable {
             fillContent(with: viewModel)
         }
     }
+    var collapsed = false {
+        didSet {
+            expandImageView.rotate(collapsed ? CGFloat.zero : CGFloat.pi)
+        }
+    }
     //MARK: Other Properties
     var expandAction: (() -> Void)?
     
@@ -22,7 +27,7 @@ final class MeaningHeader: UITableViewCell, ReuseIdentifiable {
     private let chevron: UIImage? = {
         let config = UIImage.SymbolConfiguration(
             pointSize: 32, weight: .light, scale: .default)
-        let image = UIImage(systemName: "chevron.down.circle", withConfiguration: config)
+        let image = UIImage(systemName: "chevron.up.circle", withConfiguration: config)
         return image
     }()
  
@@ -67,20 +72,19 @@ final class MeaningHeader: UITableViewCell, ReuseIdentifiable {
         return lbl
     }()
     
-    private lazy var expandButton: UIButton = {
-        let button = UIButton()
-        button.tintColor = Colors.link
-        button.contentMode = .scaleAspectFit
-        button.setImage(chevron, for: .normal)
-        return button
+    private lazy var expandImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
+        iv.tintColor = Colors.link
+        iv.image = chevron
+        iv.clipsToBounds = true
+        iv.layer.masksToBounds = true
+        return iv
     }()
     //MARK: Constraints
     private func setupConstraints() {
-        expandButton.addTarget(self,
-                         action: #selector(expandButtonPressed(sender:)),
-                         for: .touchUpInside)
         contentView.addSubviewsForAutolayout([
-            expandButton,
+            expandImageView,
             labelsStack,
             previewImageView,
             
@@ -102,28 +106,36 @@ final class MeaningHeader: UITableViewCell, ReuseIdentifiable {
         NSLayoutConstraint.activate([
             labelsStack.centerYAnchor.constraint(equalTo: centerYAnchor),
             labelsStack.leadingAnchor.constraint(equalTo: previewImageView.trailingAnchor,constant: 8),
-            labelsStack.trailingAnchor.constraint(equalTo: expandButton.leadingAnchor, constant: -2)
+            labelsStack.trailingAnchor.constraint(equalTo: expandImageView.leadingAnchor, constant: -2)
             
         ])
         //expand button
         NSLayoutConstraint.activate([
-            expandButton.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -16),
-            expandButton.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -8),
-            expandButton.topAnchor.constraint(equalTo: topAnchor,constant: 8),
-            expandButton.widthAnchor.constraint(equalTo: widthAnchor,multiplier: 0.1)
+            expandImageView.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -16),
+            expandImageView.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -8),
+            expandImageView.topAnchor.constraint(equalTo: topAnchor,constant: 8),
+            expandImageView.widthAnchor.constraint(equalTo: widthAnchor,multiplier: 0.1)
         ])
     }
     
   //MARK: Actions
-    @objc private func expandButtonPressed(sender: UIButton) {
+    @objc private func didTapHeader() {
+        collapsed.toggle()
         expandAction?()
         
     }
+    
     
     //MARK: Life cycle
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        addGestureRecognizer(UITapGestureRecognizer(target: self,
+                                                    action: #selector(didTapHeader)))
+        
+        selectionStyle = .none
+        collapsed.toggle()
         setupConstraints()
         backgroundColor = Colors.cellBackground
     }

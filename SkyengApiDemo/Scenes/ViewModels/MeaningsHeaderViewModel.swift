@@ -9,6 +9,8 @@ import Foundation
 
 
 struct MeaningsHeaderViewModel {
+    
+    
     let word: String
     let wordsCount: String
     let translations: String

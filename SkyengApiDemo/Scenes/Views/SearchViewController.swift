@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 final class SearchViewController: UIViewController {
     
@@ -39,7 +40,7 @@ final class SearchViewController: UIViewController {
         return sc
     }()
     private let activityIndicator: UIActivityIndicatorView = {
-        let ai = UIActivityIndicatorView(style: .large)
+        let ai = UIActivityIndicatorView(style: .medium)
         ai.hidesWhenStopped = true
         return ai
     }()
@@ -144,7 +145,6 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.numberOfRowsIn(section: section)
-        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -165,16 +165,23 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     
     //MARK: UITableViewDelegate
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return (viewModel.headerViewModel(at: section) == nil) ? 0 : rowHeight
+        return (viewModel.sections[section].headerViewModel == nil) ? .zero : rowHeight
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let header = tableView.dequeueReusableCell(withIdentifier: MeaningHeader.reuseId) as? MeaningHeader ,
-              let viewModel = viewModel.headerViewModel(at: section) else {
-                  return nil
-              }
-        header.viewModel  = viewModel
+        guard let header = tableView.dequeueReusableCell(withIdentifier: MeaningHeader.reuseId) as? MeaningHeader,
+        let vm   = viewModel.sections[section].headerViewModel
+                
+        else { return UIView() }
+        header.viewModel =  vm
         header.expandAction = {
-            print("HEADER TAPPPPPED")
+            DispatchQueue.main.async {
+                self.viewModel.sections[section].collapsed.toggle()
+                tableView.beginUpdates()
+                tableView.reloadSections([section], with: .fade)
+                tableView.endUpdates()
+                print(header)
+            }
+            
         }
         return header
     }
@@ -184,6 +191,14 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 extension SearchViewController {
     //MARK: View model binding
     private func bind(_ viewModel: SearchViewModel) {
+        
+        
+        viewModel.onRowsReload = { [weak self] indexPaths in
+            DispatchQueue.main.async {
+                
+               
+            }
+        }
         //search completed
         viewModel.onSearchSucceed = { [weak self] in
             DispatchQueue.main.async {
@@ -198,7 +213,7 @@ extension SearchViewController {
             }
             
         }
-        
+        //Searching error
         viewModel.onSearchError = { [weak self] in
             DispatchQueue.main.async {
                 if let bacgroundView = self?
