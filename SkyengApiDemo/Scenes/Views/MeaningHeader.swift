@@ -8,29 +8,37 @@
 import UIKit
 
 
-final class MeaningHeader: UITableViewCell, ReuseIdentifiable {
+final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
 
     var viewModel: MeaningsHeaderViewModel! {
         didSet {
             fillContent(with: viewModel)
+            
+            }
         }
-    }
-    var collapsed = false {
+    var collapsed: Bool = true {
         didSet {
-            expandImageView.rotate(collapsed ? CGFloat.zero : CGFloat.pi)
+            expandImageView.image = collapsed ? chevronDown : chevronUp
         }
     }
     //MARK: Other Properties
     var expandAction: (() -> Void)?
     
     //MARK: System  images
-    private let chevron: UIImage? = {
+    private let chevronUp: UIImage? = {
         let config = UIImage.SymbolConfiguration(
             pointSize: 32, weight: .light, scale: .default)
         let image = UIImage(systemName: "chevron.up.circle", withConfiguration: config)
         return image
     }()
- 
+    private let chevronDown: UIImage? = {
+        let config = UIImage.SymbolConfiguration(
+            pointSize: 32, weight: .light, scale: .default)
+        let image = UIImage(systemName: "chevron.down.circle", withConfiguration: config)
+        return image
+    }()
+   
+   
     //MARK: Subviews
     private let previewImageView: UIImageView = {
         let iv = UIImageView()
@@ -40,6 +48,7 @@ final class MeaningHeader: UITableViewCell, ReuseIdentifiable {
         iv.layer.cornerRadius = 10
         iv.layer.masksToBounds = true
         iv.tintColor = Colors.background
+    
         return iv
     }()
     
@@ -76,9 +85,9 @@ final class MeaningHeader: UITableViewCell, ReuseIdentifiable {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.tintColor = Colors.link
-        iv.image = chevron
         iv.clipsToBounds = true
         iv.layer.masksToBounds = true
+        
         return iv
     }()
     //MARK: Constraints
@@ -92,9 +101,9 @@ final class MeaningHeader: UITableViewCell, ReuseIdentifiable {
         contentView.insertSubviewForAutoLayout(wordsCountLabel, aboveSubview: previewImageView)
         //preview image
         NSLayoutConstraint.activate([
-            previewImageView.topAnchor.constraint(equalTo: topAnchor,constant: 6),
-            previewImageView.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 10),
-            previewImageView.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -16),
+            previewImageView.topAnchor.constraint(equalTo: topAnchor),
+            previewImageView.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 16),
+            previewImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
             previewImageView.widthAnchor.constraint(equalTo: widthAnchor,multiplier: 0.2)
         ])
         //words count label
@@ -122,37 +131,33 @@ final class MeaningHeader: UITableViewCell, ReuseIdentifiable {
     @objc private func didTapHeader() {
         collapsed.toggle()
         expandAction?()
+       
+        
         
     }
     
     
     //MARK: Life cycle
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
         addGestureRecognizer(UITapGestureRecognizer(target: self,
                                                     action: #selector(didTapHeader)))
-        
-        selectionStyle = .none
-        collapsed.toggle()
+        contentView.backgroundColor = Colors.cellBackground
         setupConstraints()
-        backgroundColor = Colors.cellBackground
+        expandImageView.image = collapsed ? chevronDown : chevronUp
+       
     }
-  
+   
+   
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        reset()
-    }
+   
     
 }
 
 extension MeaningHeader: ViewModelConfigurable {
-    
     //MARK: Sepcial methods
     func reset() {
        
@@ -163,8 +168,6 @@ extension MeaningHeader: ViewModelConfigurable {
         wordLabel.text = viewModel.word
         translationLabel.text = viewModel.translations
         wordsCountLabel.text = viewModel.wordsCount
-        
-
     }
     
     

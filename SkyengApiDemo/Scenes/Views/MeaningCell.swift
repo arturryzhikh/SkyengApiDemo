@@ -89,7 +89,7 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
         NSLayoutConstraint.activate([
             previewImageView.topAnchor.constraint(equalTo: topAnchor,constant: 6),
             previewImageView.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 16),
-            previewImageView.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -16),
+            previewImageView.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -6),
             previewImageView.widthAnchor.constraint(equalTo: widthAnchor,multiplier: 0.2)
         ])
         //labels stack
@@ -118,6 +118,7 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        Colors.background
         setupConstraints()
       
     }

@@ -22,6 +22,7 @@ struct MeaningSectionViewModel: SectionWithHeaderViewModel {
         }
     }
     var collapsed: Bool = true
+
     var headerViewModel: MeaningsHeaderViewModel?  {
         return expandable  ? makeHeader() : nil
         

@@ -9,8 +9,7 @@ import Foundation
 
 
 struct MeaningsHeaderViewModel {
-    
-    
+    var collapsed = false
     let word: String
     let wordsCount: String
     let translations: String

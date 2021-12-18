@@ -21,7 +21,7 @@ final class SearchViewModel: TableViewModel {
     
     var onSavingSucceed: ((IndexPath) -> Void)?
     var onSavingError: (() -> Void)?
-    var onRowsReload: ((_ sections: [IndexPath]) -> Void)?
+    var onSectionsReload: ((_ sections: IndexSet) -> Void)?
     //MARK: Life cycle
     
     init(networkService: Networking = ApiService.shared) {
@@ -32,11 +32,14 @@ final class SearchViewModel: TableViewModel {
         sections.removeAll()
     }
     func toggleSection(_ section: Int) {
-        
+        sections[section].collapsed.toggle()
+        onSectionsReload?([section])
     }
     func numberOfRowsIn(section: Int) -> Int {
         return sections[section].count
+       
     }
+    
     
 }
 

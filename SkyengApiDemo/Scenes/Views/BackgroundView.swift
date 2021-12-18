@@ -11,7 +11,7 @@ final class BackgroundView: UIView {
     //MARK: properties
     var searchFailed = false {
         didSet {
-            label.text = searchFailed ? "Nothing Found" : "Search words and word set, add them for study"
+            label.text = searchFailed ? "Nothing Found" : "Search words , add them for study"
             imageView.image = searchFailed ? searchFailedImage : searchImage
         }
     }
