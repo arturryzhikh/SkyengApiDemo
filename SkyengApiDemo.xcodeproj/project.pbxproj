@@ -34,6 +34,8 @@
 		34125155276D77C3007F2DFD /* MeaningSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125154276D77C2007F2DFD /* MeaningSectionViewModel.swift */; };
 		34125157276D91CB007F2DFD /* MeaningsHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125156276D91CB007F2DFD /* MeaningsHeaderViewModel.swift */; };
 		34125159276D9208007F2DFD /* MeaningViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125158276D9208007F2DFD /* MeaningViewModel.swift */; };
+		3412515B276D9632007F2DFD /* ViewModelConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412515A276D9632007F2DFD /* ViewModelConfigurable.swift */; };
+		3412515D276D96C3007F2DFD /* ReuseIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412515C276D96C3007F2DFD /* ReuseIdentifiable.swift */; };
 		344C7DE1276B5C05005B72C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344C7DE0276B5C05005B72C4 /* AppDelegate.swift */; };
 		344C7DE3276B5C05005B72C4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344C7DE2276B5C05005B72C4 /* SceneDelegate.swift */; };
 		344C7DE5276B5C05005B72C4 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344C7DE4276B5C05005B72C4 /* SearchViewController.swift */; };
@@ -87,6 +89,8 @@
 		34125154276D77C2007F2DFD /* MeaningSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeaningSectionViewModel.swift; sourceTree = "<group>"; };
 		34125156276D91CB007F2DFD /* MeaningsHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeaningsHeaderViewModel.swift; sourceTree = "<group>"; };
 		34125158276D9208007F2DFD /* MeaningViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeaningViewModel.swift; sourceTree = "<group>"; };
+		3412515A276D9632007F2DFD /* ViewModelConfigurable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelConfigurable.swift; sourceTree = "<group>"; };
+		3412515C276D96C3007F2DFD /* ReuseIdentifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReuseIdentifiable.swift; sourceTree = "<group>"; };
 		344C7DDD276B5C05005B72C4 /* SkyengApiDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SkyengApiDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		344C7DE0276B5C05005B72C4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		344C7DE2276B5C05005B72C4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -196,6 +200,7 @@
 		3412514F276D72BB007F2DFD /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3412515E276D96FF007F2DFD /* Protocols */,
 				344C7DE4276B5C05005B72C4 /* SearchViewController.swift */,
 				34125142276D70FF007F2DFD /* BackgroundView.swift */,
 				3412512D276D6ECE007F2DFD /* MeaningHeader.swift */,
@@ -219,6 +224,15 @@
 				34125151276D760B007F2DFD /* SectionViewModel.swift */,
 			);
 			name = Protocols;
+			sourceTree = "<group>";
+		};
+		3412515E276D96FF007F2DFD /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				3412515A276D9632007F2DFD /* ViewModelConfigurable.swift */,
+				3412515C276D96C3007F2DFD /* ReuseIdentifiable.swift */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 		344C7DD4276B5C05005B72C4 = {
@@ -419,6 +433,7 @@
 				34125116276D6CFC007F2DFD /* Colors.swift in Sources */,
 				3412511E276D6DD9007F2DFD /* Translation.swift in Sources */,
 				34125126276D6E60007F2DFD /* RealmManager.swift in Sources */,
+				3412515B276D9632007F2DFD /* ViewModelConfigurable.swift in Sources */,
 				34125118276D6D3C007F2DFD /* Word.swift in Sources */,
 				34125159276D9208007F2DFD /* MeaningViewModel.swift in Sources */,
 				34125155276D77C3007F2DFD /* MeaningSectionViewModel.swift in Sources */,
@@ -427,6 +442,7 @@
 				34125136276D6F40007F2DFD /* ImageFetching.swift in Sources */,
 				34125122276D6E1C007F2DFD /* SearchViewModel.swift in Sources */,
 				34125120276D6DF4007F2DFD /* TableViewModel.swift in Sources */,
+				3412515D276D96C3007F2DFD /* ReuseIdentifiable.swift in Sources */,
 				34125132276D6F0F007F2DFD /* Meaning2.swift in Sources */,
 				34125147276D71A1007F2DFD /* SearchRequest.swift in Sources */,
 				3412512E276D6ECE007F2DFD /* MeaningHeader.swift in Sources */,

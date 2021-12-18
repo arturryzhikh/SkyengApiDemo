@@ -38,17 +38,19 @@ final class SearchViewModel: TableViewModel {
 extension SearchViewModel: NetworkSearching {
     //MARK: Searching
     func search(_ text: String) {
+        print(text.count)
         guard text.first != " ", text.last != " " else {
             clear()
             onSearchError?()
             return
         }
+        
         let request = SearchRequest(text)
         
         networkService.request(request) { result in
             switch result {
             case .success(let words):
-                SectionBuilder.makeSectionsOutOf(words: words) { sections in
+                SectionBuilder.makeSectionsOutOf(models: words) { sections in
                     self.sections = sections
                     self.onSearchSucceed?()
                 }

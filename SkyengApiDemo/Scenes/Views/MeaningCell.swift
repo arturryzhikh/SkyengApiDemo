@@ -7,28 +7,6 @@
 
 import UIKit
 
-protocol ViewModelConfigurable {
-    
-    associatedtype CellViewModel
-    
-    var viewModel: CellViewModel! { get set }
-    
-    func fillContent(with: CellViewModel)
-    
-    func reset()
-    
-}
-
-
-protocol ReuseIdentifiable {
-    static var reuseId: String { get }
-}
-
-extension ReuseIdentifiable {
-    static var reuseId: String {
-        return String(describing: self)
-    }
-}
 
 class MeaningCell: UITableViewCell, ReuseIdentifiable {
     

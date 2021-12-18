@@ -153,7 +153,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
             fatalError()
         }
         cell.saveAction = {
-            print("CELL TAPPED")
+            
         }
         cell.viewModel = cellVM
         return cell

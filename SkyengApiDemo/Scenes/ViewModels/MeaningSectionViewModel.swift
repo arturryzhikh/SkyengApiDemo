@@ -5,10 +5,21 @@
 //  Created by Artur Ryzhikh on 18.12.2021.
 //
 
+protocol SectionBuilding {
+    
+    associatedtype Model
+    associatedtype Section: SectionViewModel
+    static func makeSectionsOutOf(models: [Model],
+                                  completion: ([Section]) -> Void)
+}
 
-class SectionBuilder {
-    static func makeSectionsOutOf(words: [Word], completion: ([MeaningSectionViewModel]) -> Void) {
-        let result = words.map { word in
+class SectionBuilder: SectionBuilding {
+    
+    static func makeSectionsOutOf(models: [Word],
+                                  completion: ([MeaningSectionViewModel]) -> Void) {
+        
+        
+        let result = models.map { word in
             MeaningSectionViewModel(word: word)
         }
         completion(result)
