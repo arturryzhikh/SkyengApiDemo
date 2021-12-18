@@ -8,23 +8,9 @@
 import UIKit
 
 
-final class MeaningHeaderCell: UITableViewCell, ReuseIdentifiable {
-    
-   // encrease cell width. this is to use with table viwe style inset grouped
-    override var frame: CGRect {
-        get {
-            return super.frame
-        }
-        set (newFrame) {
-            let inset: CGFloat = -10
-            var frame = newFrame
-            frame.origin.x += inset
-            frame.size.width -= 2 * inset
-            super.frame = frame
-        }
-    }
-    
-    var viewModel: Word! {
+final class MeaningHeader: UITableViewCell, ReuseIdentifiable {
+
+    var viewModel: MeaningsHeaderViewModel! {
         didSet {
             fillContent(with: viewModel)
         }
@@ -43,7 +29,7 @@ final class MeaningHeaderCell: UITableViewCell, ReuseIdentifiable {
     //MARK: Subviews
     private let previewImageView: UIImageView = {
         let iv = UIImageView()
-        iv.contentMode = .scaleAspectFill
+        iv.contentMode = .scaleAspectFit
         iv.image = UIImage.init(systemName: "rectangle.stack.fill")
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 10
@@ -85,12 +71,14 @@ final class MeaningHeaderCell: UITableViewCell, ReuseIdentifiable {
         let button = UIButton()
         button.tintColor = Colors.link
         button.contentMode = .scaleAspectFit
-        button.addTarget(self, action: #selector(expandButtonPressed(sender:)), for: .touchUpInside)
         button.setImage(chevron, for: .normal)
         return button
     }()
     //MARK: Constraints
     private func setupConstraints() {
+        expandButton.addTarget(self,
+                         action: #selector(expandButtonPressed(sender:)),
+                         for: .touchUpInside)
         contentView.addSubviewsForAutolayout([
             expandButton,
             labelsStack,
@@ -101,11 +89,11 @@ final class MeaningHeaderCell: UITableViewCell, ReuseIdentifiable {
         //preview image
         NSLayoutConstraint.activate([
             previewImageView.topAnchor.constraint(equalTo: topAnchor,constant: 6),
-            previewImageView.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 16),
+            previewImageView.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 10),
             previewImageView.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -16),
             previewImageView.widthAnchor.constraint(equalTo: widthAnchor,multiplier: 0.2)
         ])
-        //words count lavel
+        //words count label
         NSLayoutConstraint.activate([
             wordsCountLabel.centerXAnchor.constraint(equalTo: previewImageView.centerXAnchor),
             wordsCountLabel.centerYAnchor.constraint(equalTo: previewImageView.centerYAnchor,constant: 8)
@@ -117,7 +105,7 @@ final class MeaningHeaderCell: UITableViewCell, ReuseIdentifiable {
             labelsStack.trailingAnchor.constraint(equalTo: expandButton.leadingAnchor, constant: -2)
             
         ])
-        //saveButton
+        //expand button
         NSLayoutConstraint.activate([
             expandButton.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -16),
             expandButton.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -8),
@@ -128,7 +116,7 @@ final class MeaningHeaderCell: UITableViewCell, ReuseIdentifiable {
     
   //MARK: Actions
     @objc private func expandButtonPressed(sender: UIButton) {
-        
+        expandAction?()
         
     }
     
@@ -137,7 +125,7 @@ final class MeaningHeaderCell: UITableViewCell, ReuseIdentifiable {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupConstraints()
-        backgroundColor = .green
+        backgroundColor = Colors.cellBackground
     }
   
     required init?(coder: NSCoder) {
@@ -151,17 +139,19 @@ final class MeaningHeaderCell: UITableViewCell, ReuseIdentifiable {
     
 }
 
-extension MeaningHeaderCell: ViewModelConfigurable {
+extension MeaningHeader: ViewModelConfigurable {
     
     //MARK: Sepcial methods
     func reset() {
+       
         //rotate chavron
     }
     
-    func fillContent(with viewModel: Word) {
-        wordLabel.text = viewModel.text
-        wordsCountLabel.text = viewModel.meaningsCount
-        translationLabel.text = viewModel.joinTranslationsIntoOneString(length: 30)
+    func fillContent(with viewModel: MeaningsHeaderViewModel) {
+        wordLabel.text = viewModel.word
+        translationLabel.text = viewModel.translations
+        wordsCountLabel.text = viewModel.wordsCount
+        
 
     }
     

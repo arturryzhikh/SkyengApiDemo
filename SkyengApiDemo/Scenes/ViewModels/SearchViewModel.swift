@@ -11,7 +11,7 @@ final class SearchViewModel: TableViewModel {
    
     //MARK: Properties
     
-    var sections: [Word] = []
+    var sections: [MeaningSectionViewModel] = []
     
     var networkService: Networking
 
@@ -26,6 +26,9 @@ final class SearchViewModel: TableViewModel {
         self.networkService = networkService
     }
     //MARK:  special methods
+    func headerViewModel(at section: Int) -> MeaningsHeaderViewModel? {
+        return sections[section].headerViewModel
+    }
     func clear() {
         sections.removeAll()
     }
@@ -45,8 +48,11 @@ extension SearchViewModel: NetworkSearching {
         networkService.request(request) { result in
             switch result {
             case .success(let words):
-                self.sections = words
-                self.onSearchSucceed?()
+                SectionBuilder.makeSectionsOutOf(words: words) { sections in
+                    self.sections = sections
+                    self.onSearchSucceed?()
+                }
+                
             case .failure(let error):
                 print(error)
                 self.onSearchError?()
@@ -61,59 +67,59 @@ extension SearchViewModel: NetworkSearching {
 }
 //MARK: Saving cell view model
 
-extension SearchViewModel {
-    
-    func saveCellViewModel(at indexPath: IndexPath) {
-        //retrieve corresponding  word
-        let wordToSave = sections[indexPath.section]
-        //retrieve meaning to save
-        let meaningToSave = wordToSave.meanings[indexPath.row]
-        //check if it exists to prevent file fetching from the network
-        guard
-            let meaningNotExists = Meaning2.exists(primaryKey: meaningToSave.id), meaningNotExists == true else {
-                onSavingError?()
-                return
-            }
-        //get image
-        ImageFetcher.shared.downloadImage(request: ImageRequest(url: meaningToSave.imageUrl)) { image, error in
-            guard let image = image , error == nil else {
-                self.onSavingError?()
-                return
-            }
-            guard let previewImageName = FileStoreManager
-                    .shared
-                    .save(image: image,
-                          name: "\(meaningToSave.id)" + "p",
-                          compressionQuality: 1.0),
-                  let imageName = FileStoreManager
-                    .shared
-                    .save(image: image,
-                          name: "\(meaningToSave.id)" + "i") else {
-                        self.onSavingError?()
-                        return
-                    }
-            //wrire cached images names into meaning
-            meaningToSave.previewImageName = previewImageName
-            meaningToSave.imageName = imageName
-            //FIXME:: download sound and save
-            //update word with new meaning
-            wordToSave.meanings.append(meaningToSave)
-            //save it or update if it exists
-            guard let isSaved = RealmManager.shared?.save(wordToSave) else {
-                return
-            }
-            if isSaved {
-                self.onSavingSucceed?(indexPath)
-            } else {
-                self.onSavingError?()
-            }
-           
-            
-        }
-        
-    }
-    
-}
+//extension SearchViewModel {
+//    
+//    func saveCellViewModel(at indexPath: IndexPath) {
+//        //retrieve corresponding  word
+//        let wordToSave = sections[indexPath.section]
+//        //retrieve meaning to save
+//        let meaningToSave = wordToSave.meanings[indexPath.row]
+//        //check if it exists to prevent file fetching from the network
+//        guard
+//            let meaningNotExists = Meaning2.exists(primaryKey: meaningToSave.id), meaningNotExists == true else {
+//                onSavingError?()
+//                return
+//            }
+//        //get image
+//        ImageFetcher.shared.downloadImage(request: ImageRequest(url: meaningToSave.imageUrl)) { image, error in
+//            guard let image = image , error == nil else {
+//                self.onSavingError?()
+//                return
+//            }
+//            guard let previewImageName = FileStoreManager
+//                    .shared
+//                    .save(image: image,
+//                          name: "\(meaningToSave.id)" + "p",
+//                          compressionQuality: 1.0),
+//                  let imageName = FileStoreManager
+//                    .shared
+//                    .save(image: image,
+//                          name: "\(meaningToSave.id)" + "i") else {
+//                        self.onSavingError?()
+//                        return
+//                    }
+//            //wrire cached images names into meaning
+//            meaningToSave.previewImageName = previewImageName
+//            meaningToSave.imageName = imageName
+//            //FIXME:: download sound and save
+//            //update word with new meaning
+//            wordToSave.meanings.append(meaningToSave)
+//            //save it or update if it exists
+//            guard let isSaved = RealmManager.shared?.save(wordToSave) else {
+//                return
+//            }
+//            if isSaved {
+//                self.onSavingSucceed?(indexPath)
+//            } else {
+//                self.onSavingError?()
+//            }
+//           
+//            
+//        }
+//        
+//    }
+//    
+//}
 //MARK: View model constructing logic
 //extension SearchViewModel {
 

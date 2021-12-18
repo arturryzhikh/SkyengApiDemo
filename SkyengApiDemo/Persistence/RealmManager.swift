@@ -41,13 +41,14 @@ public final class RealmManager {
         return realm.object(ofType: ofType, forPrimaryKey: forPrimaryKey)
         
     }
-    ///Checks if object with given primeryKey is exists in DB
+
  
   
 }
 
 
 public extension Object {
+    
     ///Checks if object with given primeryKey is exists in DB
     static func exists<KeyType>(primaryKey: KeyType) -> Bool? {
         do {

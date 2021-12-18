@@ -44,11 +44,12 @@ final class SearchViewController: UIViewController {
         return ai
     }()
     private let tableView: UITableView = {
-        let tv = UITableView(frame: .zero, style: .insetGrouped)
+        let tv = UITableView(frame: .zero, style: .grouped)
         tv.showsVerticalScrollIndicator = false
         return tv
     }()
     //MARK: Other Properties
+    private var rowHeight = (UIScreen.main.bounds.size.height * 0.09)
     private let viewModel: SearchViewModel!
     
     //MARK:  Life cycle
@@ -77,13 +78,12 @@ final class SearchViewController: UIViewController {
     private func setupTableView() {
         tableView.register(MeaningCell.self,
                            forCellReuseIdentifier: MeaningCell.reuseId)
-        tableView.register(MeaningHeaderCell.self,
-                           forCellReuseIdentifier: MeaningHeaderCell.reuseId)
+        tableView.register(MeaningHeader.self,
+                           forCellReuseIdentifier: MeaningHeader.reuseId)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.rowHeight = (UIScreen.main.bounds.size.height * 0.09)
+        tableView.rowHeight = rowHeight
         tableView.sectionFooterHeight = .zero
-        tableView.sectionHeaderHeight = .zero
         tableView.backgroundView = BackgroundView()
     }
     private func setupSearchController(placeholder: String) {
@@ -148,16 +148,16 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: MeaningCell.reuseId, for: indexPath) as! MeaningCell
-        if let cellVM = viewModel.cellViewModel(at: indexPath) {
-            cell.viewModel = cellVM
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MeaningCell.reuseId, for: indexPath) as? MeaningCell,
+        let cellVM = viewModel.cellViewModel(at: indexPath) else  {
+            fatalError()
         }
+        cell.saveAction = {
+            print("CELL TAPPED")
+        }
+        cell.viewModel = cellVM
         return cell
-        
-        
-        //        cell.saveAction = { [weak self] in
-        //            self?.viewModel.saveCellViewModel(at: indexPath)
-        //        }
+    
         
         
     }
@@ -165,7 +165,18 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     
     //MARK: UITableViewDelegate
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return section == 1 ? 10 : 0
+        return (viewModel.headerViewModel(at: section) == nil) ? 0 : rowHeight
+    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let header = tableView.dequeueReusableCell(withIdentifier: MeaningHeader.reuseId) as? MeaningHeader ,
+              let viewModel = viewModel.headerViewModel(at: section) else {
+                  return nil
+              }
+        header.viewModel  = viewModel
+        header.expandAction = {
+            print("HEADER TAPPPPPED")
+        }
+        return header
     }
     
 }

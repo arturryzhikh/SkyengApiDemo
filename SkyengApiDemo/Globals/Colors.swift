@@ -15,5 +15,8 @@ enum Colors {
     static var link: UIColor {
         return UIColor.link
     }
+    static var cellBackground: UIColor {
+        return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+    }
 
 }

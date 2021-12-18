@@ -32,23 +32,8 @@ extension ReuseIdentifiable {
 
 class MeaningCell: UITableViewCell, ReuseIdentifiable {
     
-    //encrease cell width. this is to use with table viwe style inset grouped
-    override var frame: CGRect {
-        get {
-            return super.frame
-        }
-        
-        set (newFrame) {
-            let inset: CGFloat = -10
-            var frame = newFrame
-            frame.origin.x += inset
-            frame.size.width -= 2 * inset
-            super.frame = frame
-            
-        }
-    }
-    
-    var viewModel: Meaning2! {
+
+    var viewModel: MeaningViewModel! {
         didSet {
             fillContent(with: viewModel)
         }
@@ -83,26 +68,44 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
         iv.tintColor = Colors.background
         return iv
     }()
-    let translationLabel: UILabel = {
+    
+    private lazy var labelsStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [wordLabel,translationLabel])
+        stack.axis = .vertical
+        stack.alignment = .leading
+        stack.distribution = .equalSpacing
+        return stack
+    }()
+    
+    let wordLabel: UILabel = {
         let lbl = UILabel()
-        lbl.textAlignment = .left
+        lbl.textAlignment = .center
         lbl.font = UIFont.systemFont(ofSize: 20, weight: .medium)
         return lbl
     }()
     
-    private lazy var plusButton: UIButton = {
+    
+    let translationLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.textAlignment = .left
+        return lbl
+    }()
+    
+    private lazy var saveButton: UIButton = {
         let button = UIButton()
         button.tintColor = Colors.link
         button.contentMode = .scaleAspectFit
-        button.addTarget(self, action: #selector(buttonPressed(sender:)), for: .touchUpInside)
         return button
     }()
     //MARK: Constraints
     private func setupConstraints() {
-        self.contentView.addSubviewsForAutolayout([
-            plusButton,
+        saveButton.addTarget(self,
+                             action: #selector(saveButtonPressed(sender:)),
+                             for: .touchUpInside)
+        contentView.addSubviewsForAutolayout([
+            saveButton,
             previewImageView,
-            translationLabel
+            labelsStack
         ])
         //meaning image view
         NSLayoutConstraint.activate([
@@ -111,26 +114,25 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
             previewImageView.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -16),
             previewImageView.widthAnchor.constraint(equalTo: widthAnchor,multiplier: 0.2)
         ])
-        //translation label
+        //labels stack
         NSLayoutConstraint.activate([
-            translationLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            translationLabel.leadingAnchor.constraint(equalTo: previewImageView.trailingAnchor,constant: 8),
-            translationLabel.trailingAnchor.constraint(equalTo: plusButton.leadingAnchor, constant: -2)
+            labelsStack.centerYAnchor.constraint(equalTo: centerYAnchor),
+            labelsStack.leadingAnchor.constraint(equalTo: previewImageView.trailingAnchor,constant: 8),
+            labelsStack.trailingAnchor.constraint(equalTo: saveButton.leadingAnchor, constant: -2)
             
         ])
         //saveButton
         NSLayoutConstraint.activate([
-            plusButton.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -16),
-            plusButton.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -8),
-            plusButton.topAnchor.constraint(equalTo: topAnchor,constant: 8),
-            plusButton.widthAnchor.constraint(equalTo: widthAnchor,multiplier: 0.1)
+            saveButton.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -16),
+            saveButton.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -8),
+            saveButton.topAnchor.constraint(equalTo: topAnchor,constant: 8),
+            saveButton.widthAnchor.constraint(equalTo: widthAnchor,multiplier: 0.1)
         ])
     }
     
   //MARK: Actions
-    @objc private func buttonPressed(sender: UIButton) {
+    @objc private func saveButtonPressed(sender: UIButton) {
         saveAction?()
-        print(#function)
         
     }
     
@@ -157,17 +159,18 @@ extension MeaningCell: ViewModelConfigurable {
     //MARK: Sepcial methods
     func reset() {
         //make this to set image properly when cell is reused
-        plusButton.isHidden = false
+        saveButton.isHidden = false
     }
     
     
-    func fillContent(with viewModel: Meaning2) {
+    func fillContent(with viewModel: MeaningViewModel) {
         //assign image to plus button depending on view model is saved propertie
         let saveButtonImage = viewModel.isSaved ? starImage : plusImage
-        plusButton.setImage(saveButtonImage, for: .normal)
+        saveButton.setImage(saveButtonImage, for: .normal)
         //lock button if vm is saved
-        plusButton.isUserInteractionEnabled = viewModel.isSaved
-        translationLabel.text = viewModel.translation?.text
+        saveButton.isUserInteractionEnabled = !viewModel.isSaved
+        wordLabel.text = viewModel.word
+        translationLabel.text = viewModel.translation
         //get images from network or local
         if viewModel.isSaved {
             let previewImage = FileStoreManager
