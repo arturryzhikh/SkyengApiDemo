@@ -11,13 +11,15 @@ public protocol SectionViewModel {
     var count: Int { get }
 }
 
+
 public protocol SectionWithHeaderViewModel: SectionViewModel {
     associatedtype HeaderViewModel
     var headerViewModel: HeaderViewModel?  { get }
 }
 
+
 public protocol SectionWithFooterViewModel: SectionViewModel {
     associatedtype FooterViewModel
     var footerViewModel: FooterViewModel? { get  }
-   
+    
 }

@@ -9,26 +9,24 @@ import Foundation
 import SwiftUI
 
 final class SearchViewModel: TableViewModel {
-   
+    
     //MARK: Properties
     
     var sections: [MeaningSectionViewModel] = []
     
     var networkService: Networking
-
+    //MARK: Bindings
     var onSearchSucceed: (()-> Void)?
     var onSearchError: (() -> Void)?
-    
     var onSavingSucceed: ((IndexPath) -> Void)?
     var onSavingError: (() -> Void)?
     var onSectionsReload: ((_ sections: IndexSet) -> Void)?
     //MARK: Life cycle
-    
     init(networkService: Networking = ApiService.shared) {
         self.networkService = networkService
     }
     //MARK:  special methods
-    func clear() {
+    private func clear() {
         sections.removeAll()
     }
     func toggleSection(_ section: Int) {
@@ -37,14 +35,13 @@ final class SearchViewModel: TableViewModel {
     }
     func numberOfRowsIn(section: Int) -> Int {
         return sections[section].count
-       
+        
     }
     
     
 }
 
 extension SearchViewModel: NetworkSearching {
-    
     //MARK: Searching
     func search(_ text: String) {
         guard text.isValid else {
@@ -54,7 +51,6 @@ extension SearchViewModel: NetworkSearching {
         }
         
         let request = SearchRequest(text)
-        
         networkService.request(request) { result in
             switch result {
             case .success(let words):
@@ -76,65 +72,39 @@ extension SearchViewModel: NetworkSearching {
         }
         
         
+    
+    
     }
     
     
 }
-//MARK: Saving cell view model
 
-//extension SearchViewModel {
-//    
-//    func saveCellViewModel(at indexPath: IndexPath) {
-//        //retrieve corresponding  word
-//        let wordToSave = sections[indexPath.section]
-//        //retrieve meaning to save
-//        let meaningToSave = wordToSave.meanings[indexPath.row]
-//        //check if it exists to prevent file fetching from the network
-//        guard
-//            let meaningNotExists = Meaning2.exists(primaryKey: meaningToSave.id), meaningNotExists == true else {
-//                onSavingError?()
-//                return
-//            }
-//        //get image
-//        ImageFetcher.shared.downloadImage(request: ImageRequest(url: meaningToSave.imageUrl)) { image, error in
-//            guard let image = image , error == nil else {
-//                self.onSavingError?()
-//                return
-//            }
-//            guard let previewImageName = FileStoreManager
-//                    .shared
-//                    .save(image: image,
-//                          name: "\(meaningToSave.id)" + "p",
-//                          compressionQuality: 1.0),
-//                  let imageName = FileStoreManager
-//                    .shared
-//                    .save(image: image,
-//                          name: "\(meaningToSave.id)" + "i") else {
-//                        self.onSavingError?()
-//                        return
-//                    }
-//            //wrire cached images names into meaning
-//            meaningToSave.previewImageName = previewImageName
-//            meaningToSave.imageName = imageName
-//            //FIXME:: download sound and save
-//            //update word with new meaning
-//            wordToSave.meanings.append(meaningToSave)
-//            //save it or update if it exists
-//            guard let isSaved = RealmManager.shared?.save(wordToSave) else {
-//                return
-//            }
-//            if isSaved {
-//                self.onSavingSucceed?(indexPath)
-//            } else {
-//                self.onSavingError?()
-//            }
-//           
-//            
-//        }
-//        
-//    }
-//    
-//}
+
+extension SearchViewModel {
+    
+    func saveCellViewModel(at indexPath: IndexPath) {
+        let wordTosave = sections[indexPath.section].word
+        //check if it not extists
+        guard let exists = WordObject.exists(primaryKey: wordTosave.id),
+              !exists else  {
+                  onSavingError?()
+                  return
+                  
+              }
+        let meaningToSave = wordTosave.meanings[indexPath.row]
+        DataImporter().getDataFor(meaningToSave) { result in
+            switch result {
+            case .failure(let error):
+                print(error)
+                self.onSavingError?()
+                return
+            case.success(let meaning):
+               print(meaning)
+            }
+        }
+    }
+    
+}
 //MARK: View model constructing logic
 //extension SearchViewModel {
 

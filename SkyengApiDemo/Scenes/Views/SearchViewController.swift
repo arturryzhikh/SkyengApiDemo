@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SwiftUI
 
 final class SearchViewController: UIViewController {
     
@@ -67,7 +66,7 @@ final class SearchViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-  
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -152,29 +151,32 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MeaningCell.reuseId, for: indexPath) as? MeaningCell,
-        let cellVM = viewModel.cellViewModel(at: indexPath) else  {
-            fatalError()
-        }
+              let cellVM = viewModel.cellViewModel(at: indexPath) else  {
+                  fatalError()
+              }
         cell.saveAction = {
-            
+            self.viewModel.saveCellViewModel(at: indexPath)
         }
         cell.viewModel = cellVM
         return cell
-    
+        
         
         
     }
     
     
     //MARK: UITableViewDelegate
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return (viewModel.sections[section].headerViewModel == nil) ? .zero : rowHeight
     }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let vm = viewModel.sections[section].headerViewModel else {
             return nil
         }
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: MeaningHeader.reuseId) as! MeaningHeader
+        let header = tableView
+            .dequeueReusableHeaderFooterView(withIdentifier: MeaningHeader.reuseId) as! MeaningHeader
         header.viewModel = vm
         header.expandAction = {
             self.viewModel.toggleSection(section)
@@ -228,7 +230,7 @@ extension SearchViewController {
                 self?.savingAlert.dismiss(animated: true) {
                     let errorAlert = UIAlertController(title: "Oops!", message: "Error saving word", preferredStyle: .alert)
                     self?.present(errorAlert,animated: true)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                         errorAlert.dismiss(animated: true, completion: nil)
                     }
                 }
@@ -240,7 +242,7 @@ extension SearchViewController {
     }
     
     
-
-
+    
+    
 }
 
