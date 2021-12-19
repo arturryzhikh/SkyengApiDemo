@@ -18,7 +18,7 @@ final class SearchViewModel: TableViewModel {
     //MARK: Bindings
     var onSearchSucceed: (()-> Void)?
     var onSearchError: (() -> Void)?
-    var onSavingSucceed: ((IndexPath) -> Void)?
+    var onSavingSucceed: (([IndexPath]) -> Void)?
     var onSavingError: (() -> Void)?
     var onSectionsReload: ((_ sections: IndexSet) -> Void)?
     //MARK: Life cycle
@@ -59,12 +59,14 @@ extension SearchViewModel: NetworkSearching {
                     self.onSearchError?()
                     return
                 }
-                SectionBuilder.makeSectionsOutOf(models: words) {
-                    self.sections = $0
-                    self.onSearchSucceed?()
+                DispatchQueue.main.async {
+                    SectionBuilder.makeSectionsOutOf(models: words) {
+                        self.sections = $0
+                        self.onSearchSucceed?()
+                    }
                 }
                 
-            case .failure(let error):
+                case .failure(let error):
                 print(error)
                 //last try. search locally
                 self.onSearchError?()
@@ -84,29 +86,37 @@ extension SearchViewModel: NetworkSearching {
 extension SearchViewModel {
     
     func saveMeaning(at indexPath: IndexPath) {
-        //get corresponding word
-        let wordTosave = sections[indexPath.section].word
-        //check if it exists
-        let word = WordObject()
-        word.text = wordTosave.text
-        word.id = wordTosave.id
-        let meaningToSave = wordTosave.meanings[indexPath.row]
-        DataImporter().getDataFor(meaningToSave) { result in
+        guard let realm = RealmManager.shared else {
+            onSavingError?()
+            return
+        }
+        //get corresponding word and meaning
+        let word = sections[indexPath.section].word
+        let meaning = sections[indexPath.section].cellViewModels[indexPath.row].meaning
+        //check if word is exits
+        var wordToSave: WordObject
+        if let cached = realm.object(ofType: WordObject.self, forPrimaryKey: word.id) {
+            wordToSave = cached
+        } else {
+            wordToSave = WordObject()
+            wordToSave.id = word.id
+            wordToSave.text = word.text
+        }
+        
+        DataImporter().getDataFor(meaning) { result in
             switch result {
             case .failure(let error):
                 print(error)
                 self.onSavingError?()
                 return
             case.success(let meaning):
-                word.meanings.append(meaning)
-                RealmManager.shared?.save(word, completion: { error in
-                    print(error)
+                realm.update(wordToSave, with: [meaning] ) { error in
                     guard error == nil else {
                         self.onSavingError?()
                         return
                     }
-//                    self.onSavingSucceed?(indexPath)
-                })
+                    self.onSavingSucceed?([indexPath])
+                }
                 
             }
         }

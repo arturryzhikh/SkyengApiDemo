@@ -23,15 +23,19 @@ public final class RealmManager {
     }
     //MARK: CRUD
     //Save object
-    func save(_ object: Object, completion: (Error?) -> Void)   {
+    func update(_ word: WordObject,
+                with meanings: [Meaning2Object], _ completion: (Error?) -> Void)   {
         
         do {
             try realm.write {
-                realm.add(object, update: .modified)
+                meanings.forEach {
+                    word.meanings.append($0)
+                }
+                realm.add(word, update: .modified)
                 completion(nil)
             }
         } catch let error as NSError {
-            print("RealmManager could not save \(object). Error: \(error)")
+            print("RealmManager could not save \(word). Error: \(error)")
             completion(error)
         }
 
@@ -42,23 +46,14 @@ public final class RealmManager {
         return realm.object(ofType: ofType, forPrimaryKey: forPrimaryKey)
     
     }
-
- 
+   
   
 }
 
-
-public extension Object {
+extension Object {
     
-    ///Checks if object with given primeryKey is exists in DB
-    static func exists<KeyType>(primaryKey: KeyType) throws -> Bool {
-        do {
-            return try Realm().object(ofType: Self.self,
-                                      forPrimaryKey: primaryKey) != nil
-        } catch let error as NSError {
-            print("Could not obtain object of type: \(Self.self), Error: \(error)")
-            throw error
-        }
+    func isSaved<KeyType>(forPrimaryKey: KeyType) -> Bool {
+        return try! Realm().object(ofType: Self.self, forPrimaryKey: forPrimaryKey) != nil
     }
+    
 }
-

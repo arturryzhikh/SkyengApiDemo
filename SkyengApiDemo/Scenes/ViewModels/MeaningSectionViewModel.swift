@@ -28,13 +28,11 @@ struct MeaningSectionViewModel: SectionWithHeaderViewModel {
         
     }
    
-    var cellViewModels: [MeaningViewModel] {
-        makeMeaningViewModels()
-    }
-    
-    
+    var cellViewModels: [MeaningViewModel] = []
     init(word: WordObject) {
         self.word = word
+        self.cellViewModels = makeMeaningViewModels()
+       
     }
     
     
@@ -42,7 +40,6 @@ struct MeaningSectionViewModel: SectionWithHeaderViewModel {
 extension MeaningSectionViewModel {
     
     private func makeMeaningViewModels() -> [MeaningViewModel] {
-        
         let wordText = expandable ? "" : word.text
         return word.meanings.map { meaning in
             //check if the meaning already exists in db
@@ -65,13 +62,13 @@ extension MeaningSectionViewModel {
         for index in start..<word.meanings.count {
             guard result.count < length else { return result }
             let translation = word.meanings[index].translation?.text ?? ""
-                //add comma or don't if sting larger then 30
+                //add comma or don't if string larger then 30
                 let separator = (result.count + translation.count < length) ? ", " : ""
                 result.append(translation + separator)
                 start += 1
             
         }
-        //remove last comm and space
+        //remove last comma and space
         result.removeLast()
         result.removeLast()
         return result

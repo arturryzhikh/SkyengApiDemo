@@ -18,8 +18,6 @@ class SectionBuilder: SectionBuilding {
     
     static func makeSectionsOutOf(models: [WordObject],
                                   completion: ([MeaningSectionViewModel]) -> Void) {
-        
-        
         let result = models.map { word in
             MeaningSectionViewModel(word: word)
         }

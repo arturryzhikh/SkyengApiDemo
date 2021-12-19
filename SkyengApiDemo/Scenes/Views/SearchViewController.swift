@@ -155,6 +155,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                   fatalError()
               }
         cell.saveAction = {
+            self.navigationController?.present(self.savingAlert, animated: true, completion: nil)
             self.viewModel.saveMeaning(at: indexPath)
         }
         cell.viewModel = cellVM
@@ -218,9 +219,9 @@ extension SearchViewController {
             }
         }
         //saving meaning completed
-        viewModel.onSavingSucceed = { [weak self] indexPath in
+        viewModel.onSavingSucceed = { [weak self] indexPaths in
             DispatchQueue.main.async {
-                self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+                self?.tableView.reloadRows(at: indexPaths, with: .fade)
                 self?.savingAlert.dismiss(animated: true)
             }
         }

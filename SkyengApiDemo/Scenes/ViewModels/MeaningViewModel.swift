@@ -6,19 +6,15 @@
 //
 
 import Foundation
+
 struct MeaningViewModel {
     
     let word: String
     
-    var meaning: Meaning2Object
+    var meaning: Meaning2Object 
     
     var isSaved: Bool {
-        do {
-            return try Meaning2Object.exists(primaryKey: meaning.id)
-        } catch {
-            return false
-        }
-        
+        return meaning.isSaved(forPrimaryKey: meaning.id)
     }
     var previewUrl: String {
         return meaning.previewUrl

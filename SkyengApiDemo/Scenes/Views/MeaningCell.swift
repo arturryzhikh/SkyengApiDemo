@@ -13,6 +13,7 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
 
     var viewModel: MeaningViewModel! {
         didSet {
+            print(viewModel)
             fillContent(with: viewModel)
         }
     }
