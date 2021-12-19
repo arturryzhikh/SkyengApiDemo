@@ -75,7 +75,7 @@ final class SearchViewController: UIViewController {
         setupTableView()
         setupConstraints()
         bind(viewModel)
-        
+       
         
     }
     //MARK: Initial setup
@@ -155,7 +155,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                   fatalError()
               }
         cell.saveAction = {
-            self.viewModel.saveCellViewModel(at: indexPath)
+            self.viewModel.saveMeaning(at: indexPath)
         }
         cell.viewModel = cellVM
         return cell

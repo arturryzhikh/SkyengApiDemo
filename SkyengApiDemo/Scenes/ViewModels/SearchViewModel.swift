@@ -59,13 +59,14 @@ extension SearchViewModel: NetworkSearching {
                     self.onSearchError?()
                     return
                 }
-                SectionBuilder.makeSectionsOutOf(models: words) { sections in
-                    self.sections = sections
+                SectionBuilder.makeSectionsOutOf(models: words) {
+                    self.sections = $0
                     self.onSearchSucceed?()
                 }
                 
             case .failure(let error):
                 print(error)
+                //last try. search locally
                 self.onSearchError?()
                 return
             }
@@ -82,15 +83,13 @@ extension SearchViewModel: NetworkSearching {
 
 extension SearchViewModel {
     
-    func saveCellViewModel(at indexPath: IndexPath) {
+    func saveMeaning(at indexPath: IndexPath) {
+        //get corresponding word
         let wordTosave = sections[indexPath.section].word
-        //check if it not extists
-        guard let exists = WordObject.exists(primaryKey: wordTosave.id),
-              !exists else  {
-                  onSavingError?()
-                  return
-                  
-              }
+        //check if it exists
+        let word = WordObject()
+        word.text = wordTosave.text
+        word.id = wordTosave.id
         let meaningToSave = wordTosave.meanings[indexPath.row]
         DataImporter().getDataFor(meaningToSave) { result in
             switch result {
@@ -99,7 +98,16 @@ extension SearchViewModel {
                 self.onSavingError?()
                 return
             case.success(let meaning):
-               print(meaning)
+                word.meanings.append(meaning)
+                RealmManager.shared?.save(word, completion: { error in
+                    print(error)
+                    guard error == nil else {
+                        self.onSavingError?()
+                        return
+                    }
+//                    self.onSavingSucceed?(indexPath)
+                })
+                
             }
         }
     }

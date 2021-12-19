@@ -44,8 +44,7 @@ import Realm
     dynamic var translation: TranslationObject?
     dynamic var transcription: String = ""
     dynamic var partOfSpeechCode: String = ""
-    dynamic var ofWord = LinkingObjects<WordObject>(fromType: WordObject.self, property: "meanings")
-    //
+    let ofWord = LinkingObjects<WordObject>(fromType: WordObject.self, property: "meanings")
     var partOfSpeech: String? {
         return PartOfSpeech(rawValue: partOfSpeechCode)?.text
     }

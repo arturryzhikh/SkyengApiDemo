@@ -13,7 +13,12 @@ struct MeaningViewModel {
     var meaning: Meaning2Object
     
     var isSaved: Bool {
-        return Meaning2Object.exists(primaryKey: meaning.id) ?? false
+        do {
+            return try Meaning2Object.exists(primaryKey: meaning.id)
+        } catch {
+            return false
+        }
+        
     }
     var previewUrl: String {
         return meaning.previewUrl

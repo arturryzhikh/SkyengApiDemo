@@ -49,10 +49,10 @@ extension MeaningSectionViewModel {
             if let cachedMeaning = RealmManager
                 .shared?
                 .object(ofType: Meaning2Object.self, forPrimaryKey: meaning.id) {
-                //of exists create vm from that
+                //if exists - create vm from that
                 return MeaningViewModel(word: wordText, meaning: cachedMeaning)
             } else {
-                //if no get meanig from json
+                //if not - get meanig from fetched data
                 return MeaningViewModel(word: wordText, meaning: meaning)
             }
         }
