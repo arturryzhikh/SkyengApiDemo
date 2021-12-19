@@ -47,7 +47,7 @@ extension SearchViewModel: NetworkSearching {
     
     //MARK: Searching
     func search(_ text: String) {
-        guard !text.isEmpty, text.first != " ", text.last != " " else {
+        guard text.isValid else {
             clear()
             onSearchSucceed?()
             return
