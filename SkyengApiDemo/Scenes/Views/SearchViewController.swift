@@ -192,6 +192,7 @@ extension SearchViewController {
         viewModel.onSectionsReload = { [weak self] sections in
             DispatchQueue.main.async {
                 self?.tableView.reloadSections(sections, with: .fade)
+                self?.backgroundView.isHidden = true
             }
             
         }
@@ -201,7 +202,7 @@ extension SearchViewController {
                 self?.tableView.reloadData()
                 self?.activityIndicator.stopAnimating()
                 self?.backgroundView.searchFailed = false
-                self?.backgroundView.isHidden = true
+                self?.backgroundView.isHidden = false
             }
         }
         

@@ -44,11 +44,12 @@ final class SearchViewModel: TableViewModel {
 }
 
 extension SearchViewModel: NetworkSearching {
+    
     //MARK: Searching
     func search(_ text: String) {
-        guard text.first != " ", text.last != " " else {
+        guard !text.isEmpty, text.first != " ", text.last != " " else {
             clear()
-            onSearchError?()
+            onSearchSucceed?()
             return
         }
         
