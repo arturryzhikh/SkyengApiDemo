@@ -13,7 +13,6 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
 
     var viewModel: MeaningViewModel! {
         didSet {
-            print(viewModel)
             fillContent(with: viewModel)
         }
     }
@@ -158,9 +157,7 @@ extension MeaningCell: ViewModelConfigurable {
                 .loadImage(named: viewModel.previewUrl)
             previewImageView.image = previewImage
         } else {
-            ImageFetcher
-                .shared
-                .setImage(from: viewModel.previewUrl,
+            ImageFetcher.shared.setImage(from: viewModel.previewUrl,
                           placeholderImage: nil) { [weak self] image in
                     self?.previewImageView.image = image
                     

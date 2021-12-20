@@ -229,7 +229,9 @@ extension SearchViewController {
         viewModel.onSavingError = { [weak self]  in
             DispatchQueue.main.async {
                 self?.savingAlert.dismiss(animated: true) {
-                    let errorAlert = UIAlertController(title: "Oops!", message: "Error saving word", preferredStyle: .alert)
+                    let errorAlert = UIAlertController(title: "Oops!",
+                                                       message: "Error saving word",
+                                                       preferredStyle: .alert)
                     self?.present(errorAlert,animated: true)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                         errorAlert.dismiss(animated: true, completion: nil)

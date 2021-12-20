@@ -21,7 +21,7 @@ protocol DataImporting {
 }
 
 final class DataImporter: DataImporting {
- 
+    
     func getDataFor(_ object: Meaning2Object,
                     completion: @escaping( Result<Meaning2Object, Error> ) -> Void) {
         do {
@@ -30,33 +30,28 @@ final class DataImporter: DataImporting {
         
         ImageFetcher
             .shared
-            .downloadImage(request: ImageRequest(url: object.imageUrl)) { image, error in
+            .downloadImage(request: ImageRequest(url: object.previewUrl)) { image, error in
                 
-            if let error = error {
-                completion(.failure(error))
-            }
-            guard let image = image else {
-                completion(.failure(DataImportError.fetchingData))
-                return
-            }
+                if let error = error {
+                    completion(.failure(error))
+                }
+                guard let image = image else {
+                    completion(.failure(DataImportError.fetchingData))
+                    return
+                }
                 
-            guard let previewImageName = FileStoreManager
-                    .shared
-                    .save(image: image,
-                          name: "\(object.id)" + "p",
-                          compressionQuality: 0.25),
-                  let imageName = FileStoreManager
-                    .shared
-                    .save(image: image,
-                          name: "\(object.id)" + "i") else {
-                        completion(.failure(DataImportError.savingImages))
-                        return
-                    }
-            //set cached images names to meaning
-            object.previewUrl = previewImageName
-            object.imageUrl = imageName
-            completion(.success(object))
-            
-        }
+                guard let previewImageName = FileStoreManager.shared
+                        .save(image: image, name: "\(object.id)" + "p"),
+                      let imageName = FileStoreManager.shared
+                        .save(image: image,name: "\(object.id)" + "i") else {
+                            completion(.failure(DataImportError.savingImages))
+                            return
+                        }
+                //set cached images names to meaning
+                object.previewUrl = previewImageName
+                object.imageUrl = imageName
+                completion(.success(object))
+                
+            }
     }
 }
