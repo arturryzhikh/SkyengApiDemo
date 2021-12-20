@@ -16,7 +16,7 @@ protocol SectionBuilding {
 
 class SectionBuilder: SectionBuilding {
     
-    static func makeSectionsOutOf(models: [WordObject],
+    static func makeSectionsOutOf(models: [Word],
                                   completion: ([MeaningSectionViewModel]) -> Void) {
         let result = models.map { word in
             MeaningSectionViewModel(word: word)

@@ -9,7 +9,7 @@
 
 struct MeaningSectionViewModel: SectionWithHeaderViewModel {
     
-    let word: WordObject
+    let word: Word
     
     private var expandable: Bool {
         return word.meanings.count > 1
@@ -29,7 +29,7 @@ struct MeaningSectionViewModel: SectionWithHeaderViewModel {
     }
    
     var cellViewModels: [MeaningViewModel] = []
-    init(word: WordObject) {
+    init(word: Word) {
         self.word = word
         self.cellViewModels = makeMeaningViewModels()
        
@@ -46,7 +46,7 @@ extension MeaningSectionViewModel {
             //check if the meaning already exists in db
             if let cachedMeaning = RealmManager
                 .shared?
-                .object(ofType: Meaning2Object.self, forPrimaryKey: meaning.id) {
+                .object(ofType: Meaning2.self, forPrimaryKey: meaning.id) {
                 //if exists - create vm from that
                 return MeaningViewModel(word: wordText,
                                         meaning: cachedMeaning)

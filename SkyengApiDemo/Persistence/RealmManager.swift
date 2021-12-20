@@ -23,8 +23,8 @@ public final class RealmManager {
     }
     //MARK: CRUD
     //Save object
-    func update(_ word: WordObject,
-                with meanings: [Meaning2Object], _ completion: (Error?) -> Void)   {
+    func update(_ word: Word,
+                with meanings: [Meaning2], _ completion: (Error?) -> Void)   {
         do {
             try realm.write {
                 meanings.forEach {

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		34125116276D6CFC007F2DFD /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125115276D6CFC007F2DFD /* Colors.swift */; };
-		34125118276D6D3C007F2DFD /* WordObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125117276D6D3C007F2DFD /* WordObject.swift */; };
+		34125118276D6D3C007F2DFD /* Word.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125117276D6D3C007F2DFD /* Word.swift */; };
 		3412511A276D6D84007F2DFD /* UView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125119276D6D84007F2DFD /* UView+Extensions.swift */; };
 		34125120276D6DF4007F2DFD /* TableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412511F276D6DF4007F2DFD /* TableViewModel.swift */; };
 		34125122276D6E1C007F2DFD /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125121276D6E1C007F2DFD /* SearchViewModel.swift */; };
@@ -67,7 +67,7 @@
 
 /* Begin PBXFileReference section */
 		34125115276D6CFC007F2DFD /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
-		34125117276D6D3C007F2DFD /* WordObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordObject.swift; sourceTree = "<group>"; };
+		34125117276D6D3C007F2DFD /* Word.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Word.swift; sourceTree = "<group>"; };
 		34125119276D6D84007F2DFD /* UView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UView+Extensions.swift"; sourceTree = "<group>"; };
 		3412511F276D6DF4007F2DFD /* TableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewModel.swift; sourceTree = "<group>"; };
 		34125121276D6E1C007F2DFD /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
@@ -182,7 +182,7 @@
 			isa = PBXGroup;
 			children = (
 				34F5C483276F69A600EDE50B /* Protocols */,
-				34125117276D6D3C007F2DFD /* WordObject.swift */,
+				34125117276D6D3C007F2DFD /* Word.swift */,
 				34125133276D6F2A007F2DFD /* ImageRequest.swift */,
 				34125146276D71A1007F2DFD /* SearchRequest.swift */,
 			);
@@ -455,7 +455,7 @@
 				34125116276D6CFC007F2DFD /* Colors.swift in Sources */,
 				34125126276D6E60007F2DFD /* RealmManager.swift in Sources */,
 				3412515B276D9632007F2DFD /* ViewModelConfigurable.swift in Sources */,
-				34125118276D6D3C007F2DFD /* WordObject.swift in Sources */,
+				34125118276D6D3C007F2DFD /* Word.swift in Sources */,
 				34125159276D9208007F2DFD /* MeaningViewModel.swift in Sources */,
 				34125155276D77C3007F2DFD /* MeaningSectionViewModel.swift in Sources */,
 				34125134276D6F2A007F2DFD /* ImageRequest.swift in Sources */,

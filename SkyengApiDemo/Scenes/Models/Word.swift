@@ -10,11 +10,11 @@ import Realm
 
 
 
-@objcMembers public class WordObject: Object, Decodable  {
+@objcMembers public class Word: Object, Decodable  {
     
     dynamic var id: Int = 0
     dynamic var text: String = ""
-    dynamic var meanings = List<Meaning2Object>()
+    let meanings = List<Meaning2>()
     
     public override class func primaryKey() -> String? {
         return "id"
@@ -26,7 +26,7 @@ import Realm
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
         text = try container.decode(String.self, forKey: .text)
-        let meaning = try container.decode([Meaning2Object].self, forKey: .meanings)
+        let meaning = try container.decode([Meaning2].self, forKey: .meanings)
         meanings.append(objectsIn: meaning)
         super.init()
     }
@@ -38,13 +38,13 @@ import Realm
     
 }
 
-@objcMembers public class Meaning2Object: Object, Decodable {
+@objcMembers public class Meaning2: Object, Decodable {
     
     dynamic var id: Int = 0
-    dynamic var translation: TranslationObject?
+    dynamic var translation: Translation?
     dynamic var transcription: String = ""
     dynamic var partOfSpeechCode: String = ""
-    let ofWord = LinkingObjects<WordObject>(fromType: WordObject.self, property: "meanings")
+    //    let ofWord = LinkingObjects<WordObject>(fromType: WordObject.self, property: "meanings")
     var partOfSpeech: String? {
         return PartOfSpeech(rawValue: partOfSpeechCode)?.text
     }
@@ -68,7 +68,7 @@ import Realm
         let scheme = "https:"
         id = try container.decode(Int.self, forKey: .id)
         partOfSpeechCode = try container.decode(String.self, forKey: .partOfSpeechCode)
-        translation = try? container.decode(TranslationObject.self, forKey: .translation)
+        translation = try? container.decode(Translation.self, forKey: .translation)
         previewUrl = try scheme + container.decode(String.self, forKey: .previewUrl)
         imageUrl = try scheme + container.decode(String.self, forKey: .imageUrl)
         soundUrl = try scheme + container.decode(String.self, forKey: .soundUrl)
@@ -81,11 +81,11 @@ import Realm
     }
     
 }
-@objcMembers public class TranslationObject: Object , Decodable {
+@objcMembers public class Translation: Object , Decodable {
     
     dynamic var text: String = ""
     dynamic var note: String?
-    
+//    let ofMeaning = LinkingObjects<Meaning2>(fromType: Meaning2.self, property: "translation")
     enum CodingKeys: String, CodingKey {
         case text, note
     }

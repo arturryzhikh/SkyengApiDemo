@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import RealmSwift
 final class SearchViewController: UIViewController {
     
     //MARK: Subviews
@@ -75,6 +75,7 @@ final class SearchViewController: UIViewController {
         setupTableView()
         setupConstraints()
         bind(viewModel)
+        
        
         
     }

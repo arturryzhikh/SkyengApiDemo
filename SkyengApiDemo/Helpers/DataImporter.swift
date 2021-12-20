@@ -22,8 +22,8 @@ protocol DataImporting {
 
 final class DataImporter: DataImporting {
     
-    func getDataFor(_ object: Meaning2Object,
-                    completion: @escaping( Result<Meaning2Object, Error> ) -> Void) {
+    func getDataFor(_ object: Meaning2,
+                    completion: @escaping( Result<Meaning2, Error> ) -> Void) {
         do {
             
         }
