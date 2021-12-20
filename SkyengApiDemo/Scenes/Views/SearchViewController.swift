@@ -39,7 +39,7 @@ final class SearchViewController: UIViewController {
         return sc
     }()
     private let activityIndicator: UIActivityIndicatorView = {
-        let ai = UIActivityIndicatorView(style: .large)
+        let ai = UIActivityIndicatorView(style: .medium)
         ai.hidesWhenStopped = true
         return ai
     }()
@@ -48,8 +48,12 @@ final class SearchViewController: UIViewController {
         tv.showsVerticalScrollIndicator = false
         return tv
     }()
+    private var backgroundView: BackgroundView {
+        return tableView.backgroundView as! BackgroundView
+    }
     //MARK: Other Properties
-    private var rowHeight = (UIScreen.main.bounds.size.height * 0.09)
+    private let rowHeight = (UIScreen.main.bounds.size.height * 0.09)
+    private let rowWidth = UIScreen.main.bounds.width
     private let viewModel: SearchViewModel!
     
     //MARK:  Life cycle
@@ -62,7 +66,7 @@ final class SearchViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-  
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -71,15 +75,14 @@ final class SearchViewController: UIViewController {
         setupTableView()
         setupConstraints()
         bind(viewModel)
-        
+       
         
     }
     //MARK: Initial setup
     private func setupTableView() {
         tableView.register(MeaningCell.self,
                            forCellReuseIdentifier: MeaningCell.reuseId)
-        tableView.register(MeaningHeader.self,
-                           forCellReuseIdentifier: MeaningHeader.reuseId)
+        tableView.register(MeaningHeader.self, forHeaderFooterViewReuseIdentifier: MeaningHeader.reuseId)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = rowHeight
@@ -144,37 +147,40 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.numberOfRowsIn(section: section)
-        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MeaningCell.reuseId, for: indexPath) as? MeaningCell,
-        let cellVM = viewModel.cellViewModel(at: indexPath) else  {
-            fatalError()
-        }
+              let cellVM = viewModel.cellViewModel(at: indexPath) else  {
+                  fatalError()
+              }
         cell.saveAction = {
-            
+            self.navigationController?.present(self.savingAlert, animated: true, completion: nil)
+            self.viewModel.saveMeaning(at: indexPath)
         }
         cell.viewModel = cellVM
         return cell
-    
+        
         
         
     }
     
     
     //MARK: UITableViewDelegate
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return (viewModel.headerViewModel(at: section) == nil) ? 0 : rowHeight
+        return (viewModel.sections[section].headerViewModel == nil) ? .zero : rowHeight
     }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let header = tableView.dequeueReusableCell(withIdentifier: MeaningHeader.reuseId) as? MeaningHeader ,
-              let viewModel = viewModel.headerViewModel(at: section) else {
-                  return nil
-              }
-        header.viewModel  = viewModel
+        guard let vm = viewModel.sections[section].headerViewModel else {
+            return nil
+        }
+        let header = tableView
+            .dequeueReusableHeaderFooterView(withIdentifier: MeaningHeader.reuseId) as! MeaningHeader
+        header.viewModel = vm
         header.expandAction = {
-            print("HEADER TAPPPPPED")
+            self.viewModel.toggleSection(section)
         }
         return header
     }
@@ -182,39 +188,40 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 }
 //MARK: VIew Model Binding
 extension SearchViewController {
+    
     //MARK: View model binding
     private func bind(_ viewModel: SearchViewModel) {
-        //search completed
+        //Reload sections
+        viewModel.onSectionsReload = { [weak self] sections in
+            DispatchQueue.main.async {
+                self?.tableView.reloadSections(sections, with: .fade)
+                self?.backgroundView.isHidden = true
+            }
+            
+        }
+        //Search success
         viewModel.onSearchSucceed = { [weak self] in
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
                 self?.activityIndicator.stopAnimating()
-                if let bacgroundView = self?
-                    .tableView
-                    .backgroundView as? BackgroundView {
-                    bacgroundView.searchFailed = false
-                }
-                
+                self?.backgroundView.searchFailed = false
+                self?.backgroundView.isHidden = false
             }
-            
         }
         
+        //Searching error
         viewModel.onSearchError = { [weak self] in
             DispatchQueue.main.async {
-                if let bacgroundView = self?
-                    .tableView
-                    .backgroundView as? BackgroundView {
-                    bacgroundView.searchFailed = true
-                }
+                self?.backgroundView.searchFailed = true
                 self?.tableView.reloadData()
                 self?.activityIndicator.stopAnimating()
-                
+                self?.backgroundView.isHidden = false
             }
         }
         //saving meaning completed
-        viewModel.onSavingSucceed = { [weak self] indexPath in
+        viewModel.onSavingSucceed = { [weak self] indexPaths in
             DispatchQueue.main.async {
-                self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+                self?.tableView.reloadRows(at: indexPaths, with: .fade)
                 self?.savingAlert.dismiss(animated: true)
             }
         }
@@ -222,11 +229,12 @@ extension SearchViewController {
         viewModel.onSavingError = { [weak self]  in
             DispatchQueue.main.async {
                 self?.savingAlert.dismiss(animated: true) {
-                    let errorAlert = UIAlertController(title: "Oops!", message: "Error saving word", preferredStyle: .alert)
+                    let errorAlert = UIAlertController(title: "Oops!",
+                                                       message: "Error saving word",
+                                                       preferredStyle: .alert)
                     self?.present(errorAlert,animated: true)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                         errorAlert.dismiss(animated: true, completion: nil)
-                        
                     }
                 }
                 
@@ -235,6 +243,8 @@ extension SearchViewController {
         }
         
     }
+    
+    
     
     
 }

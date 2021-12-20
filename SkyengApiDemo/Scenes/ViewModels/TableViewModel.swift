@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 public protocol TableViewModel: AnyObject {
     
     associatedtype Section: SectionViewModel

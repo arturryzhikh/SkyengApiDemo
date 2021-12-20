@@ -8,7 +8,7 @@
 import UIKit
 
 
-protocol ViewModelConfigurable: UITableViewCell {
+protocol ViewModelConfigurable {
     
     associatedtype ViewModel
     

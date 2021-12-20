@@ -6,11 +6,15 @@
 //
 
 import Foundation
+
 struct MeaningViewModel {
+    
     let word: String
-    let meaning: Meaning2
+    
+    var meaning: Meaning2Object 
+    
     var isSaved: Bool {
-        return Meaning2.exists(primaryKey: meaning.id) ?? false
+        return meaning.isSaved(forPrimaryKey: meaning.id)
     }
     var previewUrl: String {
         return meaning.previewUrl
@@ -19,7 +23,7 @@ struct MeaningViewModel {
     var translation: String {
         return meaning.translation?.text ?? ""
     }
-    init(word: String, meaning: Meaning2) {
+    init(word: String, meaning: Meaning2Object) {
         self.word = word
         self.meaning = meaning
     }

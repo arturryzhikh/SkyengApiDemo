@@ -6,122 +6,123 @@
 //
 
 import Foundation
+import SwiftUI
 
 final class SearchViewModel: TableViewModel {
-   
+    
     //MARK: Properties
     
     var sections: [MeaningSectionViewModel] = []
     
     var networkService: Networking
-
+    //MARK: Bindings
     var onSearchSucceed: (()-> Void)?
     var onSearchError: (() -> Void)?
-    
-    var onSavingSucceed: ((IndexPath) -> Void)?
+    var onSavingSucceed: (([IndexPath]) -> Void)?
     var onSavingError: (() -> Void)?
+    var onSectionsReload: ((_ sections: IndexSet) -> Void)?
     //MARK: Life cycle
-    
     init(networkService: Networking = ApiService.shared) {
         self.networkService = networkService
     }
     //MARK:  special methods
-    func headerViewModel(at section: Int) -> MeaningsHeaderViewModel? {
-        return sections[section].headerViewModel
-    }
-    func clear() {
+    private func clear() {
         sections.removeAll()
     }
+    func toggleSection(_ section: Int) {
+        sections[section].collapsed.toggle()
+        onSectionsReload?([section])
+    }
+    func numberOfRowsIn(section: Int) -> Int {
+        return sections[section].count
+        
+    }
+    
     
 }
 
 extension SearchViewModel: NetworkSearching {
     //MARK: Searching
     func search(_ text: String) {
-        print(text.count)
-        guard text.first != " ", text.last != " " else {
+        guard text.isValid else {
             clear()
-            onSearchError?()
+            onSearchSucceed?()
             return
         }
         
         let request = SearchRequest(text)
-        
         networkService.request(request) { result in
             switch result {
             case .success(let words):
-                SectionBuilder.makeSectionsOutOf(models: words) { sections in
-                    self.sections = sections
-                    self.onSearchSucceed?()
+                guard !words.isEmpty else {
+                    self.clear()
+                    self.onSearchError?()
+                    return
+                }
+                DispatchQueue.main.async {
+                    SectionBuilder.makeSectionsOutOf(models: words) {
+                        self.sections = $0
+                        self.onSearchSucceed?()
+                    }
                 }
                 
-            case .failure(let error):
+                case .failure(let error):
                 print(error)
+                //last try. search locally
                 self.onSearchError?()
                 return
             }
         }
         
         
+    
+    
     }
     
     
 }
-//MARK: Saving cell view model
 
-//extension SearchViewModel {
-//    
-//    func saveCellViewModel(at indexPath: IndexPath) {
-//        //retrieve corresponding  word
-//        let wordToSave = sections[indexPath.section]
-//        //retrieve meaning to save
-//        let meaningToSave = wordToSave.meanings[indexPath.row]
-//        //check if it exists to prevent file fetching from the network
-//        guard
-//            let meaningNotExists = Meaning2.exists(primaryKey: meaningToSave.id), meaningNotExists == true else {
-//                onSavingError?()
-//                return
-//            }
-//        //get image
-//        ImageFetcher.shared.downloadImage(request: ImageRequest(url: meaningToSave.imageUrl)) { image, error in
-//            guard let image = image , error == nil else {
-//                self.onSavingError?()
-//                return
-//            }
-//            guard let previewImageName = FileStoreManager
-//                    .shared
-//                    .save(image: image,
-//                          name: "\(meaningToSave.id)" + "p",
-//                          compressionQuality: 1.0),
-//                  let imageName = FileStoreManager
-//                    .shared
-//                    .save(image: image,
-//                          name: "\(meaningToSave.id)" + "i") else {
-//                        self.onSavingError?()
-//                        return
-//                    }
-//            //wrire cached images names into meaning
-//            meaningToSave.previewImageName = previewImageName
-//            meaningToSave.imageName = imageName
-//            //FIXME:: download sound and save
-//            //update word with new meaning
-//            wordToSave.meanings.append(meaningToSave)
-//            //save it or update if it exists
-//            guard let isSaved = RealmManager.shared?.save(wordToSave) else {
-//                return
-//            }
-//            if isSaved {
-//                self.onSavingSucceed?(indexPath)
-//            } else {
-//                self.onSavingError?()
-//            }
-//           
-//            
-//        }
-//        
-//    }
-//    
-//}
+
+extension SearchViewModel {
+    
+    func saveMeaning(at indexPath: IndexPath) {
+        guard let realm = RealmManager.shared else {
+            onSavingError?()
+            return
+        }
+        //get corresponding word and meaning
+        let word = sections[indexPath.section].word
+        let meaning = sections[indexPath.section].cellViewModels[indexPath.row].meaning
+        //check if word is exits
+        var wordToSave: WordObject
+        if let cached = realm.object(ofType: WordObject.self, forPrimaryKey: word.id) {
+            wordToSave = cached
+        } else {
+            wordToSave = WordObject()
+            wordToSave.id = word.id
+            wordToSave.text = word.text
+        }
+        
+        DataImporter().getDataFor(meaning) { result in
+            switch result {
+            case .failure(let error):
+                print(error)
+                self.onSavingError?()
+                return
+            case.success(let meaning):
+                realm.update(wordToSave, with: [meaning] ) { error in
+                    guard error == nil else {
+                        self.onSavingError?()
+                        return
+                    }
+                    self.onSavingSucceed?([indexPath])
+                }
+                
+            }
+        }
+    }
+    
+}
 //MARK: View model constructing logic
 //extension SearchViewModel {
 

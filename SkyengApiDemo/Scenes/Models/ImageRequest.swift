@@ -8,7 +8,7 @@
 import UIKit
 
 struct ImageRequest: NetworkDataRequest {
-    
+
     typealias Response = UIImage
     
     var url: String
