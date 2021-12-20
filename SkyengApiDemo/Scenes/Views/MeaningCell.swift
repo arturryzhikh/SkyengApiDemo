@@ -20,15 +20,15 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
     var saveAction: (() -> Void)?
     
     //MARK: System  images
-    private let plusImage: UIImage? = {
+    private let saveImage: UIImage? = {
         let config = UIImage.SymbolConfiguration(
             pointSize: 32, weight: .light, scale: .default)
-        let image = UIImage(systemName: "plus.circle.fill", withConfiguration: config)
+        let image = UIImage(systemName: "plus.circle", withConfiguration: config)
         
         return image
     }()
     
-    private let bookmark: UIImage? = {
+    private let savedImage: UIImage? = {
         let config = UIImage.SymbolConfiguration(
             pointSize: 28, weight: .light, scale: .default)
         let image = UIImage(systemName: "bookmark.circle",withConfiguration: config)
@@ -144,7 +144,7 @@ extension MeaningCell: ViewModelConfigurable {
     
     func fillContent(with viewModel: MeaningViewModel) {
         //assign image to plus button depending on view model is saved propertie
-        let saveButtonImage = viewModel.isSaved ? bookmark : plusImage
+        let saveButtonImage = viewModel.isSaved ? savedImage : saveImage
         saveButton.setImage(saveButtonImage, for: .normal)
         //lock button if vm is saved
         saveButton.isUserInteractionEnabled = !viewModel.isSaved

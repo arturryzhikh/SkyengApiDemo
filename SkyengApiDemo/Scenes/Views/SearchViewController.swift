@@ -69,7 +69,7 @@ final class SearchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = Colors.cellBackground
         setupNavigationController(title: "Skyeng translate")
         setupSearchController(placeholder: "Search new words")
         setupTableView()
@@ -83,6 +83,7 @@ final class SearchViewController: UIViewController {
         tableView.register(MeaningCell.self,
                            forCellReuseIdentifier: MeaningCell.reuseId)
         tableView.register(MeaningHeader.self, forHeaderFooterViewReuseIdentifier: MeaningHeader.reuseId)
+        tableView.remembersLastFocusedIndexPath = true
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = rowHeight
@@ -194,8 +195,11 @@ extension SearchViewController {
         //Reload sections
         viewModel.onSectionsReload = { [weak self] sections in
             DispatchQueue.main.async {
+                self?.tableView.beginUpdates()
                 self?.tableView.reloadSections(sections, with: .fade)
+                self?.tableView.endUpdates()
                 self?.backgroundView.isHidden = true
+                
             }
             
         }
@@ -221,7 +225,9 @@ extension SearchViewController {
         //saving meaning completed
         viewModel.onSavingSucceed = { [weak self] indexPaths in
             DispatchQueue.main.async {
-                self?.tableView.reloadRows(at: indexPaths, with: .fade)
+                self?.tableView.beginUpdates()
+                self?.tableView.reloadRows(at: indexPaths, with: .none)
+                self?.tableView.endUpdates()
                 self?.savingAlert.dismiss(animated: true)
             }
         }

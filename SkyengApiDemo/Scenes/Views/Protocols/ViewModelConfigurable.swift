@@ -16,7 +16,7 @@ protocol ViewModelConfigurable {
     
     func fillContent(with: ViewModel)
     
-    func reset()
+    
     
 }
 

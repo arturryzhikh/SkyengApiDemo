@@ -18,5 +18,7 @@ enum Colors {
     static var cellBackground: UIColor {
         return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
     }
-
+    static var headerBackground: UIColor {
+        return #colorLiteral(red: 0.9591858983, green: 0.9591858983, blue: 0.9591858983, alpha: 1)
+    }
 }

@@ -78,7 +78,8 @@ extension MeaningSectionViewModel {
         let translations = joinTranslationsIntoOneString(length: 30)
         return MeaningsHeaderViewModel(word: word.text,
                                        wordsCount: count,
-                                       translations: translations)
+                                       translations: translations,
+                                       collapsed: collapsed)
     }
 }
 

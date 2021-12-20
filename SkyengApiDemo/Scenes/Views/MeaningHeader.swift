@@ -13,32 +13,23 @@ final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
     var viewModel: MeaningsHeaderViewModel! {
         didSet {
             fillContent(with: viewModel)
-            
             }
         }
-    var collapsed: Bool = true {
-        didSet {
-            expandImageView.image = collapsed ? chevronDown : chevronUp
-        }
-    }
     //MARK: Other Properties
     var expandAction: (() -> Void)?
-    
     //MARK: System  images
-    private let chevronUp: UIImage? = {
-        let config = UIImage.SymbolConfiguration(
-            pointSize: 32, weight: .light, scale: .default)
-        let image = UIImage(systemName: "chevron.up.circle", withConfiguration: config)
-        return image
-    }()
     private let chevronDown: UIImage? = {
         let config = UIImage.SymbolConfiguration(
             pointSize: 32, weight: .light, scale: .default)
         let image = UIImage(systemName: "chevron.down.circle", withConfiguration: config)
         return image
     }()
-   
-   
+    private let chevronUp: UIImage? = {
+        let config = UIImage.SymbolConfiguration(
+            pointSize: 32, weight: .light, scale: .default)
+        let image = UIImage(systemName: "chevron.up.circle", withConfiguration: config)
+        return image
+    }()
     //MARK: Subviews
     private let previewImageView: UIImageView = {
         let iv = UIImageView()
@@ -87,7 +78,7 @@ final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
         iv.tintColor = Colors.link
         iv.clipsToBounds = true
         iv.layer.masksToBounds = true
-        
+        iv.image = chevronDown
         return iv
     }()
     //MARK: Constraints
@@ -129,11 +120,7 @@ final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
     
   //MARK: Actions
     @objc private func didTapHeader() {
-        collapsed.toggle()
         expandAction?()
-       
-        
-        
     }
     
     
@@ -142,9 +129,9 @@ final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
         super.init(reuseIdentifier: reuseIdentifier)
         addGestureRecognizer(UITapGestureRecognizer(target: self,
                                                     action: #selector(didTapHeader)))
-        contentView.backgroundColor = Colors.cellBackground
+        contentView.backgroundColor = Colors.headerBackground
         setupConstraints()
-        expandImageView.image = collapsed ? chevronDown : chevronUp
+        
        
     }
    
@@ -159,15 +146,13 @@ final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
 
 extension MeaningHeader: ViewModelConfigurable {
     //MARK: Sepcial methods
-    func reset() {
-       
-        //rotate chavron
-    }
     
     func fillContent(with viewModel: MeaningsHeaderViewModel) {
         wordLabel.text = viewModel.word
         translationLabel.text = viewModel.translations
         wordsCountLabel.text = viewModel.wordsCount
+        expandImageView.image = viewModel.collapsed ? chevronDown : chevronUp
+        
     }
     
     

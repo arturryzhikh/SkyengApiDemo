@@ -77,7 +77,7 @@ final class BackgroundView: UIView {
         super.init(frame: frame)
         setupConstraints()
         searchFailed = false
-        backgroundColor = Colors.background
+        backgroundColor = Colors.cellBackground
     }
     
     required init?(coder: NSCoder) {
