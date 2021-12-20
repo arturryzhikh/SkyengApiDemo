@@ -195,8 +195,8 @@
 				34125153276D77A9007F2DFD /* Protocols */,
 				34125121276D6E1C007F2DFD /* SearchViewModel.swift */,
 				34125154276D77C2007F2DFD /* MeaningSectionViewModel.swift */,
-				34125156276D91CB007F2DFD /* MeaningsHeaderViewModel.swift */,
 				34125158276D9208007F2DFD /* MeaningViewModel.swift */,
+				34125156276D91CB007F2DFD /* MeaningsHeaderViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";

@@ -129,7 +129,7 @@ final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
         super.init(reuseIdentifier: reuseIdentifier)
         addGestureRecognizer(UITapGestureRecognizer(target: self,
                                                     action: #selector(didTapHeader)))
-        contentView.backgroundColor = Colors.headerBackground
+        contentView.backgroundColor = Colors.selected
         setupConstraints()
         
        

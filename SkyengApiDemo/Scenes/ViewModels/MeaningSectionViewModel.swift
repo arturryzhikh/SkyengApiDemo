@@ -41,16 +41,19 @@ extension MeaningSectionViewModel {
     
     private func makeMeaningViewModels() -> [MeaningViewModel] {
         let wordText = expandable ? "" : word.text
+   
         return word.meanings.map { meaning in
             //check if the meaning already exists in db
             if let cachedMeaning = RealmManager
                 .shared?
                 .object(ofType: Meaning2Object.self, forPrimaryKey: meaning.id) {
                 //if exists - create vm from that
-                return MeaningViewModel(word: wordText, meaning: cachedMeaning)
+                return MeaningViewModel(word: wordText,
+                                        meaning: cachedMeaning)
             } else {
                 //if not - get meanig from fetched data
-                return MeaningViewModel(word: wordText, meaning: meaning)
+                return MeaningViewModel(word: wordText,
+                                        meaning: meaning)
             }
         }
     }

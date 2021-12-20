@@ -26,6 +26,7 @@ struct MeaningViewModel {
     init(word: String, meaning: Meaning2Object) {
         self.word = word
         self.meaning = meaning
+        
     }
 }
 
