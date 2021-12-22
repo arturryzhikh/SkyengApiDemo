@@ -9,7 +9,7 @@ import Foundation
 
 
 class MeaningsHeaderViewModel {
-    let collapsed: Bool
+    var collapsed: Bool
     let word: String
     let wordsCount: String
     let translations: String

@@ -37,8 +37,7 @@ final class SearchViewModel: TableViewModel {
         return sections[section].count
         
     }
-    
-    
+   
 }
 
 extension SearchViewModel: NetworkSearching {
@@ -51,7 +50,8 @@ extension SearchViewModel: NetworkSearching {
         }
         
         let request = SearchRequest(text)
-        networkService.request(request) { result in
+        networkService.request(request) { [weak self ]result in
+            guard let self = self else {return}
             switch result {
             case .success(let words):
                 guard !words.isEmpty else {
@@ -63,7 +63,6 @@ extension SearchViewModel: NetworkSearching {
                 DispatchQueue.main.async {
                     SectionBuilder.makeSectionsOutOf(models: words) {
                         self.sections = $0
-                      
                         self.onSearchSucceed?()
                     }
                 }

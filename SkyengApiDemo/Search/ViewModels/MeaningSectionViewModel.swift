@@ -21,7 +21,11 @@ class MeaningSectionViewModel: SectionWithHeaderViewModel {
             return cellViewModels.count
         }
     }
-    var collapsed: Bool = true
+    var collapsed: Bool = true {
+        didSet {
+            headerViewModel?.collapsed = collapsed
+        }
+    }
 
     var headerViewModel: MeaningsHeaderViewModel?  {
         return expandable  ? makeHeader() : nil

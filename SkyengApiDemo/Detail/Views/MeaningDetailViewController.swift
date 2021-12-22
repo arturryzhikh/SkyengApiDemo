@@ -25,18 +25,18 @@ class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
         noteLabel.text = viewModel.note
         transcriptionLabel.text = viewModel.transcription
         partOfSpeechLabel.text = viewModel.partOfSpeech
-        print(viewModel.isSaved)
         let saveButtonTitle = viewModel.isSaved ? "Delete from favorites" : "Add to favorites"
         let buttonColor = viewModel.isSaved ? Colors.delete : Colors.link
         saveButton.setTitle(saveButtonTitle, for: .normal)
         saveButton.backgroundColor = buttonColor
         if viewModel.isSaved {
-            let image = FileStoreManager.shared.loadImage(named: viewModel.imageUrl)
-            meaningImageView.image = image
+            meaningImageView.image = FileStoreManager.shared.loadImage(named: viewModel.imageUrl)
         } else {
             ImageFetcher.shared.setImage(from: viewModel.imageUrl) { [weak self] image in
-                    self?.meaningImageView.image = image
-                }
+                guard let self = self else {return}
+                self.meaningImageView.image = image
+                
+            }
         }
         
     }
@@ -62,7 +62,7 @@ class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
     
     //MARK: Actionis
     @objc private func speakerButtonPressed(sender: UIButton) {
-        
+        print(#function)
     }
     @objc private func saveButtonPressed(sender: UIButton) {
         
@@ -89,7 +89,7 @@ class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
         let stack = UIStackView(arrangedSubviews: [wordLabel,translationLabel,noteLabel])
         stack.axis = .vertical
         stack.alignment = .leading
-        stack.distribution = .equalSpacing
+        stack.distribution = .fill
         return stack
     }()
    
@@ -106,6 +106,9 @@ class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
         let lbl = UILabel()
         lbl.textAlignment = .left
         lbl.textColor = .white
+        lbl.numberOfLines = 0
+        lbl.lineBreakMode = .byWordWrapping
+        lbl.sizeToFit()
         return lbl
     }()
     private let noteLabel: UILabel = {
@@ -187,8 +190,8 @@ class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
         ])
         meaningImageView.addSubviewsForAutolayout([
             meaningDetailView,
-            labelsStack,
-            speakerButton
+            labelsStack
+            
         ])
         //meaning detail view
         NSLayoutConstraint.activate([
@@ -198,18 +201,17 @@ class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
             meaningDetailView.heightAnchor.constraint(equalTo: meaningImageView.heightAnchor, multiplier: 0.3)
         ])
         //labeles stack
-        meaningDetailView.addSubviewsForAutolayout([labelsStack])
+        meaningDetailView.addSubviewsForAutolayout([labelsStack,speakerButton])
         NSLayoutConstraint.activate([
             labelsStack.leadingAnchor.constraint(equalTo: meaningDetailView.leadingAnchor,constant: 16),
             labelsStack.centerYAnchor.constraint(equalTo: meaningDetailView.centerYAnchor),
-            
-            
+            labelsStack.widthAnchor.constraint(equalTo: meaningImageView.widthAnchor, multiplier: 0.85)
         ])
         //speaker button
-        view.insertSubviewForAutoLayout(speakerButton, aboveSubview: meaningDetailView)
+        view.insertSubviewForAutoLayout(speakerButton, aboveSubview: meaningImageView)
         NSLayoutConstraint.activate([
-            speakerButton.centerYAnchor.constraint(equalTo: meaningDetailView.centerYAnchor),
-            speakerButton.trailingAnchor.constraint(equalTo: meaningDetailView.trailingAnchor,constant: -16)
+            speakerButton.centerYAnchor.constraint(equalTo: labelsStack.centerYAnchor),
+            speakerButton.trailingAnchor.constraint(equalTo: meaningDetailView.trailingAnchor,constant: -6)
         
         ])
         //transcription

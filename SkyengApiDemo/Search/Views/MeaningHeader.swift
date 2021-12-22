@@ -83,19 +83,19 @@ final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
     }()
     //MARK: Constraints
     private func setupConstraints() {
-        contentView.addSubviewsForAutolayout([
+        addSubviewsForAutolayout([
             expandImageView,
             labelsStack,
             previewImageView,
             
         ])
-        contentView.insertSubviewForAutoLayout(wordsCountLabel, aboveSubview: previewImageView)
+        insertSubviewForAutoLayout(wordsCountLabel, aboveSubview: previewImageView)
         //preview image
         NSLayoutConstraint.activate([
-            previewImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            previewImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 16),
-            previewImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            previewImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor,multiplier: 0.2)
+            previewImageView.topAnchor.constraint(equalTo: topAnchor),
+            previewImageView.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 16),
+            previewImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            previewImageView.widthAnchor.constraint(equalTo: widthAnchor,multiplier: 0.2)
         ])
         //words count label
         NSLayoutConstraint.activate([

@@ -78,31 +78,31 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
     //MARK: Constraints
     private func setupConstraints() {
         
-        contentView.addSubviewsForAutolayout([
+        addSubviewsForAutolayout([
             saveButton,
             previewImageView,
             labelsStack
         ])
         //meaning image view
         NSLayoutConstraint.activate([
-            previewImageView.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 6),
-            previewImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 16),
-            previewImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,constant: -6),
-            previewImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor,multiplier: 0.2)
+            previewImageView.topAnchor.constraint(equalTo: topAnchor,constant: 6),
+            previewImageView.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 16),
+            previewImageView.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -6),
+            previewImageView.widthAnchor.constraint(equalTo: widthAnchor,multiplier: 0.2)
         ])
         //labels stack
         NSLayoutConstraint.activate([
-            labelsStack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            labelsStack.centerYAnchor.constraint(equalTo: centerYAnchor),
             labelsStack.leadingAnchor.constraint(equalTo: previewImageView.trailingAnchor,constant: 8),
             labelsStack.trailingAnchor.constraint(equalTo: saveButton.leadingAnchor, constant: -2)
             
         ])
         //saveButton
         NSLayoutConstraint.activate([
-            saveButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,constant: -16),
-            saveButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,constant: -8),
-            saveButton.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 8),
-            saveButton.widthAnchor.constraint(equalTo: contentView.widthAnchor,multiplier: 0.1)
+            saveButton.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -16),
+            saveButton.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -8),
+            saveButton.topAnchor.constraint(equalTo: topAnchor,constant: 8),
+            saveButton.widthAnchor.constraint(equalTo: widthAnchor,multiplier: 0.1)
         ])
     }
     
@@ -153,11 +153,12 @@ extension MeaningCell: ViewModelConfigurable {
         translationLabel.text = viewModel.translation
         //get images from network or local
         if viewModel.isSaved {
-            let previewImage = FileStoreManager.shared.loadImage(named: viewModel.previewUrl)
-            previewImageView.image = previewImage
+            previewImageView.image = FileStoreManager.shared.loadImage(named: viewModel.previewUrl)
+            
         } else {
             ImageFetcher.shared.setImage(from: viewModel.previewUrl) { [weak self] image in
-                    self?.previewImageView.image = image
+                guard let self = self else { return }
+                    self.previewImageView.image = image
                 }
         }
     }
