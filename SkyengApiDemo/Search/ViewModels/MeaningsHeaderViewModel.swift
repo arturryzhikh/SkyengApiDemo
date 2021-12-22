@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct MeaningsHeaderViewModel {
+class MeaningsHeaderViewModel {
     let collapsed: Bool
     let word: String
     let wordsCount: String

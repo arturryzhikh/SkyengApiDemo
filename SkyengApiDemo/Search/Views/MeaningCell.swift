@@ -153,15 +153,11 @@ extension MeaningCell: ViewModelConfigurable {
         translationLabel.text = viewModel.translation
         //get images from network or local
         if viewModel.isSaved {
-            let previewImage = FileStoreManager
-                .shared
-                .loadImage(named: viewModel.previewUrl)
+            let previewImage = FileStoreManager.shared.loadImage(named: viewModel.previewUrl)
             previewImageView.image = previewImage
         } else {
-            ImageFetcher.shared.setImage(from: viewModel.previewUrl,
-                          placeholderImage: nil) { [weak self] image in
+            ImageFetcher.shared.setImage(from: viewModel.previewUrl) { [weak self] image in
                     self?.previewImageView.image = image
-                    
                 }
         }
     }

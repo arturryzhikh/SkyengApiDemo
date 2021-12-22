@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		34011A40277330D80006EE53 /* MeaningDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34011A3F277330D80006EE53 /* MeaningDetailViewModel.swift */; };
 		34125116276D6CFC007F2DFD /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125115276D6CFC007F2DFD /* Colors.swift */; };
 		34125118276D6D3C007F2DFD /* Word.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125117276D6D3C007F2DFD /* Word.swift */; };
 		3412511A276D6D84007F2DFD /* UView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125119276D6D84007F2DFD /* UView+Extensions.swift */; };
@@ -44,7 +45,6 @@
 		344C7E02276B5C06005B72C4 /* SkyengApiDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344C7E01276B5C06005B72C4 /* SkyengApiDemoUITests.swift */; };
 		344C7E04276B5C06005B72C4 /* SkyengApiDemoUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344C7E03276B5C06005B72C4 /* SkyengApiDemoUITestsLaunchTests.swift */; };
 		34E6A9A52772ED3000F5BD23 /* MeaningDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E6A9A42772ED3000F5BD23 /* MeaningDetailViewController.swift */; };
-		34E6A9AB2773121B00F5BD23 /* MeaningDetailHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E6A9AA2773121B00F5BD23 /* MeaningDetailHeader.swift */; };
 		34E797D7276F24B900BBAC29 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E797D6276F24B900BBAC29 /* String+Extension.swift */; };
 		34F5C482276F695E00EDE50B /* RealmManagable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F5C481276F695E00EDE50B /* RealmManagable.swift */; };
 		34F5C485276F6DDB00EDE50B /* DataImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F5C484276F6DDB00EDE50B /* DataImporter.swift */; };
@@ -68,6 +68,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		34011A3F277330D80006EE53 /* MeaningDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeaningDetailViewModel.swift; sourceTree = "<group>"; };
 		34125115276D6CFC007F2DFD /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		34125117276D6D3C007F2DFD /* Word.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Word.swift; sourceTree = "<group>"; };
 		34125119276D6D84007F2DFD /* UView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UView+Extensions.swift"; sourceTree = "<group>"; };
@@ -107,7 +108,6 @@
 		344C7E01276B5C06005B72C4 /* SkyengApiDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkyengApiDemoUITests.swift; sourceTree = "<group>"; };
 		344C7E03276B5C06005B72C4 /* SkyengApiDemoUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkyengApiDemoUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		34E6A9A42772ED3000F5BD23 /* MeaningDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeaningDetailViewController.swift; sourceTree = "<group>"; };
-		34E6A9AA2773121B00F5BD23 /* MeaningDetailHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeaningDetailHeader.swift; sourceTree = "<group>"; };
 		34E797D6276F24B900BBAC29 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		34F5C481276F695E00EDE50B /* RealmManagable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManagable.swift; sourceTree = "<group>"; };
 		34F5C484276F6DDB00EDE50B /* DataImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataImporter.swift; sourceTree = "<group>"; };
@@ -140,6 +140,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		34011A3A277328F90006EE53 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		34125148276D7234007F2DFD /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -302,6 +309,7 @@
 		34E6A9A22772ECF600F5BD23 /* Detail */ = {
 			isa = PBXGroup;
 			children = (
+				34011A3A277328F90006EE53 /* ViewModels */,
 				34E6A9A32772ED0100F5BD23 /* Views */,
 			);
 			path = Detail;
@@ -311,7 +319,7 @@
 			isa = PBXGroup;
 			children = (
 				34E6A9A42772ED3000F5BD23 /* MeaningDetailViewController.swift */,
-				34E6A9AA2773121B00F5BD23 /* MeaningDetailHeader.swift */,
+				34011A3F277330D80006EE53 /* MeaningDetailViewModel.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -487,12 +495,12 @@
 				34125122276D6E1C007F2DFD /* SearchViewModel.swift in Sources */,
 				34E6A9A52772ED3000F5BD23 /* MeaningDetailViewController.swift in Sources */,
 				34125120276D6DF4007F2DFD /* TableViewModel.swift in Sources */,
+				34011A40277330D80006EE53 /* MeaningDetailViewModel.swift in Sources */,
 				3412515D276D96C3007F2DFD /* ReuseIdentifiable.swift in Sources */,
 				34125147276D71A1007F2DFD /* SearchRequest.swift in Sources */,
 				3412512E276D6ECE007F2DFD /* MeaningHeader.swift in Sources */,
 				34125128276D6E79007F2DFD /* NetworkSearching.swift in Sources */,
 				34125145276D712F007F2DFD /* ApiService.swift in Sources */,
-				34E6A9AB2773121B00F5BD23 /* MeaningDetailHeader.swift in Sources */,
 				3412512C276D6EB4007F2DFD /* NetworkDataRequest.swift in Sources */,
 				34125130276D6EEF007F2DFD /* MeaningCell.swift in Sources */,
 				34F5C482276F695E00EDE50B /* RealmManagable.swift in Sources */,

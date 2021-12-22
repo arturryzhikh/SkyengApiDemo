@@ -140,7 +140,7 @@ extension SearchViewController: UISearchResultsUpdating {
         guard let text = searchController.searchBar.text else { return }
         viewModel.search(text)
         activityIndicator.startAnimating()
-        
+        print(#function)
     }
     
     
@@ -162,6 +162,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                   fatalError()
               }
         cell.saveAction = {
+           
             self.navigationController?.present(self.savingAlert, animated: true, completion: nil)
             self.viewModel.saveMeaning(at: indexPath)
         }
@@ -192,7 +193,13 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         return header
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        navigationController?.pushViewController(MeaningDetailViewController(), animated: true)
+        guard let meaning = viewModel.cellViewModel(at: indexPath)?.meaning else {
+            return
+        }
+        let word = viewModel.sections[indexPath.section].word.text
+        let viewModel = MeaningDetailViewModel(word: word, meaning: meaning)
+        let meaningDetailVC = MeaningDetailViewController(viewModel: viewModel)
+        navigationController?.pushViewController(meaningDetailVC, animated: true)
     }
    
     

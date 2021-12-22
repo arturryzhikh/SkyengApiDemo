@@ -7,7 +7,7 @@
 
 
 
-struct MeaningSectionViewModel: SectionWithHeaderViewModel {
+class MeaningSectionViewModel: SectionWithHeaderViewModel {
     
     let word: Word
     
@@ -40,6 +40,7 @@ struct MeaningSectionViewModel: SectionWithHeaderViewModel {
 extension MeaningSectionViewModel {
     
     private func makeMeaningViewModels() -> [MeaningViewModel] {
+        
         let wordText = expandable ? "" : word.text
    
         return word.meanings.map { meaning in
