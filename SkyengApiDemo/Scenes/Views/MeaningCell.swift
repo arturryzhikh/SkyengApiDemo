@@ -77,9 +77,7 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
     }()
     //MARK: Constraints
     private func setupConstraints() {
-        saveButton.addTarget(self,
-                             action: #selector(saveButtonPressed(sender:)),
-                             for: .touchUpInside)
+        
         contentView.addSubviewsForAutolayout([
             saveButton,
             previewImageView,
@@ -118,6 +116,9 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        saveButton.addTarget(self,
+                             action: #selector(saveButtonPressed(sender:)),
+                             for: .touchUpInside)
         contentView.backgroundColor = Colors.cellBackground
         setupConstraints()
       

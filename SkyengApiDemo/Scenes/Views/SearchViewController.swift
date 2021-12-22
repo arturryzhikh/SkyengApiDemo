@@ -191,6 +191,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         }
         return header
     }
+   
     
 }
 //MARK: VIew Model Binding
