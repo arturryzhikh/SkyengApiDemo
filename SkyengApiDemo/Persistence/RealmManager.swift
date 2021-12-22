@@ -28,13 +28,13 @@ public final class RealmManager {
         do {
             try realm.write {
                 meanings.forEach {
-                    word.meanings.append($0)
+                   word.meanings.append($0)
                 }
                 realm.add(word, update: .modified)
                 completion(nil)
             }
         } catch let error as NSError {
-            print("RealmManager could not save \(word). Error: \(error)")
+            print("RealmManager could not update \(word) with meanings: \(meanings). Error: \(error)")
             completion(error)
         }
 

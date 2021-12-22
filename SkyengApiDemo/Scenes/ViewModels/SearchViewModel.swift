@@ -95,7 +95,7 @@ extension SearchViewModel {
         let meaning = sections[indexPath.section].cellViewModels[indexPath.row].meaning
         //check if word is exits
         var wordToSave: Word
-        if let cached = realm.object(ofType: Word.self, forPrimaryKey: word.id) {
+        if let cached = realm.object(ofType: Word.self, forPrimaryKey: word.text) {
             wordToSave = cached
         } else {//create new one with data from word from internet ,but without meanings
             wordToSave = Word()

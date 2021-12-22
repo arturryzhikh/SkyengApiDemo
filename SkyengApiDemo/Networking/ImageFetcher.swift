@@ -46,7 +46,8 @@ final class ImageFetcher {
 
 extension ImageFetcher: ImageFetching {
     
-    func downloadImage<Request: NetworkDataRequest>(request: Request, completion: @escaping (UIImage?, Error?) -> Void) {
+    func downloadImage<Request: NetworkDataRequest>(request: Request,
+                                                    completion: @escaping (UIImage?, Error?) -> Void) {
         
         let networkService: Networking = ApiService.shared
         
@@ -69,7 +70,8 @@ extension ImageFetcher: ImageFetching {
     
     
     
-    func setImage(from url: String, placeholderImage: UIImage? = nil, completion: @escaping (UIImage?) -> Void) {
+    func setImage(from url: String, placeholderImage: UIImage? = nil,
+                  completion: @escaping (UIImage?) -> Void) {
         
         let request = ImageRequest(url: url)
         if let cacheImage = cachedImageForURL[url] {

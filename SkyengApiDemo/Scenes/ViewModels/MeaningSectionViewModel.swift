@@ -78,7 +78,7 @@ extension MeaningSectionViewModel {
     }
     private func makeHeader() -> MeaningsHeaderViewModel {
         let count = "\(word.meanings.count)"
-        let translations = joinTranslationsIntoOneString(length: 30)
+        let translations = joinTranslationsIntoOneString(length: 26)
         return MeaningsHeaderViewModel(word: word.text,
                                        wordsCount: count,
                                        translations: translations,

@@ -17,7 +17,7 @@ import Realm
     let meanings = List<Meaning2>()
     
     public override class func primaryKey() -> String? {
-        return "id"
+        return "text"
     }
     enum CodingKeys: String, CodingKey {
         case id, text, meanings
@@ -44,7 +44,6 @@ import Realm
     dynamic var translation: Translation?
     dynamic var transcription: String = ""
     dynamic var partOfSpeechCode: String = ""
-    //    let ofWord = LinkingObjects<WordObject>(fromType: WordObject.self, property: "meanings")
     var partOfSpeech: String? {
         return PartOfSpeech(rawValue: partOfSpeechCode)?.text
     }
@@ -85,6 +84,7 @@ import Realm
     
     dynamic var text: String = ""
     dynamic var note: String?
+    
 //    let ofMeaning = LinkingObjects<Meaning2>(fromType: Meaning2.self, property: "translation")
     enum CodingKeys: String, CodingKey {
         case text, note

@@ -76,6 +76,10 @@ final class SearchViewController: UIViewController {
         setupConstraints()
         bind(viewModel)
         
+    
+        
+     
+        
        
         
     }
@@ -83,7 +87,8 @@ final class SearchViewController: UIViewController {
     private func setupTableView() {
         tableView.register(MeaningCell.self,
                            forCellReuseIdentifier: MeaningCell.reuseId)
-        tableView.register(MeaningHeader.self, forHeaderFooterViewReuseIdentifier: MeaningHeader.reuseId)
+        tableView.register(MeaningHeader.self,
+                           forHeaderFooterViewReuseIdentifier: MeaningHeader.reuseId)
         tableView.remembersLastFocusedIndexPath = true
         tableView.delegate = self
         tableView.dataSource = self
@@ -240,9 +245,8 @@ extension SearchViewController {
                                                        message: "Error saving word",
                                                        preferredStyle: .alert)
                     self?.present(errorAlert,animated: true)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        errorAlert.dismiss(animated: true, completion: nil)
-                    }
+                    errorAlert.dismiss(animated: true, completion: nil)
+                    
                 }
                 
             }
