@@ -23,18 +23,18 @@ public final class RealmManager {
     }
     //MARK: CRUD
     //Save object
-    func update(_ word: WordObject,
-                with meanings: [Meaning2Object], _ completion: (Error?) -> Void)   {
+    func update(_ word: Word,
+                with meanings: [Meaning2], _ completion: (Error?) -> Void)   {
         do {
             try realm.write {
                 meanings.forEach {
-                    word.meanings.append($0)
+                   word.meanings.append($0)
                 }
                 realm.add(word, update: .modified)
                 completion(nil)
             }
         } catch let error as NSError {
-            print("RealmManager could not save \(word). Error: \(error)")
+            print("RealmManager could not update \(word) with meanings: \(meanings). Error: \(error)")
             completion(error)
         }
 

@@ -20,7 +20,7 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
     var saveAction: (() -> Void)?
     
     //MARK: System  images
-    private let plusImage: UIImage? = {
+    private let saveImage: UIImage? = {
         let config = UIImage.SymbolConfiguration(
             pointSize: 32, weight: .light, scale: .default)
         let image = UIImage(systemName: "plus.circle.fill", withConfiguration: config)
@@ -28,17 +28,17 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
         return image
     }()
     
-    private let starImage: UIImage? = {
+    private let savedImage: UIImage? = {
         let config = UIImage.SymbolConfiguration(
             pointSize: 28, weight: .light, scale: .default)
-        let image = UIImage(systemName: "star.fill",withConfiguration: config)
+        let image = UIImage(systemName: "bookmark.circle",withConfiguration: config)
         return image
     }()
  
     //MARK: Subviews
     private let previewImageView: UIImageView = {
         let iv = UIImageView()
-        iv.contentMode = .scaleAspectFill
+        iv.contentMode = .scaleAspectFit
         iv.image = UIImage.init(systemName: "photo.fill")
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 10
@@ -77,10 +77,8 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
     }()
     //MARK: Constraints
     private func setupConstraints() {
-        saveButton.addTarget(self,
-                             action: #selector(saveButtonPressed(sender:)),
-                             for: .touchUpInside)
-        contentView.addSubviewsForAutolayout([
+        
+        addSubviewsForAutolayout([
             saveButton,
             previewImageView,
             labelsStack
@@ -118,7 +116,10 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+        saveButton.addTarget(self,
+                             action: #selector(saveButtonPressed(sender:)),
+                             for: .touchUpInside)
+        contentView.backgroundColor = Colors.cellBackground
         setupConstraints()
       
     }
@@ -144,7 +145,7 @@ extension MeaningCell: ViewModelConfigurable {
     
     func fillContent(with viewModel: MeaningViewModel) {
         //assign image to plus button depending on view model is saved propertie
-        let saveButtonImage = viewModel.isSaved ? starImage : plusImage
+        let saveButtonImage = viewModel.isSaved ? savedImage : saveImage
         saveButton.setImage(saveButtonImage, for: .normal)
         //lock button if vm is saved
         saveButton.isUserInteractionEnabled = !viewModel.isSaved
@@ -152,15 +153,12 @@ extension MeaningCell: ViewModelConfigurable {
         translationLabel.text = viewModel.translation
         //get images from network or local
         if viewModel.isSaved {
-            let previewImage = FileStoreManager
-                .shared
-                .loadImage(named: viewModel.previewUrl)
-            previewImageView.image = previewImage
+            previewImageView.image = FileStoreManager.shared.loadImage(named: viewModel.previewUrl)
+            
         } else {
-            ImageFetcher.shared.setImage(from: viewModel.previewUrl,
-                          placeholderImage: nil) { [weak self] image in
-                    self?.previewImageView.image = image
-                    
+            ImageFetcher.shared.setImage(from: viewModel.previewUrl) { [weak self] image in
+                guard let self = self else { return }
+                    self.previewImageView.image = image
                 }
         }
     }

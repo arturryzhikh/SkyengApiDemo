@@ -13,32 +13,23 @@ final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
     var viewModel: MeaningsHeaderViewModel! {
         didSet {
             fillContent(with: viewModel)
-            
             }
         }
-    var collapsed: Bool = true {
-        didSet {
-            expandImageView.image = collapsed ? chevronDown : chevronUp
-        }
-    }
     //MARK: Other Properties
     var expandAction: (() -> Void)?
-    
     //MARK: System  images
-    private let chevronUp: UIImage? = {
-        let config = UIImage.SymbolConfiguration(
-            pointSize: 32, weight: .light, scale: .default)
-        let image = UIImage(systemName: "chevron.up.circle", withConfiguration: config)
-        return image
-    }()
     private let chevronDown: UIImage? = {
         let config = UIImage.SymbolConfiguration(
             pointSize: 32, weight: .light, scale: .default)
         let image = UIImage(systemName: "chevron.down.circle", withConfiguration: config)
         return image
     }()
-   
-   
+    private let chevronUp: UIImage? = {
+        let config = UIImage.SymbolConfiguration(
+            pointSize: 32, weight: .light, scale: .default)
+        let image = UIImage(systemName: "chevron.up.circle", withConfiguration: config)
+        return image
+    }()
     //MARK: Subviews
     private let previewImageView: UIImageView = {
         let iv = UIImageView()
@@ -87,18 +78,18 @@ final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
         iv.tintColor = Colors.link
         iv.clipsToBounds = true
         iv.layer.masksToBounds = true
-        
+        iv.image = chevronDown
         return iv
     }()
     //MARK: Constraints
     private func setupConstraints() {
-        contentView.addSubviewsForAutolayout([
+        addSubviewsForAutolayout([
             expandImageView,
             labelsStack,
             previewImageView,
             
         ])
-        contentView.insertSubviewForAutoLayout(wordsCountLabel, aboveSubview: previewImageView)
+        insertSubviewForAutoLayout(wordsCountLabel, aboveSubview: previewImageView)
         //preview image
         NSLayoutConstraint.activate([
             previewImageView.topAnchor.constraint(equalTo: topAnchor),
@@ -113,7 +104,7 @@ final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
         ])
         //labels stack
         NSLayoutConstraint.activate([
-            labelsStack.centerYAnchor.constraint(equalTo: centerYAnchor),
+            labelsStack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             labelsStack.leadingAnchor.constraint(equalTo: previewImageView.trailingAnchor,constant: 8),
             labelsStack.trailingAnchor.constraint(equalTo: expandImageView.leadingAnchor, constant: -2)
             
@@ -126,14 +117,10 @@ final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
             expandImageView.widthAnchor.constraint(equalTo: widthAnchor,multiplier: 0.1)
         ])
     }
-    
+   
   //MARK: Actions
     @objc private func didTapHeader() {
-        collapsed.toggle()
         expandAction?()
-       
-        
-        
     }
     
     
@@ -142,9 +129,9 @@ final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
         super.init(reuseIdentifier: reuseIdentifier)
         addGestureRecognizer(UITapGestureRecognizer(target: self,
                                                     action: #selector(didTapHeader)))
-        contentView.backgroundColor = Colors.cellBackground
+        contentView.backgroundColor = Colors.selected
         setupConstraints()
-        expandImageView.image = collapsed ? chevronDown : chevronUp
+        
        
     }
    
@@ -159,15 +146,13 @@ final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
 
 extension MeaningHeader: ViewModelConfigurable {
     //MARK: Sepcial methods
-    func reset() {
-       
-        //rotate chavron
-    }
     
     func fillContent(with viewModel: MeaningsHeaderViewModel) {
         wordLabel.text = viewModel.word
         translationLabel.text = viewModel.translations
         wordsCountLabel.text = viewModel.wordsCount
+        expandImageView.image = viewModel.collapsed ? chevronDown : chevronUp
+        
     }
     
     

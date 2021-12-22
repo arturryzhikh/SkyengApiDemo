@@ -7,9 +7,9 @@
 
 
 
-struct MeaningSectionViewModel: SectionWithHeaderViewModel {
+class MeaningSectionViewModel: SectionWithHeaderViewModel {
     
-    let word: WordObject
+    let word: Word
     
     private var expandable: Bool {
         return word.meanings.count > 1
@@ -21,7 +21,11 @@ struct MeaningSectionViewModel: SectionWithHeaderViewModel {
             return cellViewModels.count
         }
     }
-    var collapsed: Bool = true
+    var collapsed: Bool = true {
+        didSet {
+            headerViewModel?.collapsed = collapsed
+        }
+    }
 
     var headerViewModel: MeaningsHeaderViewModel?  {
         return expandable  ? makeHeader() : nil
@@ -29,7 +33,7 @@ struct MeaningSectionViewModel: SectionWithHeaderViewModel {
     }
    
     var cellViewModels: [MeaningViewModel] = []
-    init(word: WordObject) {
+    init(word: Word) {
         self.word = word
         self.cellViewModels = makeMeaningViewModels()
        
@@ -40,17 +44,21 @@ struct MeaningSectionViewModel: SectionWithHeaderViewModel {
 extension MeaningSectionViewModel {
     
     private func makeMeaningViewModels() -> [MeaningViewModel] {
+        
         let wordText = expandable ? "" : word.text
+   
         return word.meanings.map { meaning in
             //check if the meaning already exists in db
             if let cachedMeaning = RealmManager
                 .shared?
-                .object(ofType: Meaning2Object.self, forPrimaryKey: meaning.id) {
+                .object(ofType: Meaning2.self, forPrimaryKey: meaning.id) {
                 //if exists - create vm from that
-                return MeaningViewModel(word: wordText, meaning: cachedMeaning)
+                return MeaningViewModel(word: wordText,
+                                        meaning: cachedMeaning)
             } else {
                 //if not - get meanig from fetched data
-                return MeaningViewModel(word: wordText, meaning: meaning)
+                return MeaningViewModel(word: wordText,
+                                        meaning: meaning)
             }
         }
     }
@@ -75,10 +83,11 @@ extension MeaningSectionViewModel {
     }
     private func makeHeader() -> MeaningsHeaderViewModel {
         let count = "\(word.meanings.count)"
-        let translations = joinTranslationsIntoOneString(length: 30)
+        let translations = joinTranslationsIntoOneString(length: 26)
         return MeaningsHeaderViewModel(word: word.text,
                                        wordsCount: count,
-                                       translations: translations)
+                                       translations: translations,
+                                       collapsed: collapsed)
     }
 }
 

@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import RealmSwift
 final class SearchViewController: UIViewController {
     
     //MARK: Subviews
@@ -35,7 +35,6 @@ final class SearchViewController: UIViewController {
     private let searchController: UISearchController = {
         let sc = UISearchController(searchResultsController: nil)
         sc.obscuresBackgroundDuringPresentation = false
-        sc.definesPresentationContext = true
         return sc
     }()
     private let activityIndicator: UIActivityIndicatorView = {
@@ -52,6 +51,7 @@ final class SearchViewController: UIViewController {
         return tableView.backgroundView as! BackgroundView
     }
     //MARK: Other Properties
+    
     private let rowHeight = (UIScreen.main.bounds.size.height * 0.09)
     private let rowWidth = UIScreen.main.bounds.width
     private let viewModel: SearchViewModel!
@@ -69,20 +69,21 @@ final class SearchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        setupNavigationController(title: "Skyeng translate")
+        view.backgroundColor = Colors.cellBackground
+        setupNavigationController(title: "Search")
         setupSearchController(placeholder: "Search new words")
         setupTableView()
         setupConstraints()
         bind(viewModel)
-       
         
     }
     //MARK: Initial setup
     private func setupTableView() {
         tableView.register(MeaningCell.self,
                            forCellReuseIdentifier: MeaningCell.reuseId)
-        tableView.register(MeaningHeader.self, forHeaderFooterViewReuseIdentifier: MeaningHeader.reuseId)
+        tableView.register(MeaningHeader.self,
+                           forHeaderFooterViewReuseIdentifier: MeaningHeader.reuseId)
+        tableView.remembersLastFocusedIndexPath = true
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = rowHeight
@@ -91,15 +92,14 @@ final class SearchViewController: UIViewController {
     }
     private func setupSearchController(placeholder: String) {
         searchController.searchResultsUpdater = self
+        searchController.definesPresentationContext = true
         searchController.searchBar.placeholder = placeholder
-        searchController.becomeFirstResponder()
+       
     }
     private func setupNavigationController(title: String) {
         navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.title = title
         navigationController?.navigationBar.prefersLargeTitles = true
-        
     }
     //MARK: Constraints
     private func setupConstraints() {
@@ -123,18 +123,21 @@ final class SearchViewController: UIViewController {
         
         
     }
-    
+   
 }
 //MARK: UISearchResultsUpdating delegate
 
-extension SearchViewController: UISearchResultsUpdating {
+extension SearchViewController: UISearchResultsUpdating  {
     
     func updateSearchResults(for searchController: UISearchController) {
-        guard let text = searchController.searchBar.text else { return }
+        var lastSearchedText: String = ""
+        guard let text = searchController.searchBar.text, text != lastSearchedText else { return }
+        lastSearchedText = text
         viewModel.search(text)
         activityIndicator.startAnimating()
         
     }
+   
     
     
 }
@@ -154,7 +157,8 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
               let cellVM = viewModel.cellViewModel(at: indexPath) else  {
                   fatalError()
               }
-        cell.saveAction = {
+        cell.saveAction = { [weak self] in
+            guard let self = self else { return }
             self.navigationController?.present(self.savingAlert, animated: true, completion: nil)
             self.viewModel.saveMeaning(at: indexPath)
         }
@@ -179,11 +183,24 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         let header = tableView
             .dequeueReusableHeaderFooterView(withIdentifier: MeaningHeader.reuseId) as! MeaningHeader
         header.viewModel = vm
-        header.expandAction = {
+        header.expandAction = { [weak self] in
+            guard let self = self else { return }
             self.viewModel.toggleSection(section)
         }
         return header
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let meaning = viewModel.cellViewModel(at: indexPath)?.meaning else {
+            return
+        }
+        let word = viewModel.sections[indexPath.section].word.text
+        let viewModel = MeaningDetailViewModel(word: word, meaning: meaning)
+        let meaningDetailVC = MeaningDetailViewController(viewModel: viewModel)
+        navigationController?.show(meaningDetailVC, sender: nil)
+        searchController.searchBar.resignFirstResponder()
+    }
+  
     
 }
 //MARK: VIew Model Binding
@@ -193,49 +210,58 @@ extension SearchViewController {
     private func bind(_ viewModel: SearchViewModel) {
         //Reload sections
         viewModel.onSectionsReload = { [weak self] sections in
+            guard let self = self else {return}
             DispatchQueue.main.async {
-                self?.tableView.reloadSections(sections, with: .fade)
-                self?.backgroundView.isHidden = true
+                self.tableView.beginUpdates()
+                self.tableView.reloadSections(sections, with: .none)
+                self.tableView.endUpdates()
+                self.backgroundView.isHidden = true
+                
             }
             
         }
         //Search success
         viewModel.onSearchSucceed = { [weak self] in
+            guard let self = self else {return}
             DispatchQueue.main.async {
-                self?.tableView.reloadData()
-                self?.activityIndicator.stopAnimating()
-                self?.backgroundView.searchFailed = false
-                self?.backgroundView.isHidden = false
+                self.tableView.reloadData()
+                self.activityIndicator.stopAnimating()
+                self.backgroundView.searchFailed = false
+                self.backgroundView.isHidden = false
             }
         }
         
         //Searching error
         viewModel.onSearchError = { [weak self] in
+            guard let self = self else {return}
             DispatchQueue.main.async {
-                self?.backgroundView.searchFailed = true
-                self?.tableView.reloadData()
-                self?.activityIndicator.stopAnimating()
-                self?.backgroundView.isHidden = false
+                self.backgroundView.searchFailed = true
+                self.tableView.reloadData()
+                self.activityIndicator.stopAnimating()
+                self.backgroundView.isHidden = false
             }
         }
         //saving meaning completed
         viewModel.onSavingSucceed = { [weak self] indexPaths in
+            guard let self = self else {return}
             DispatchQueue.main.async {
-                self?.tableView.reloadRows(at: indexPaths, with: .fade)
-                self?.savingAlert.dismiss(animated: true)
+                self.tableView.beginUpdates()
+                self.tableView.reloadRows(at: indexPaths, with: .none)
+                self.tableView.endUpdates()
+                self.savingAlert.dismiss(animated: true)
             }
         }
         //on saving meaning error
         viewModel.onSavingError = { [weak self]  in
+            guard let self = self else {return}
             DispatchQueue.main.async {
-                self?.savingAlert.dismiss(animated: true) {
+                self.savingAlert.dismiss(animated: true) {
                     let errorAlert = UIAlertController(title: "Oops!",
                                                        message: "Error saving word",
                                                        preferredStyle: .alert)
-                    self?.present(errorAlert,animated: true)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        errorAlert.dismiss(animated: true, completion: nil)
-                    }
+                    self.present(errorAlert,animated: true)
+                    errorAlert.dismiss(animated: true, completion: nil)
+                    
                 }
                 
             }

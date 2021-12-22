@@ -37,8 +37,7 @@ final class SearchViewModel: TableViewModel {
         return sections[section].count
         
     }
-    
-    
+   
 }
 
 extension SearchViewModel: NetworkSearching {
@@ -51,7 +50,8 @@ extension SearchViewModel: NetworkSearching {
         }
         
         let request = SearchRequest(text)
-        networkService.request(request) { result in
+        networkService.request(request) { [weak self ]result in
+            guard let self = self else {return}
             switch result {
             case .success(let words):
                 guard !words.isEmpty else {
@@ -59,6 +59,7 @@ extension SearchViewModel: NetworkSearching {
                     self.onSearchError?()
                     return
                 }
+    
                 DispatchQueue.main.async {
                     SectionBuilder.makeSectionsOutOf(models: words) {
                         self.sections = $0
@@ -94,15 +95,15 @@ extension SearchViewModel {
         let word = sections[indexPath.section].word
         let meaning = sections[indexPath.section].cellViewModels[indexPath.row].meaning
         //check if word is exits
-        var wordToSave: WordObject
-        if let cached = realm.object(ofType: WordObject.self, forPrimaryKey: word.id) {
+        var wordToSave: Word
+        if let cached = realm.object(ofType: Word.self, forPrimaryKey: word.text) {
             wordToSave = cached
-        } else {
-            wordToSave = WordObject()
+        } else {//create new one with data from word from internet ,but without meanings
+            wordToSave = Word()
             wordToSave.id = word.id
             wordToSave.text = word.text
         }
-        
+        //fetch additional data
         DataImporter().getDataFor(meaning) { result in
             switch result {
             case .failure(let error):
@@ -123,8 +124,8 @@ extension SearchViewModel {
     }
     
 }
-//MARK: View model constructing logic
-//extension SearchViewModel {
+//MARK: Read from db
+extension SearchViewModel {
 
 //    func search(enitity: Meaning.Type, by searchText: String, completion: ([Meaning]?) -> Void) {
 //        //create predicates to search text in ids and word properties of Meaning
@@ -139,5 +140,5 @@ extension SearchViewModel {
 //    }
 
 
-//}
+}
 

@@ -7,7 +7,7 @@
 import Foundation
 struct SearchRequest: NetworkDataRequest  {
     
-    typealias Response = [WordObject]
+    typealias Response = [Word]
     
     //FIXME: implement paginating request
     var searchText: String
@@ -29,9 +29,9 @@ struct SearchRequest: NetworkDataRequest  {
         self.searchText = searchText
     }
     
-    func decode(_ data: Data) throws -> [WordObject] {
+    func decode(_ data: Data) throws -> [Word] {
         let decoder = JSONDecoder()
-        let response = try decoder.decode([WordObject].self, from: data)
+        let response = try decoder.decode([Word].self, from: data)
         return response
     }
     
