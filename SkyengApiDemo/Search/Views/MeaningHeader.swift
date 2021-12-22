@@ -92,10 +92,10 @@ final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
         contentView.insertSubviewForAutoLayout(wordsCountLabel, aboveSubview: previewImageView)
         //preview image
         NSLayoutConstraint.activate([
-            previewImageView.topAnchor.constraint(equalTo: topAnchor),
-            previewImageView.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 16),
-            previewImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            previewImageView.widthAnchor.constraint(equalTo: widthAnchor,multiplier: 0.2)
+            previewImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            previewImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 16),
+            previewImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            previewImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor,multiplier: 0.2)
         ])
         //words count label
         NSLayoutConstraint.activate([
@@ -104,7 +104,7 @@ final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
         ])
         //labels stack
         NSLayoutConstraint.activate([
-            labelsStack.centerYAnchor.constraint(equalTo: centerYAnchor),
+            labelsStack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             labelsStack.leadingAnchor.constraint(equalTo: previewImageView.trailingAnchor,constant: 8),
             labelsStack.trailingAnchor.constraint(equalTo: expandImageView.leadingAnchor, constant: -2)
             
@@ -117,7 +117,7 @@ final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
             expandImageView.widthAnchor.constraint(equalTo: widthAnchor,multiplier: 0.1)
         ])
     }
-    
+   
   //MARK: Actions
     @objc private func didTapHeader() {
         expandAction?()

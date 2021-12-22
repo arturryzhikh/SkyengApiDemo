@@ -59,9 +59,11 @@ extension SearchViewModel: NetworkSearching {
                     self.onSearchError?()
                     return
                 }
+              
                 DispatchQueue.main.async {
                     SectionBuilder.makeSectionsOutOf(models: words) {
                         self.sections = $0
+                      
                         self.onSearchSucceed?()
                     }
                 }

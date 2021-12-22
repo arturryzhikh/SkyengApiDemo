@@ -70,7 +70,7 @@ final class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Colors.cellBackground
-        setupNavigationController(title: "Skyeng translate")
+        setupNavigationController(title: "Search")
         setupSearchController(placeholder: "Search new words")
         setupTableView()
         setupConstraints()
@@ -190,6 +190,9 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
             self.viewModel.toggleSection(section)
         }
         return header
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        navigationController?.pushViewController(MeaningDetailViewController(), animated: true)
     }
    
     
