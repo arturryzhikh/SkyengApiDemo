@@ -35,7 +35,6 @@ final class SearchViewController: UIViewController {
     private let searchController: UISearchController = {
         let sc = UISearchController(searchResultsController: nil)
         sc.obscuresBackgroundDuringPresentation = false
-        sc.definesPresentationContext = true
         return sc
     }()
     private let activityIndicator: UIActivityIndicatorView = {
@@ -52,6 +51,7 @@ final class SearchViewController: UIViewController {
         return tableView.backgroundView as! BackgroundView
     }
     //MARK: Other Properties
+    
     private let rowHeight = (UIScreen.main.bounds.size.height * 0.09)
     private let rowWidth = UIScreen.main.bounds.width
     private let viewModel: SearchViewModel!
@@ -76,12 +76,6 @@ final class SearchViewController: UIViewController {
         setupConstraints()
         bind(viewModel)
         
-    
-        
-     
-        
-       
-        
     }
     //MARK: Initial setup
     private func setupTableView() {
@@ -98,15 +92,14 @@ final class SearchViewController: UIViewController {
     }
     private func setupSearchController(placeholder: String) {
         searchController.searchResultsUpdater = self
+        searchController.definesPresentationContext = true
         searchController.searchBar.placeholder = placeholder
        
     }
     private func setupNavigationController(title: String) {
         navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.title = title
         navigationController?.navigationBar.prefersLargeTitles = true
-        
     }
     //MARK: Constraints
     private func setupConstraints() {
@@ -134,14 +127,17 @@ final class SearchViewController: UIViewController {
 }
 //MARK: UISearchResultsUpdating delegate
 
-extension SearchViewController: UISearchResultsUpdating {
+extension SearchViewController: UISearchResultsUpdating  {
     
     func updateSearchResults(for searchController: UISearchController) {
-        guard let text = searchController.searchBar.text else { return }
+        var lastSearchedText: String = ""
+        guard let text = searchController.searchBar.text, text != lastSearchedText else { return }
+        lastSearchedText = text
         viewModel.search(text)
         activityIndicator.startAnimating()
-        print("Search text is: ", text)
+        
     }
+   
     
     
 }
@@ -202,7 +198,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         let viewModel = MeaningDetailViewModel(word: word, meaning: meaning)
         let meaningDetailVC = MeaningDetailViewController(viewModel: viewModel)
         navigationController?.show(meaningDetailVC, sender: nil)
-        
+        searchController.searchBar.resignFirstResponder()
     }
   
     

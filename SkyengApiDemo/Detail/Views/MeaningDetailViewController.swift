@@ -13,12 +13,13 @@ class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
     
     //MARK: properties
     var viewModel: MeaningDetailViewModel!
-   
+    
     //MARK: Life Cycle
     init(viewModel: MeaningDetailViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
+    
     func fillContent(with: MeaningDetailViewModel) {
         wordLabel.text = viewModel.word
         translationLabel.text = viewModel.translation
@@ -65,7 +66,7 @@ class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
         print(#function)
     }
     @objc private func saveButtonPressed(sender: UIButton) {
-        
+        viewModel.isSaved ? viewModel.delete() : viewModel.save()
     }
     //MARK: Subviews
     private let meaningImageView: UIImageView = {
