@@ -11,9 +11,9 @@ import Foundation
 
 public final class RealmManager {
     
-    static let shared = RealmManager()
+   
     private let realm: Realm
-    private init?() {
+    init?() {
         do {
             try self.realm = Realm()
         } catch  let error as NSError {

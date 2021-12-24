@@ -18,7 +18,7 @@ class SectionBuilder: SectionBuilding {
     
     static func makeSectionsOutOf(models: [Word],
                                   completion: ([MeaningSectionViewModel]) -> Void) {
-        let result = models.map { word in
+        let result = models.compactMap { word in
             MeaningSectionViewModel(word: word)
         }
         completion(result)

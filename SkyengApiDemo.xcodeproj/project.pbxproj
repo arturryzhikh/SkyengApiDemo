@@ -14,7 +14,6 @@
 		34125120276D6DF4007F2DFD /* TableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412511F276D6DF4007F2DFD /* TableViewModel.swift */; };
 		34125122276D6E1C007F2DFD /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125121276D6E1C007F2DFD /* SearchViewModel.swift */; };
 		34125126276D6E60007F2DFD /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125125276D6E60007F2DFD /* RealmManager.swift */; };
-		34125128276D6E79007F2DFD /* NetworkSearching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125127276D6E79007F2DFD /* NetworkSearching.swift */; };
 		3412512A276D6E95007F2DFD /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34125129276D6E95007F2DFD /* Networking.swift */; };
 		3412512C276D6EB4007F2DFD /* NetworkDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412512B276D6EB4007F2DFD /* NetworkDataRequest.swift */; };
 		3412512E276D6ECE007F2DFD /* MeaningHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412512D276D6ECE007F2DFD /* MeaningHeader.swift */; };
@@ -76,7 +75,6 @@
 		3412511F276D6DF4007F2DFD /* TableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewModel.swift; sourceTree = "<group>"; };
 		34125121276D6E1C007F2DFD /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		34125125276D6E60007F2DFD /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
-		34125127276D6E79007F2DFD /* NetworkSearching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSearching.swift; sourceTree = "<group>"; };
 		34125129276D6E95007F2DFD /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 		3412512B276D6EB4007F2DFD /* NetworkDataRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataRequest.swift; sourceTree = "<group>"; };
 		3412512D276D6ECE007F2DFD /* MeaningHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeaningHeader.swift; sourceTree = "<group>"; };
@@ -163,7 +161,6 @@
 			isa = PBXGroup;
 			children = (
 				34125144276D712F007F2DFD /* ApiService.swift */,
-				34125127276D6E79007F2DFD /* NetworkSearching.swift */,
 				34125129276D6E95007F2DFD /* Networking.swift */,
 				3412512B276D6EB4007F2DFD /* NetworkDataRequest.swift */,
 				34125135276D6F40007F2DFD /* ImageFetching.swift */,
@@ -502,7 +499,6 @@
 				3412515D276D96C3007F2DFD /* ReuseIdentifiable.swift in Sources */,
 				34125147276D71A1007F2DFD /* SearchRequest.swift in Sources */,
 				3412512E276D6ECE007F2DFD /* MeaningHeader.swift in Sources */,
-				34125128276D6E79007F2DFD /* NetworkSearching.swift in Sources */,
 				34E7E8F52775E99600E1C2F3 /* Word.swift in Sources */,
 				34125145276D712F007F2DFD /* ApiService.swift in Sources */,
 				3412512C276D6EB4007F2DFD /* NetworkDataRequest.swift in Sources */,

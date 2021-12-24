@@ -9,9 +9,9 @@ import Foundation
 
 public final class ApiService: Networking {
     
-    private init() {}
+   
     
-    static let shared = ApiService()
+   
     
     public func request<Request: NetworkDataRequest>(_ request: Request, completion: @escaping (Result<Request.Response, Error>) -> Void) {
         

@@ -43,7 +43,7 @@ extension FileStoreManaging {
     
     
     func saveSound(data: Data, name: String) -> String? {
-        guard let documentsDirectory = documentsDirectory else {return nil}
+        guard let documentsDirectory = documentsDirectory else { return nil}
         let soundName = name + ".mp3"
         let fileUrl = documentsDirectory.appendingPathComponent(soundName)
         //Checks if file exists, removes it if so.

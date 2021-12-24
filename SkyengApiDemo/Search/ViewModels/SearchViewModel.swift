@@ -14,7 +14,9 @@ final class SearchViewModel: TableViewModel {
     
     var sections: [MeaningSectionViewModel] = []
     
-    var networkService: Networking
+    let networkService: Networking
+    let dataImporter: DataImporter
+    let realmManager: RealmManager?
     //MARK: Bindings
     var onSearchSucceed: (()-> Void)?
     var onSearchError: (() -> Void)?
@@ -22,7 +24,11 @@ final class SearchViewModel: TableViewModel {
     var onSavingError: (() -> Void)?
     var onSectionsReload: ((_ sections: IndexSet) -> Void)?
     //MARK: Life cycle
-    init(networkService: Networking = ApiService.shared) {
+    init?(networkService: Networking = ApiService(),
+         dataImporter: DataImporter = DataImporter(),
+         realmManager: RealmManager? = RealmManager()) {
+        self.realmManager = realmManager
+        self.dataImporter = dataImporter
         self.networkService = networkService
     }
     //MARK:  special methods
@@ -40,7 +46,7 @@ final class SearchViewModel: TableViewModel {
    
 }
 
-extension SearchViewModel: NetworkSearching {
+extension SearchViewModel {
     //MARK: Searching
     func search(_ text: String) {
         guard text.isValid else {
@@ -80,10 +86,6 @@ extension SearchViewModel: NetworkSearching {
 extension SearchViewModel {
     
     func saveMeaning(at indexPath: IndexPath) {
-        guard let realm = RealmManager.shared else {
-            onSavingError?()
-            return
-        }
         //get corresponding word and meaning
         let word = sections[indexPath.section].word
         let meaning = sections[indexPath.section].cellViewModels[indexPath.row].meaning.managedObject()
@@ -92,8 +94,12 @@ extension SearchViewModel {
             onSavingError?()
             return
         }
+        guard let realmManager = self.realmManager else {
+            onSavingError?()
+            return
+        }
         var wordToSave: WordObject
-        if let cached = realm.object(ofType: WordObject.self, forPrimaryKey: word.text) {
+        if let cached = realmManager.object(ofType: WordObject.self, forPrimaryKey: word.text) {
             wordToSave = cached
         } else {//create new one with data from word from internet ,but without meanings
             wordToSave = WordObject()
@@ -101,7 +107,7 @@ extension SearchViewModel {
             wordToSave.text = word.text
         }
         //fetch additional data
-        let dataImporter = DataImporter.shared
+        
         dataImporter.getDataFor(meaning) { [weak self] result in
             guard let self = self else { return }
             switch result {
@@ -110,7 +116,7 @@ extension SearchViewModel {
                 self.onSavingError?()
                 return
             case.success(let meaning):
-                realm.update(wordToSave, with: [meaning] ) { error in
+                realmManager.update(wordToSave, with: [meaning] ) { error in
                     guard error == nil else {
                         self.onSavingError?()
                         return
