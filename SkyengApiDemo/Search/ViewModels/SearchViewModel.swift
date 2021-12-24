@@ -14,9 +14,10 @@ final class SearchViewModel: TableViewModel {
     
     var sections: [MeaningSectionViewModel] = []
     
-    let networkService: Networking
-    let dataImporter: DataImporter
-    let realmManager: RealmManager?
+    private let networkService: Networking
+    private let dataImporter: DataImporter
+    private let realmManager: RealmManager?
+    private let sectionBuilder: SectionBuilder
     //MARK: Bindings
     var onSearchSucceed: (()-> Void)?
     var onSearchError: (() -> Void)?
@@ -25,11 +26,13 @@ final class SearchViewModel: TableViewModel {
     var onSectionsReload: ((_ sections: IndexSet) -> Void)?
     //MARK: Life cycle
     init?(networkService: Networking = ApiService(),
-         dataImporter: DataImporter = DataImporter(),
-         realmManager: RealmManager? = RealmManager()) {
+          dataImporter: DataImporter = DataImporter(),
+          realmManager: RealmManager? = RealmManager(),
+          sectionBuilder: SectionBuilder = SectionBuilder()) {
         self.realmManager = realmManager
         self.dataImporter = dataImporter
         self.networkService = networkService
+        self.sectionBuilder = sectionBuilder
     }
     //MARK:  special methods
     private func clear() {
@@ -43,7 +46,7 @@ final class SearchViewModel: TableViewModel {
         return sections[section].count
         
     }
-   
+    
 }
 
 extension SearchViewModel {
@@ -66,12 +69,13 @@ extension SearchViewModel {
                     return
                 }
                 DispatchQueue.main.async {
-                    SectionBuilder.makeSectionsOutOf(models: words) {
-                        self.sections = $0
+                    self.sectionBuilder
+                        .makeSectionsOutOf(models: words) { sections in
+                        self.sections = sections
                         self.onSearchSucceed?()
                     }
                 }
-                case .failure(let error):
+            case .failure(let error):
                 print(error)
                 //last try. search locally
                 self.onSearchError?()
@@ -132,6 +136,7 @@ extension SearchViewModel {
     }
     
 }
+
 //MARK: MeaningDetailDelegate
 extension SearchViewModel: MeaningDetailDelegate {
     func didManage(meaning: Meaning2, at indexPath: IndexPath) {
@@ -139,21 +144,5 @@ extension SearchViewModel: MeaningDetailDelegate {
         onSavingSucceed?([indexPath])
     }
 }
-//MARK: Read from db
-extension SearchViewModel {
 
-//    func search(enitity: Meaning.Type, by searchText: String, completion: ([Meaning]?) -> Void) {
-//        //create predicates to search text in ids and word properties of Meaning
-//        let wordPredicate = NSPredicate(format: "word CONTAINS[cd] %@", searchText)
-//        let translationPredicate = NSPredicate(format: "translation CONTAINS[cd] %@", searchText)
-//        //wrap that into OR predicate
-//        let orPredicate = NSCompoundPredicate.init(orPredicateWithSubpredicates: [wordPredicate,translationPredicate])
-//        //fetch meanings and construct vms if meanings exists
-//        CoreDataManager.shared.searchEntitiesOf(type: Meaning.self, predicate: orPredicate) { meanings in
-//            completion(meanings)
-//        }
-//    }
-
-
-}
 

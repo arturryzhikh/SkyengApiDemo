@@ -14,18 +14,7 @@ enum DataImportError : Error {
    
 }
 
-protocol DataImporting {
-    
-    associatedtype Item
-    var fileStoreManager: FileStoreManaging { get }
-    var imageFetcher: ImageFetching { get }
-    
-    func getDataFor(_ object: Item, completion: @escaping(Result<Item,Error>) -> Void)
-    
-}
-
-
-final class DataImporter: DataImporting {
+final class DataImporter {
     
     internal let imageFetcher: ImageFetching
     internal let fileStoreManager: FileStoreManaging
@@ -66,6 +55,6 @@ final class DataImporter: DataImporting {
                 object.soundName = soundName
                 completion(.success(object))
                 
-            }
+        }
     }
 }

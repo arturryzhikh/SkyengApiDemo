@@ -7,6 +7,7 @@
 
 
 import UIKit
+import RealmSwift
 
 final class MeaningDetailViewModel {
     
@@ -14,6 +15,7 @@ final class MeaningDetailViewModel {
     private let imageFetcher: ImageFetching
     private let dataImporter: DataImporter
     private let realmManager: RealmManager?
+    
     let word: Word
     let indexPath: IndexPath
     var meaning: Meaning2
@@ -26,6 +28,7 @@ final class MeaningDetailViewModel {
         return meaning.translation.text
     }
     var transcription: String {
+        guard !meaning.transcription.isEmpty else { return ""}
         return "· Transcription: [ \(meaning.transcription) ]"
     }
     var note: String {
@@ -33,7 +36,8 @@ final class MeaningDetailViewModel {
         return note.isEmpty ? "" : "(\(note))"
     }
     var partOfSpeech: String {
-        return "· Part of speech: \(PartOfSpeech(rawValue: meaning.partOfSpeechCode)?.text ?? "")"
+        let text = PartOfSpeech(rawValue: meaning.partOfSpeechCode)?.text ?? ""
+        return  "· Part of speech: " + text
     }
     private var imageUrl: String {
         return meaning.imageUrl
@@ -43,10 +47,11 @@ final class MeaningDetailViewModel {
     }
     func image(completion: @escaping (UIImage?) -> Void) {
         //get images from network or local
-        if isSaved {
+        switch isSaved {
+        case true:
             let image = fileStoreManager.loadImage(named: meaning.imageName)
             completion(image)
-        } else {
+        case false:
             imageFetcher.setImage(from: imageUrl, placeholderImage: nil) { image in
                 completion(image)
             }
@@ -91,13 +96,13 @@ final class MeaningDetailViewModel {
             var wordToSave: WordObject
             if let cached = realmManager.object(ofType: WordObject.self, forPrimaryKey: word.text) {
                 wordToSave = cached
-            } else {//create new one with data from word from internet ,but without meanings
+            } else {
+                //create new one with data from word from internet ,but without meanings
                 wordToSave = WordObject()
                 wordToSave.id = word.id
                 wordToSave.text = word.text
             }
-           
-            dataImporter.getDataFor(meaning.managedObject()) { result in
+           dataImporter.getDataFor(meaning.managedObject()) { result in
                 switch result {
                 case .failure(let error):
                     print("\(error)")

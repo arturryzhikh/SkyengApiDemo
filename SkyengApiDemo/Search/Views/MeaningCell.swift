@@ -31,7 +31,7 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
     private let savedImage: UIImage? = {
         let config = UIImage.SymbolConfiguration(
             pointSize: 28, weight: .light, scale: .default)
-        let image = UIImage(systemName: "bookmark.circle",withConfiguration: config)
+        let image = UIImage(systemName: "star.circle",withConfiguration: config)
         return image
     }()
  
