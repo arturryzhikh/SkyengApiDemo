@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import RealmSwift
 
 final class SearchViewModel: TableViewModel {
     
@@ -86,18 +86,23 @@ extension SearchViewModel {
         }
         //get corresponding word and meaning
         let word = sections[indexPath.section].word
-        let meaning = sections[indexPath.section].cellViewModels[indexPath.row].meaning
+        let meaning = sections[indexPath.section].cellViewModels[indexPath.row].meaning.managedObject()
         //check if word is exits
-        var wordToSave: Word
-        if let cached = realm.object(ofType: Word.self, forPrimaryKey: word.text) {
+        guard !Meaning2Object.isSaved(forPrimaryKey: meaning.id) else {
+            onSavingError?()
+            return
+        }
+        var wordToSave: WordObject
+        if let cached = realm.object(ofType: WordObject.self, forPrimaryKey: word.text) {
             wordToSave = cached
         } else {//create new one with data from word from internet ,but without meanings
-            wordToSave = Word()
+            wordToSave = WordObject()
             wordToSave.id = word.id
             wordToSave.text = word.text
         }
         //fetch additional data
-        DataImporter().getDataFor(meaning) { [weak self] result in
+        let dataImporter = DataImporter.shared
+        dataImporter.getDataFor(meaning) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):
@@ -110,6 +115,9 @@ extension SearchViewModel {
                         self.onSavingError?()
                         return
                     }
+                    //replace meaning at index path with saved one
+                    self.sections[indexPath.section].cellViewModels[indexPath.row].meaning =
+                    Meaning2(managedObject: meaning)
                     self.onSavingSucceed?([indexPath])
                 }
                 
@@ -117,6 +125,13 @@ extension SearchViewModel {
         }
     }
     
+}
+//MARK: MeaningDetailDelegate
+extension SearchViewModel: MeaningDetailDelegate {
+    func didManage(meaning: Meaning2, at indexPath: IndexPath) {
+        sections[indexPath.section].cellViewModels[indexPath.row].meaning = meaning
+        onSavingSucceed?([indexPath])
+    }
 }
 //MARK: Read from db
 extension SearchViewModel {

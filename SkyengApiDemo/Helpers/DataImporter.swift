@@ -22,9 +22,10 @@ protocol DataImporting {
 }
 
 final class DataImporter: DataImporting {
-    
-    func getDataFor(_ object: Meaning2,
-                    completion: @escaping( Result<Meaning2, Error> ) -> Void) {
+    static let shared = DataImporter()
+    private init() {}
+    func getDataFor(_ object: Meaning2Object,
+                    completion: @escaping( Result<Meaning2Object, Error> ) -> Void) {
         do {
             
         }
@@ -35,7 +36,10 @@ final class DataImporter: DataImporting {
                 if let error = error {
                     completion(.failure(error))
                 }
-                guard let image = image, let soundUrl = URL(string: object.soundUrl), let soundData = try? Data(contentsOf: soundUrl) else {
+                guard
+                    let image = image,
+                    let soundUrl = URL(string: object.soundUrl),
+                    let soundData = try? Data(contentsOf: soundUrl) else {
                     completion(.failure(DataImportError.fetchingData))
                     return
                 }
@@ -51,9 +55,9 @@ final class DataImporter: DataImporting {
                         }
                 
                 //set cached images names to meaning
-                object.previewUrl = previewImageName
-                object.imageUrl = imageName
-                object.soundUrl = soundName
+                object.previewName = previewImageName
+                object.imageName = imageName
+                object.soundName = soundName
                 completion(.success(object))
                 
             }

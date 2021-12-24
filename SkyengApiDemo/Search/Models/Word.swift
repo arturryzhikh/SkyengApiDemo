@@ -2,102 +2,111 @@
 //  Word.swift
 //  SkyengApiDemo
 //
-//  Created by Artur Ryzhikh on 18.12.2021.
+//  Created by Artur Ryzhikh on 24.12.2021.
 //
 
-import RealmSwift
-import Realm
+import Foundation
 
-
-
-@objcMembers public class Word: Object, Decodable  {
-    
-    dynamic var id: Int = 0
-    dynamic var text: String = ""
-    let meanings = List<Meaning2>()
-    
-    public override class func primaryKey() -> String? {
-        return "text"
-    }
-    enum CodingKeys: String, CodingKey {
-        case id, text, meanings
-    }
-    required public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(Int.self, forKey: .id)
-        text = try container.decode(String.self, forKey: .text)
-        let meaning = try container.decode([Meaning2].self, forKey: .meanings)
-        meanings.append(objectsIn: meaning)
-        super.init()
-    }
-    
-    required override init() {
-        super.init()
-    }
-    
-    
+struct Word: Decodable {
+    let id: Int
+    let text: String
+    let meanings: [Meaning2]
 }
 
-@objcMembers public class Meaning2: Object, Decodable {
+struct Meaning2: Decodable {
+    var id: Int = 0
+    var translation: Translation
+    var transcription: String = ""
+    var partOfSpeechCode: String = ""
+    var previewUrl: String = ""
+    var imageUrl: String = ""
+    var soundUrl: String = ""
+   
     
-    dynamic var id: Int = 0
-    dynamic var translation: Translation?
-    dynamic var transcription: String = ""
-    dynamic var partOfSpeechCode: String = ""
     
-    dynamic var previewUrl: String = ""
-    dynamic var imageUrl: String = ""
-    dynamic var soundUrl: String = "" 
+    var previewName: String = ""
+    var imageName: String = ""
+    var soundName: String = ""
     
-    public override class func primaryKey() -> String? {
-        return "id"
-    }
-    //Decodable
     enum CodingKeys: String, CodingKey {
         case id,partOfSpeechCode, translation,
              transcription, previewUrl, imageUrl, soundUrl
     }
    
     //MARK: life cycle
-    required public init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         //api returns url without scheme , so add it while decoding
         let scheme = "https:"
         id = try container.decode(Int.self, forKey: .id)
         partOfSpeechCode = try container.decode(String.self, forKey: .partOfSpeechCode)
-        translation = try? container.decode(Translation.self, forKey: .translation)
+        translation = try container.decode(Translation.self, forKey: .translation)
         previewUrl = try scheme + container.decode(String.self, forKey: .previewUrl)
         imageUrl = try scheme + container.decode(String.self, forKey: .imageUrl)
         soundUrl = try scheme + container.decode(String.self, forKey: .soundUrl)
         transcription = try container.decode(String.self, forKey: .transcription)
-        super.init()
-    }
-    
-    required override init() {
-        super.init()
-    }
-    
-}
-@objcMembers public class Translation: Object , Decodable {
-    
-    dynamic var text: String = ""
-    dynamic var note: String?
-    
-//    let ofMeaning = LinkingObjects<Meaning2>(fromType: Meaning2.self, property: "translation")
-    enum CodingKeys: String, CodingKey {
-        case text, note
-    }
-    //MARK:  life cycle
-    required public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        text = try container.decode(String.self, forKey: .text)
-        note = try? container.decode(String.self, forKey: .note)
-        super.init()
         
     }
-    required override init() {
-        super.init()
-    }
   
-    
 }
+
+struct Translation: Decodable {
+    var text: String = ""
+    var note: String?
+}
+
+extension Word: RealmManagable {
+    init(managedObject: WordObject) {
+        self.id = managedObject.id
+        self.text = managedObject.text
+        self.meanings = managedObject.meanings.map { meaning2Object in
+            Meaning2(managedObject: meaning2Object)
+        }
+
+    }
+
+    func managedObject() -> WordObject {
+        let object = WordObject()
+        object.id = self.id
+        object.text = self.text
+        self.meanings.forEach { meaning in
+            object.meanings.append(meaning.managedObject())
+            
+        }
+        return object
+    }
+  }
+extension Meaning2: RealmManagable {
+    
+    func managedObject() -> Meaning2Object {
+        let object = Meaning2Object()
+        object.id = self.id
+        object.translation = self.translation.text
+        object.note = self.translation.note
+        object.partOfSpeechCode = self.partOfSpeechCode
+        object.previewUrl = self.previewUrl
+        object.imageUrl = self.imageUrl
+        object.soundUrl = self.soundUrl
+        object.previewName = self.previewName
+        object.imageName = self.imageName
+        object.soundName = self.soundName
+        return object
+    }
+    
+    init(managedObject: Meaning2Object) {
+        self.id = managedObject.id
+        var translation = Translation()
+        translation.text = managedObject.translation
+        translation.note = managedObject.note
+        self.translation = translation
+        self.translation.note = managedObject.note
+        self.transcription = managedObject.transcription
+        self.previewUrl = managedObject.previewUrl
+        self.imageUrl = managedObject.imageUrl
+        self.soundUrl = managedObject.soundUrl
+        self.previewName = managedObject.previewName
+        self.imageName = managedObject.imageName
+        self.soundName = managedObject.soundName
+    }
+}
+
