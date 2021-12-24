@@ -35,7 +35,10 @@ final class DataImporter: DataImporting {
                 if let error = error {
                     completion(.failure(error))
                 }
-                guard let image = image, let soundUrl = URL(string: object.soundUrl), let soundData = try? Data(contentsOf: soundUrl) else {
+                guard
+                    let image = image,
+                    let soundUrl = URL(string: object.soundUrl),
+                    let soundData = try? Data(contentsOf: soundUrl) else {
                     completion(.failure(DataImportError.fetchingData))
                     return
                 }

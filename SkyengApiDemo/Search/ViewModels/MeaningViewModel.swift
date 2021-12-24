@@ -31,7 +31,7 @@ class MeaningViewModel {
             let image = FileStoreManager.shared.loadImage(named: previewUrl)
             completion(image)
         } else {
-            ImageFetcher.shared.setImage(from: "https:" + previewUrl) { image in
+            ImageFetcher.shared.setImage(from: previewUrl) { image in
                 completion(image)
             }
         }

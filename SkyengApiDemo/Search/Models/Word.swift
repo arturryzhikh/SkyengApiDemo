@@ -21,14 +21,33 @@ struct Meaning2: Decodable {
     var previewUrl: String = ""
     var imageUrl: String = ""
     var soundUrl: String = ""
-    init(from decoder: Decoder) throws {
+    enum CodingKeys: String, CodingKey {
+        case id,partOfSpeechCode, translation,
+             transcription, previewUrl, imageUrl, soundUrl
+    }
+   
+    //MARK: life cycle
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        //api returns url without scheme , so add it while decoding
+        let scheme = "https:"
+        id = try container.decode(Int.self, forKey: .id)
+        partOfSpeechCode = try container.decode(String.self, forKey: .partOfSpeechCode)
+        translation = try container.decode(Translation.self, forKey: .translation)
+        previewUrl = try scheme + container.decode(String.self, forKey: .previewUrl)
+        imageUrl = try scheme + container.decode(String.self, forKey: .imageUrl)
+        soundUrl = try scheme + container.decode(String.self, forKey: .soundUrl)
+        transcription = try container.decode(String.self, forKey: .transcription)
         
     }
+  
 }
+
 struct Translation: Decodable {
     var text: String = ""
     var note: String?
 }
+
 extension Word: RealmManagable {
     init(managedObject: WordObject) {
         self.id = managedObject.id

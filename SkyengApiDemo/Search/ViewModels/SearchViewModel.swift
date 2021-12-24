@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 
 final class SearchViewModel: TableViewModel {
@@ -110,6 +111,9 @@ extension SearchViewModel {
                         self.onSavingError?()
                         return
                     }
+                    //replace meaning at index path with saved one
+                    self.sections[indexPath.section].cellViewModels[indexPath.row].meaning =
+                    Meaning2(managedObject: meaning)
                     self.onSavingSucceed?([indexPath])
                 }
                 

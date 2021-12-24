@@ -50,7 +50,6 @@ final class MeaningDetailViewModel {
     
     func soundData(completion: @escaping (Data?) -> Void) {
         if isSaved {
-            print(meaning.soundUrl)
             let data = FileStoreManager.shared.loadSound(named: soundUrl)
             completion(data)
         } else {
