@@ -17,12 +17,14 @@ protocol MeaningDetailDelegate: AnyObject {
 final class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
     var player: AVAudioPlayer?
     weak var delegate: MeaningDetailDelegate?
+    private var coordinator: MeaningDetaiCoordinator?
     //MARK: properties
     var viewModel: MeaningDetailViewModel!
     
     //MARK: Life Cycle
-    init(viewModel: MeaningDetailViewModel) {
+    init(viewModel: MeaningDetailViewModel, coordinator: MeaningDetaiCoordinator) {
         self.viewModel = viewModel
+        self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -87,7 +89,6 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
         }
     }
     @objc private func saveButtonPressed(sender: UIButton) {
-        print(viewModel.isSaved)
         viewModel.manageModel { [weak self] meaning in
             guard
                 let meaning = meaning ,
@@ -96,8 +97,8 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
                 }
             self.setupButton(isSaved: self.viewModel.isSaved)
             self.delegate?.didManage(meaning: meaning, at: self.viewModel.indexPath)
-            self.navigationController?.popViewController(animated: true)
-           
+            self.coordinator?.popViewController(animated: true)
+            
         }
         
         

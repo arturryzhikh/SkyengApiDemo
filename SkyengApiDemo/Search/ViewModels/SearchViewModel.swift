@@ -25,7 +25,7 @@ final class SearchViewModel: TableViewModel {
     var onSavingError: (() -> Void)?
     var onSectionsReload: ((_ sections: IndexSet) -> Void)?
     //MARK: Life cycle
-    init?(networkService: Networking = ApiService(),
+    init(networkService: Networking = ApiService(),
           dataImporter: DataImporter = DataImporter(),
           realmManager: RealmManager? = RealmManager(),
           sectionBuilder: SectionBuilder = SectionBuilder()) {
@@ -44,7 +44,16 @@ final class SearchViewModel: TableViewModel {
     }
     func numberOfRowsIn(section: Int) -> Int {
         return sections[section].count
-        
+    }
+    private func sectionViewModel(at section: Int) -> MeaningSectionViewModel? {
+        return sections[section]
+    }
+    func makeMeaningDetail(for indexPath: IndexPath) -> MeaningDetailViewModel? {
+        guard let meaning = cellViewModel(at: indexPath)?.meaning, let
+                word = sectionViewModel(at: indexPath.section)?.word else {
+                    return nil
+                }
+        return MeaningDetailViewModel(word: word, meaning: meaning, indexPath: indexPath)
     }
     
 }

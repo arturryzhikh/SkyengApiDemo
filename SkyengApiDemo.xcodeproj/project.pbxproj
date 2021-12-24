@@ -46,6 +46,9 @@
 		34E6A9A52772ED3000F5BD23 /* MeaningDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E6A9A42772ED3000F5BD23 /* MeaningDetailViewController.swift */; };
 		34E797D7276F24B900BBAC29 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E797D6276F24B900BBAC29 /* String+Extension.swift */; };
 		34E7E8F52775E99600E1C2F3 /* Word.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E7E8F42775E99600E1C2F3 /* Word.swift */; };
+		34F3CA732776531C001CB333 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F3CA722776531C001CB333 /* Coordinator.swift */; };
+		34F3CA7527765838001CB333 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F3CA7427765838001CB333 /* AppCoordinator.swift */; };
+		34F3CA772776585D001CB333 /* MeaningDetailCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F3CA762776585D001CB333 /* MeaningDetailCoordinator.swift */; };
 		34F5C482276F695E00EDE50B /* RealmManagable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F5C481276F695E00EDE50B /* RealmManagable.swift */; };
 		34F5C485276F6DDB00EDE50B /* DataImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F5C484276F6DDB00EDE50B /* DataImporter.swift */; };
 /* End PBXBuildFile section */
@@ -109,6 +112,9 @@
 		34E6A9A42772ED3000F5BD23 /* MeaningDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeaningDetailViewController.swift; sourceTree = "<group>"; };
 		34E797D6276F24B900BBAC29 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		34E7E8F42775E99600E1C2F3 /* Word.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Word.swift; sourceTree = "<group>"; };
+		34F3CA722776531C001CB333 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		34F3CA7427765838001CB333 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		34F3CA762776585D001CB333 /* MeaningDetailCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeaningDetailCoordinator.swift; sourceTree = "<group>"; };
 		34F5C481276F695E00EDE50B /* RealmManagable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManagable.swift; sourceTree = "<group>"; };
 		34F5C484276F6DDB00EDE50B /* DataImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataImporter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -276,6 +282,7 @@
 			children = (
 				344C7DE0276B5C05005B72C4 /* AppDelegate.swift */,
 				344C7DE2276B5C05005B72C4 /* SceneDelegate.swift */,
+				34F3CA712776530B001CB333 /* Coordinator */,
 				34F5C480276F66F900EDE50B /* Helpers */,
 				34125148276D7234007F2DFD /* Extensions */,
 				34125150276D7349007F2DFD /* Globals */,
@@ -322,6 +329,16 @@
 				34E6A9A42772ED3000F5BD23 /* MeaningDetailViewController.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		34F3CA712776530B001CB333 /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				34F3CA722776531C001CB333 /* Coordinator.swift */,
+				34F3CA7427765838001CB333 /* AppCoordinator.swift */,
+				34F3CA762776585D001CB333 /* MeaningDetailCoordinator.swift */,
+			);
+			path = Coordinator;
 			sourceTree = "<group>";
 		};
 		34F5C480276F66F900EDE50B /* Helpers */ = {
@@ -485,6 +502,7 @@
 				34125116276D6CFC007F2DFD /* Colors.swift in Sources */,
 				34125126276D6E60007F2DFD /* RealmManager.swift in Sources */,
 				3412515B276D9632007F2DFD /* ViewModelConfigurable.swift in Sources */,
+				34F3CA772776585D001CB333 /* MeaningDetailCoordinator.swift in Sources */,
 				34125118276D6D3C007F2DFD /* WordObject.swift in Sources */,
 				34125159276D9208007F2DFD /* MeaningViewModel.swift in Sources */,
 				34125155276D77C3007F2DFD /* MeaningSectionViewModel.swift in Sources */,
@@ -502,9 +520,11 @@
 				34E7E8F52775E99600E1C2F3 /* Word.swift in Sources */,
 				34125145276D712F007F2DFD /* ApiService.swift in Sources */,
 				3412512C276D6EB4007F2DFD /* NetworkDataRequest.swift in Sources */,
+				34F3CA7527765838001CB333 /* AppCoordinator.swift in Sources */,
 				34125130276D6EEF007F2DFD /* MeaningCell.swift in Sources */,
 				34F5C482276F695E00EDE50B /* RealmManagable.swift in Sources */,
 				34125157276D91CB007F2DFD /* MeaningsHeaderViewModel.swift in Sources */,
+				34F3CA732776531C001CB333 /* Coordinator.swift in Sources */,
 				34F5C485276F6DDB00EDE50B /* DataImporter.swift in Sources */,
 				34125143276D70FF007F2DFD /* BackgroundView.swift in Sources */,
 				34125138276D6F57007F2DFD /* ImageFetcher.swift in Sources */,
