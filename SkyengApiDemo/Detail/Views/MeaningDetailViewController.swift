@@ -7,7 +7,9 @@
 
 import UIKit
 import AVFoundation
-
+protocol MeaningDetailDelegate {
+    
+}
 
 final class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
     var player: AVAudioPlayer?
