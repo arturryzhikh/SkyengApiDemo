@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class MeaningViewModel {
     
@@ -23,6 +24,17 @@ class MeaningViewModel {
     var translation: String {
         return meaning.translation?.text ?? ""
         
+    }
+    func previewImage(completion: @escaping (UIImage?) -> Void) {
+        //get images from network or local
+        if isSaved {
+            let image = FileStoreManager.shared.loadImage(named: previewUrl)
+            completion(image)
+        } else {
+            ImageFetcher.shared.setImage(from: previewUrl) { image in
+                completion(image)
+            }
+        }
     }
     init(word: String, meaning: Meaning2) {
         self.word = word

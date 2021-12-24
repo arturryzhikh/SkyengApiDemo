@@ -143,6 +143,7 @@
 		34011A3A277328F90006EE53 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				34011A3F277330D80006EE53 /* MeaningDetailViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -319,7 +320,6 @@
 			isa = PBXGroup;
 			children = (
 				34E6A9A42772ED3000F5BD23 /* MeaningDetailViewController.swift */,
-				34011A3F277330D80006EE53 /* MeaningDetailViewModel.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";

@@ -6,6 +6,8 @@
 //
 
 
+import UIKit
+
 final class MeaningDetailViewModel {
     
     let word: String
@@ -22,7 +24,6 @@ final class MeaningDetailViewModel {
         return "· Transcription: [ \(meaning.transcription) ]"
     }
     var note: String {
-        
         guard let translation = meaning.translation,
                 let note = translation.note else { return "" }
         return note.isEmpty ? "" : "(\(note))"
@@ -30,19 +31,56 @@ final class MeaningDetailViewModel {
     var partOfSpeech: String {
         return "· Part of speech: \(PartOfSpeech(rawValue: meaning.partOfSpeechCode)?.text ?? "")"
     }
-    var imageUrl: String {
+    private var imageUrl: String {
         return meaning.imageUrl
     }
-    var soundUrl: String {
+    private var soundUrl: String {
         return meaning.soundUrl
+    }
+    func image(completion: @escaping (UIImage?) -> Void) {
+        //get images from network or local
+        if isSaved {
+            let image = FileStoreManager.shared.loadImage(named: imageUrl)
+            completion(image)
+        } else {
+            ImageFetcher.shared.setImage(from: imageUrl) { image in
+                completion(image)
+            }
+        }
+    }
+    
+    func soundData(completion: @escaping (Data?) -> Void) {
+        if isSaved {
+            print(meaning.soundUrl)
+            let data = FileStoreManager.shared.loadSound(named: soundUrl)
+            completion(data)
+        } else {
+            guard let url = URL(string: meaning.soundUrl) else {
+                completion(nil)
+                return
+            }
+            DispatchQueue.global().async {
+                do {
+                    let data = try Data(contentsOf: url)
+                    DispatchQueue.main.async {
+                        completion(data)
+                    }
+                } catch {
+                    completion(nil)
+                }
+                
+            }
+        }
     }
     
     func save() {
         
     }
+    
     func delete() {
         
     }
+    
     init (word: String, meaning: Meaning2) {
         self.word = word
         self.meaning = meaning

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import SwiftUI
+
 
 final class SearchViewModel: TableViewModel {
     
@@ -59,14 +59,12 @@ extension SearchViewModel: NetworkSearching {
                     self.onSearchError?()
                     return
                 }
-    
                 DispatchQueue.main.async {
                     SectionBuilder.makeSectionsOutOf(models: words) {
                         self.sections = $0
                         self.onSearchSucceed?()
                     }
                 }
-                
                 case .failure(let error):
                 print(error)
                 //last try. search locally
@@ -75,12 +73,7 @@ extension SearchViewModel: NetworkSearching {
             }
         }
         
-        
-    
-    
     }
-    
-    
 }
 
 
@@ -104,10 +97,11 @@ extension SearchViewModel {
             wordToSave.text = word.text
         }
         //fetch additional data
-        DataImporter().getDataFor(meaning) { result in
+        DataImporter().getDataFor(meaning) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .failure(let error):
-                print(error)
+                print("\(error)")
                 self.onSavingError?()
                 return
             case.success(let meaning):

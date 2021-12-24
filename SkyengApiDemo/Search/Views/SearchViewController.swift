@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import RealmSwift
+
 final class SearchViewController: UIViewController {
     
     //MARK: Subviews
@@ -76,6 +76,7 @@ final class SearchViewController: UIViewController {
         setupConstraints()
         bind(viewModel)
         
+       
     }
     //MARK: Initial setup
     private func setupTableView() {
@@ -83,7 +84,6 @@ final class SearchViewController: UIViewController {
                            forCellReuseIdentifier: MeaningCell.reuseId)
         tableView.register(MeaningHeader.self,
                            forHeaderFooterViewReuseIdentifier: MeaningHeader.reuseId)
-        tableView.remembersLastFocusedIndexPath = true
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = rowHeight
@@ -227,7 +227,7 @@ extension SearchViewController {
                 self.tableView.reloadData()
                 self.activityIndicator.stopAnimating()
                 self.backgroundView.searchFailed = false
-                self.backgroundView.isHidden = false
+                
             }
         }
         
