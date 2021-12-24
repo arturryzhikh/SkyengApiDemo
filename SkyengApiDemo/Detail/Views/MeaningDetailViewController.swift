@@ -7,11 +7,16 @@
 
 import UIKit
 import AVFoundation
+protocol MeaningDetailDelegate: AnyObject {
+    
+    func didManage(meaning: Meaning2, at indexPath: IndexPath)
+    
+}
 
 
 final class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
     var player: AVAudioPlayer?
-    
+    weak var delegate: MeaningDetailDelegate?
     //MARK: properties
     var viewModel: MeaningDetailViewModel!
     
@@ -21,16 +26,20 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
         super.init(nibName: nil, bundle: nil)
     }
     
+    private func setupButton(isSaved: Bool) {
+        let saveButtonTitle = isSaved ? "Delete from favorites" : "Add to favorites"
+        let buttonColor = isSaved ? Colors.delete : Colors.link
+        saveButton.setTitle(saveButtonTitle, for: .normal)
+        saveButton.backgroundColor = buttonColor
+    }
+    
     func fillContent(with: MeaningDetailViewModel) {
-        wordLabel.text = viewModel.word
+        wordLabel.text = viewModel.word.text
         translationLabel.text = viewModel.translation
         noteLabel.text = viewModel.note
         transcriptionLabel.text = viewModel.transcription
         partOfSpeechLabel.text = viewModel.partOfSpeech
-        let saveButtonTitle = viewModel.isSaved ? "Delete from favorites" : "Add to favorites"
-        let buttonColor = viewModel.isSaved ? Colors.delete : Colors.link
-        saveButton.setTitle(saveButtonTitle, for: .normal)
-        saveButton.backgroundColor = buttonColor
+        setupButton(isSaved: viewModel.isSaved)
         viewModel.image { [weak self] image in
             guard let self = self else {return}
             self.meaningImageView.image = image
@@ -50,7 +59,7 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
                              action: #selector(saveButtonPressed(sender:)),
                              for: .touchUpInside)
         fillContent(with: viewModel)
-        setupNavigationController(title: viewModel.word)
+        setupNavigationController(title: viewModel.word.text)
         setupConstraints()
     }
     
@@ -68,6 +77,7 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
     //MARK: Actionis
     
     @objc private func speakerButtonPressed(sender: UIButton) {
+        
         viewModel.soundData { [weak self] data in
             guard let data = data , let self = self else {
                 return
@@ -77,7 +87,21 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
         }
     }
     @objc private func saveButtonPressed(sender: UIButton) {
-        viewModel.isSaved ? viewModel.delete() : viewModel.save()
+        print(viewModel.isSaved)
+        viewModel.manageModel { [weak self] meaning in
+            guard
+                let meaning = meaning ,
+                let self = self else {
+                    return
+                }
+            self.setupButton(isSaved: self.viewModel.isSaved)
+            self.delegate?.didManage(meaning: meaning, at: self.viewModel.indexPath)
+            self.navigationController?.popViewController(animated: true)
+           
+        }
+        
+        
+        
     }
     //MARK: Subviews
     private let meaningImageView: UIImageView = {

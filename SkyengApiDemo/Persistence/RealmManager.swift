@@ -23,8 +23,8 @@ public final class RealmManager {
     }
     //MARK: CRUD
     //Save object
-    func update(_ word: Word,
-                with meanings: [Meaning2], _ completion: (Error?) -> Void)   {
+    func update(_ word: WordObject,
+                with meanings: [Meaning2Object], _ completion: (Error?) -> Void)   {
         do {
             try realm.write {
                 meanings.forEach {
@@ -39,6 +39,29 @@ public final class RealmManager {
         }
 
     }
+    
+    func deleteMeaning(with Id: Int, for word: String, _ completion: (Meaning2?) -> Void ) {
+        guard let word = realm.object(ofType: WordObject.self, forPrimaryKey: word),
+              let meaning = realm.object(ofType: Meaning2Object.self, forPrimaryKey: Id) else {
+                  completion(nil)
+                  return
+              }
+        do {
+            let meaningStruct = Meaning2(managedObject: meaning)
+            try realm.write {
+                realm.delete(meaning)
+                completion(meaningStruct)
+                if word.meanings.isEmpty {
+                    realm.delete(word)
+                }
+               
+            }
+            
+        } catch let error as NSError {
+            print("Could not delete object",error)
+            completion(nil)
+        }
+    }
     //fetch specific object by primary key
     func object<Element:Object,KeyType>(ofType: Element.Type,
                                         forPrimaryKey: KeyType) -> Element? {
@@ -51,7 +74,7 @@ public final class RealmManager {
 
 extension Object {
     
-    func isSaved<KeyType>(forPrimaryKey: KeyType) -> Bool {
+    static func isSaved<KeyType>(forPrimaryKey: KeyType) -> Bool {
         return try! Realm().object(ofType: Self.self, forPrimaryKey: forPrimaryKey) != nil
     }
     

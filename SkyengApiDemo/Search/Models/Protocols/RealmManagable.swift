@@ -8,9 +8,13 @@
 import RealmSwift
 
 public protocol RealmManagable {
+    
     associatedtype ManagedObject: RealmSwift.Object
+    
     init(managedObject: ManagedObject)
+    
     func managedObject() -> ManagedObject
+    
 }
 
 
