@@ -86,18 +86,18 @@ extension SearchViewModel {
         }
         //get corresponding word and meaning
         let word = sections[indexPath.section].word
-        let meaning = sections[indexPath.section].cellViewModels[indexPath.row].meaning
+        let meaning = sections[indexPath.section].cellViewModels[indexPath.row].meaning.managedObject()
         //check if word is exits
-        var wordToSave: Word
-        if let cached = realm.object(ofType: Word.self, forPrimaryKey: word.text) {
+        var wordToSave: WordObject
+        if let cached = realm.object(ofType: WordObject.self, forPrimaryKey: word.text) {
             wordToSave = cached
         } else {//create new one with data from word from internet ,but without meanings
-            wordToSave = Word()
+            wordToSave = WordObject()
             wordToSave.id = word.id
             wordToSave.text = word.text
         }
         //fetch additional data
-        DataImporter().getDataFor(meaning) { [weak self] result in
+       DataImporter().getDataFor(meaning) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):

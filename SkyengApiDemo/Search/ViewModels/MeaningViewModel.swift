@@ -15,14 +15,14 @@ class MeaningViewModel {
     var meaning: Meaning2
     
     var isSaved: Bool {
-        return meaning.isSaved(forPrimaryKey: meaning.id)
+        return Meaning2Object.isSaved(forPrimaryKey: meaning.id)
     }
     var previewUrl: String {
         return meaning.previewUrl
     }
    
     var translation: String {
-        return meaning.translation?.text ?? ""
+        return meaning.translation.text
         
     }
     func previewImage(completion: @escaping (UIImage?) -> Void) {
@@ -31,7 +31,7 @@ class MeaningViewModel {
             let image = FileStoreManager.shared.loadImage(named: previewUrl)
             completion(image)
         } else {
-            ImageFetcher.shared.setImage(from: previewUrl) { image in
+            ImageFetcher.shared.setImage(from: "https:" + previewUrl) { image in
                 completion(image)
             }
         }

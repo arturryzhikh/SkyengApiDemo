@@ -51,10 +51,10 @@ extension MeaningSectionViewModel {
             //check if the meaning already exists in db
             if let cachedMeaning = RealmManager
                 .shared?
-                .object(ofType: Meaning2.self, forPrimaryKey: meaning.id) {
+                .object(ofType: Meaning2Object.self, forPrimaryKey: meaning.id) {
                 //if exists - create vm from that
                 return MeaningViewModel(word: wordText,
-                                        meaning: cachedMeaning)
+                                        meaning: Meaning2(managedObject: cachedMeaning))
             } else {
                 //if not - get meanig from fetched data
                 return MeaningViewModel(word: wordText,
@@ -64,12 +64,12 @@ extension MeaningSectionViewModel {
     }
     
     private func joinTranslationsIntoOneString(length: Int) -> String {
-        var result = (word.meanings.first?.translation?.text ?? "") + ", "
+        var result = (word.meanings.first?.translation.text ?? "") + ", "
         //show only a FEW translations in on string ,separated by a comma
         var start = 1
         for index in start..<word.meanings.count {
             guard result.count < length else { return result }
-            let translation = word.meanings[index].translation?.text ?? ""
+            let translation = word.meanings[index].translation.text 
                 //add comma or don't if string larger then 30
                 let separator = (result.count + translation.count < length) ? ", " : ""
                 result.append(translation + separator)

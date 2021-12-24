@@ -15,17 +15,16 @@ final class MeaningDetailViewModel {
     let meaning: Meaning2
     
     var isSaved: Bool {
-        return meaning.isSaved(forPrimaryKey: meaning.id)
+        return Meaning2Object.isSaved(forPrimaryKey: meaning.id)
     }
     var translation: String {
-        return meaning.translation?.text ?? ""
+        return meaning.translation.text
     }
     var transcription: String {
         return "· Transcription: [ \(meaning.transcription) ]"
     }
     var note: String {
-        guard let translation = meaning.translation,
-                let note = translation.note else { return "" }
+        guard let note = meaning.translation.note else { return "" }
         return note.isEmpty ? "" : "(\(note))"
     }
     var partOfSpeech: String {
