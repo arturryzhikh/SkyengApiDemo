@@ -214,7 +214,7 @@ extension SearchViewController {
             guard let self = self else {return}
             DispatchQueue.main.async {
                 self.tableView.beginUpdates()
-                self.tableView.reloadSections(sections, with: .none)
+                self.tableView.reloadSections(sections, with: .fade)
                 self.tableView.endUpdates()
                 self.backgroundView.isHidden = true
                 
