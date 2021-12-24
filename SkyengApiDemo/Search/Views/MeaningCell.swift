@@ -151,15 +151,9 @@ extension MeaningCell: ViewModelConfigurable {
         saveButton.isUserInteractionEnabled = !viewModel.isSaved
         wordLabel.text = viewModel.word
         translationLabel.text = viewModel.translation
-        //get images from network or local
-        if viewModel.isSaved {
-            previewImageView.image = FileStoreManager.shared.loadImage(named: viewModel.previewUrl)
-            
-        } else {
-            ImageFetcher.shared.setImage(from: viewModel.previewUrl) { [weak self] image in
-                guard let self = self else { return }
-                    self.previewImageView.image = image
-                }
+        viewModel.previewImage { [weak self] image in
+            guard let self = self else {return}
+            self.previewImageView.image = image
         }
     }
     

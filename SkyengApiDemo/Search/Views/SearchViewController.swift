@@ -76,6 +76,8 @@ final class SearchViewController: UIViewController {
         setupConstraints()
         bind(viewModel)
         
+        print(try! Realm().configuration.fileURL)
+       
     }
     //MARK: Initial setup
     private func setupTableView() {
@@ -227,7 +229,7 @@ extension SearchViewController {
                 self.tableView.reloadData()
                 self.activityIndicator.stopAnimating()
                 self.backgroundView.searchFailed = false
-                self.backgroundView.isHidden = false
+                
             }
         }
         

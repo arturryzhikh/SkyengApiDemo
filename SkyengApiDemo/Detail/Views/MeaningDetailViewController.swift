@@ -6,10 +6,11 @@
 //
 
 import UIKit
+import AVFoundation
 
-class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
-    
-    
+
+final class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
+    var player: AVAudioPlayer?
     
     //MARK: properties
     var viewModel: MeaningDetailViewModel!
@@ -30,14 +31,9 @@ class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
         let buttonColor = viewModel.isSaved ? Colors.delete : Colors.link
         saveButton.setTitle(saveButtonTitle, for: .normal)
         saveButton.backgroundColor = buttonColor
-        if viewModel.isSaved {
-            meaningImageView.image = FileStoreManager.shared.loadImage(named: viewModel.imageUrl)
-        } else {
-            ImageFetcher.shared.setImage(from: viewModel.imageUrl) { [weak self] image in
-                guard let self = self else {return}
-                self.meaningImageView.image = image
-                
-            }
+        viewModel.image { [weak self] image in
+            guard let self = self else {return}
+            self.meaningImageView.image = image
         }
         
     }
@@ -48,22 +44,37 @@ class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
         super.viewDidLoad()
         view.backgroundColor = .white
         speakerButton.addTarget(self,
-                             action: #selector(speakerButtonPressed(sender:)),
-                             for: .touchUpInside)
+                                action: #selector(speakerButtonPressed(sender:)),
+                                for: .touchUpInside)
         saveButton.addTarget(self,
                              action: #selector(saveButtonPressed(sender:)),
                              for: .touchUpInside)
         fillContent(with: viewModel)
         setupNavigationController(title: viewModel.word)
         setupConstraints()
-        
-        
     }
     
-    
+    func playSound(data: Data) {
+        do {
+            player = try AVAudioPlayer(data: data)
+            guard let player = player else { return }
+            player.prepareToPlay()
+            player.volume = 1.0
+            player.play()
+        } catch {
+            print(error)
+        }
+    }
     //MARK: Actionis
+    
     @objc private func speakerButtonPressed(sender: UIButton) {
-        print(#function)
+        viewModel.soundData { [weak self] data in
+            guard let data = data , let self = self else {
+                return
+            }
+            self.playSound(data: data)
+            
+        }
     }
     @objc private func saveButtonPressed(sender: UIButton) {
         viewModel.isSaved ? viewModel.delete() : viewModel.save()
@@ -93,7 +104,7 @@ class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
         stack.distribution = .fill
         return stack
     }()
-   
+    
     private let wordLabel: UILabel = {
         let lbl = UILabel()
         lbl.textAlignment = .center
@@ -102,7 +113,7 @@ class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
         lbl.font = UIFont.systemFont(ofSize: 22, weight: .medium)
         return lbl
     }()
-   
+    
     private let translationLabel: UILabel = {
         let lbl = UILabel()
         lbl.textAlignment = .left
@@ -130,7 +141,6 @@ class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
         button.tintColor = .white
         button.setImage(speakerImage, for: .normal)
         button.contentMode = .scaleAspectFit
-      
         return button
     }()
     private lazy var transcriptionPartOfSpeechStack: UIStackView = {
@@ -165,7 +175,7 @@ class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
         b.layer.cornerRadius = 12
         return b
     }()
-   
+    
     //MARK: Constraints
     private func setupConstraints() {
         view.addSubviewsForAutolayout([
@@ -213,7 +223,7 @@ class MeaningDetailViewController: UIViewController, ViewModelConfigurable {
         NSLayoutConstraint.activate([
             speakerButton.centerYAnchor.constraint(equalTo: labelsStack.centerYAnchor),
             speakerButton.trailingAnchor.constraint(equalTo: meaningDetailView.trailingAnchor,constant: -6)
-        
+            
         ])
         //transcription
         NSLayoutConstraint.activate([

@@ -107,7 +107,7 @@ extension SearchViewModel {
         DataImporter().getDataFor(meaning) { result in
             switch result {
             case .failure(let error):
-                print(error)
+                print("\(error)")
                 self.onSavingError?()
                 return
             case.success(let meaning):
