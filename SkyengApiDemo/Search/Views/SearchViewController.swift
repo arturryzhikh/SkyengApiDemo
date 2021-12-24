@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import RealmSwift
+
 final class SearchViewController: UIViewController {
     
     //MARK: Subviews
@@ -76,7 +76,6 @@ final class SearchViewController: UIViewController {
         setupConstraints()
         bind(viewModel)
         
-        print(try! Realm().configuration.fileURL)
        
     }
     //MARK: Initial setup
@@ -85,7 +84,6 @@ final class SearchViewController: UIViewController {
                            forCellReuseIdentifier: MeaningCell.reuseId)
         tableView.register(MeaningHeader.self,
                            forHeaderFooterViewReuseIdentifier: MeaningHeader.reuseId)
-        tableView.remembersLastFocusedIndexPath = true
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = rowHeight
