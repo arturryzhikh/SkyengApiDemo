@@ -37,7 +37,7 @@ final class MeaningDetailViewModel {
     }
     var partOfSpeech: String {
         let text = PartOfSpeech(rawValue: meaning.partOfSpeechCode)?.text ?? ""
-        return  "· Part of speech: " + text
+        return  text.isEmpty ? "" : "· Part of speech: " + text
     }
     private var imageUrl: String {
         return meaning.imageUrl
