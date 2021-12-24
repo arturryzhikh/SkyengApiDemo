@@ -23,7 +23,6 @@ final class MeaningDetailViewModel {
         return "· Transcription: [ \(meaning.transcription) ]"
     }
     var note: String {
-        
         guard let translation = meaning.translation,
                 let note = translation.note else { return "" }
         return note.isEmpty ? "" : "(\(note))"
@@ -65,7 +64,6 @@ final class MeaningDetailViewModel {
                     DispatchQueue.main.async {
                         completion(data)
                     }
-                    
                 } catch {
                     completion(nil)
                 }
