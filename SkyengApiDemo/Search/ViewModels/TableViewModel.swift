@@ -12,6 +12,7 @@ public protocol TableViewModel: AnyObject {
     
     associatedtype Section: SectionViewModel
     
+   
     var sections: [Section] { get }
 
     var numberOfSections: Int { get }

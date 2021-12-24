@@ -11,7 +11,8 @@ import UIKit
 class MeaningViewModel {
     
     let word: String
-    
+    private let imageFetcher: ImageFetching
+    private let fileStoreManager: FileStoreManaging
     var meaning: Meaning2
     
     var isSaved: Bool {
@@ -20,20 +21,25 @@ class MeaningViewModel {
     
     var translation: String {
         return meaning.translation.text
-        
     }
     func previewImage(completion: @escaping (UIImage?) -> Void) {
-        //get images from network or local
-        if isSaved {
-            let image = FileStoreManager.shared.loadImage(named: meaning.previewName)
+        switch isSaved {
+        case true :
+            let image = fileStoreManager.loadImage(named: meaning.previewName)
             completion(image)
-        } else {
-            ImageFetcher.shared.setImage(from: meaning.previewUrl) { image in
+        case false:
+            imageFetcher.setImage(from: meaning.previewUrl, placeholderImage: nil) { image in
                 completion(image)
+                }
             }
         }
-    }
-    init(word: String, meaning: Meaning2) {
+    
+    init(word: String, meaning: Meaning2,
+         imageFetcher: ImageFetching = ImageFetcher(),
+         fileStoreManager: FileStoreManaging = FileStoreManager()) {
+        
+        self.fileStoreManager = fileStoreManager
+        self.imageFetcher = imageFetcher
         self.word = word
         self.meaning = meaning
         

@@ -9,7 +9,7 @@ import Foundation
 
 class FileStoreManager: FileStoreManaging {
     
-    private init() {}
-    static let shared = FileStoreManager()
+    init() {}
+   
 
 }

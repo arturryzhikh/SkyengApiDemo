@@ -14,7 +14,10 @@ final class SearchViewModel: TableViewModel {
     
     var sections: [MeaningSectionViewModel] = []
     
-    var networkService: Networking
+    private let networkService: Networking
+    private let dataImporter: DataImporter
+    private let realmManager: RealmManager?
+    private let sectionBuilder: SectionBuilder
     //MARK: Bindings
     var onSearchSucceed: (()-> Void)?
     var onSearchError: (() -> Void)?
@@ -22,8 +25,14 @@ final class SearchViewModel: TableViewModel {
     var onSavingError: (() -> Void)?
     var onSectionsReload: ((_ sections: IndexSet) -> Void)?
     //MARK: Life cycle
-    init(networkService: Networking = ApiService.shared) {
+    init?(networkService: Networking = ApiService(),
+          dataImporter: DataImporter = DataImporter(),
+          realmManager: RealmManager? = RealmManager(),
+          sectionBuilder: SectionBuilder = SectionBuilder()) {
+        self.realmManager = realmManager
+        self.dataImporter = dataImporter
         self.networkService = networkService
+        self.sectionBuilder = sectionBuilder
     }
     //MARK:  special methods
     private func clear() {
@@ -37,10 +46,10 @@ final class SearchViewModel: TableViewModel {
         return sections[section].count
         
     }
-   
+    
 }
 
-extension SearchViewModel: NetworkSearching {
+extension SearchViewModel {
     //MARK: Searching
     func search(_ text: String) {
         guard text.isValid else {
@@ -60,12 +69,13 @@ extension SearchViewModel: NetworkSearching {
                     return
                 }
                 DispatchQueue.main.async {
-                    SectionBuilder.makeSectionsOutOf(models: words) {
-                        self.sections = $0
+                    self.sectionBuilder
+                        .makeSectionsOutOf(models: words) { sections in
+                        self.sections = sections
                         self.onSearchSucceed?()
                     }
                 }
-                case .failure(let error):
+            case .failure(let error):
                 print(error)
                 //last try. search locally
                 self.onSearchError?()
@@ -80,10 +90,6 @@ extension SearchViewModel: NetworkSearching {
 extension SearchViewModel {
     
     func saveMeaning(at indexPath: IndexPath) {
-        guard let realm = RealmManager.shared else {
-            onSavingError?()
-            return
-        }
         //get corresponding word and meaning
         let word = sections[indexPath.section].word
         let meaning = sections[indexPath.section].cellViewModels[indexPath.row].meaning.managedObject()
@@ -92,8 +98,12 @@ extension SearchViewModel {
             onSavingError?()
             return
         }
+        guard let realmManager = self.realmManager else {
+            onSavingError?()
+            return
+        }
         var wordToSave: WordObject
-        if let cached = realm.object(ofType: WordObject.self, forPrimaryKey: word.text) {
+        if let cached = realmManager.object(ofType: WordObject.self, forPrimaryKey: word.text) {
             wordToSave = cached
         } else {//create new one with data from word from internet ,but without meanings
             wordToSave = WordObject()
@@ -101,7 +111,7 @@ extension SearchViewModel {
             wordToSave.text = word.text
         }
         //fetch additional data
-        let dataImporter = DataImporter.shared
+        
         dataImporter.getDataFor(meaning) { [weak self] result in
             guard let self = self else { return }
             switch result {
@@ -110,7 +120,7 @@ extension SearchViewModel {
                 self.onSavingError?()
                 return
             case.success(let meaning):
-                realm.update(wordToSave, with: [meaning] ) { error in
+                realmManager.update(wordToSave, with: [meaning] ) { error in
                     guard error == nil else {
                         self.onSavingError?()
                         return
@@ -126,6 +136,7 @@ extension SearchViewModel {
     }
     
 }
+
 //MARK: MeaningDetailDelegate
 extension SearchViewModel: MeaningDetailDelegate {
     func didManage(meaning: Meaning2, at indexPath: IndexPath) {
@@ -133,21 +144,5 @@ extension SearchViewModel: MeaningDetailDelegate {
         onSavingSucceed?([indexPath])
     }
 }
-//MARK: Read from db
-extension SearchViewModel {
 
-//    func search(enitity: Meaning.Type, by searchText: String, completion: ([Meaning]?) -> Void) {
-//        //create predicates to search text in ids and word properties of Meaning
-//        let wordPredicate = NSPredicate(format: "word CONTAINS[cd] %@", searchText)
-//        let translationPredicate = NSPredicate(format: "translation CONTAINS[cd] %@", searchText)
-//        //wrap that into OR predicate
-//        let orPredicate = NSCompoundPredicate.init(orPredicateWithSubpredicates: [wordPredicate,translationPredicate])
-//        //fetch meanings and construct vms if meanings exists
-//        CoreDataManager.shared.searchEntitiesOf(type: Meaning.self, predicate: orPredicate) { meanings in
-//            completion(meanings)
-//        }
-//    }
-
-
-}
 

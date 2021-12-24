@@ -10,23 +10,22 @@ import UIKit
 
 final class ImageFetcher {
     
-    static let shared = ImageFetcher(
-        responseQueue: .main,
-        session: URLSession.shared
-    )
     
     private(set) var cachedImageForURL: [String: UIImage]
     private(set) var cachedTaskForImageView: [UIImageView : Networking]
     
     let responseQueue: DispatchQueue?
     let session: URLSession
+    let networkService: Networking
     
-    init(responseQueue: DispatchQueue?, session: URLSession) {
+    init(responseQueue: DispatchQueue? = .main,
+         session: URLSession = .shared,
+         networkService: Networking = ApiService()) {
         self.cachedImageForURL = [:]
         self.cachedTaskForImageView = [:]
-        
         self.responseQueue = responseQueue
         self.session = session
+        self.networkService = networkService
     }
     
     private func dispatchImage(image: UIImage? = nil,
@@ -49,8 +48,7 @@ extension ImageFetcher: ImageFetching {
     func downloadImage<Request: NetworkDataRequest>(request: Request,
                                                     completion: @escaping (UIImage?, Error?) -> Void) {
         
-        let networkService: Networking = ApiService.shared
-        
+     
         networkService.request(request) { [weak self] result in
             guard let self = self else {
                 return
@@ -72,7 +70,6 @@ extension ImageFetcher: ImageFetching {
     
     func setImage(from url: String, placeholderImage: UIImage? = nil,
                   completion: @escaping (UIImage?) -> Void) {
-        
         let request = ImageRequest(url: url)
         if let cacheImage = cachedImageForURL[url] {
             completion(cacheImage)

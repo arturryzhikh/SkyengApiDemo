@@ -7,8 +7,14 @@
 
 
 import UIKit
+import RealmSwift
 
 final class MeaningDetailViewModel {
+    
+    private let fileStoreManager: FileStoreManaging
+    private let imageFetcher: ImageFetching
+    private let dataImporter: DataImporter
+    private let realmManager: RealmManager?
     
     let word: Word
     let indexPath: IndexPath
@@ -22,6 +28,7 @@ final class MeaningDetailViewModel {
         return meaning.translation.text
     }
     var transcription: String {
+        guard !meaning.transcription.isEmpty else { return ""}
         return "· Transcription: [ \(meaning.transcription) ]"
     }
     var note: String {
@@ -29,7 +36,8 @@ final class MeaningDetailViewModel {
         return note.isEmpty ? "" : "(\(note))"
     }
     var partOfSpeech: String {
-        return "· Part of speech: \(PartOfSpeech(rawValue: meaning.partOfSpeechCode)?.text ?? "")"
+        let text = PartOfSpeech(rawValue: meaning.partOfSpeechCode)?.text ?? ""
+        return  "· Part of speech: " + text
     }
     private var imageUrl: String {
         return meaning.imageUrl
@@ -39,11 +47,12 @@ final class MeaningDetailViewModel {
     }
     func image(completion: @escaping (UIImage?) -> Void) {
         //get images from network or local
-        if isSaved {
-            let image = FileStoreManager.shared.loadImage(named: meaning.imageName)
+        switch isSaved {
+        case true:
+            let image = fileStoreManager.loadImage(named: meaning.imageName)
             completion(image)
-        } else {
-            ImageFetcher.shared.setImage(from: imageUrl) { image in
+        case false:
+            imageFetcher.setImage(from: imageUrl, placeholderImage: nil) { image in
                 completion(image)
             }
         }
@@ -51,7 +60,7 @@ final class MeaningDetailViewModel {
     
     func soundData(completion: @escaping (Data?) -> Void) {
         if isSaved {
-            let data = FileStoreManager.shared.loadSound(named: meaning.soundName)
+            let data = fileStoreManager.loadSound(named: meaning.soundName)
             completion(data)
         } else {
             guard let url = URL(string: meaning.soundUrl) else {
@@ -73,7 +82,7 @@ final class MeaningDetailViewModel {
     }
     //Delete object / save object if its not saved
     func manageModel(_ completion: @escaping (Meaning2?) -> Void) {
-        guard let realmManager = RealmManager.shared else {return}
+        guard let realmManager = realmManager else {return}
         if isSaved {
             realmManager.deleteMeaning(with: meaning.id, for: word.text) { meaning in
                 guard let meaning = meaning else {
@@ -87,13 +96,13 @@ final class MeaningDetailViewModel {
             var wordToSave: WordObject
             if let cached = realmManager.object(ofType: WordObject.self, forPrimaryKey: word.text) {
                 wordToSave = cached
-            } else {//create new one with data from word from internet ,but without meanings
+            } else {
+                //create new one with data from word from internet ,but without meanings
                 wordToSave = WordObject()
                 wordToSave.id = word.id
                 wordToSave.text = word.text
             }
-            let dataImporter = DataImporter.shared
-            dataImporter.getDataFor(meaning.managedObject()) { result in
+           dataImporter.getDataFor(meaning.managedObject()) { result in
                 switch result {
                 case .failure(let error):
                     print("\(error)")
@@ -117,14 +126,18 @@ final class MeaningDetailViewModel {
     
     
     
-
-
-init (word: Word, meaning: Meaning2, indexPath: IndexPath) {
-    self.word = word
-    self.meaning = meaning
-    self.indexPath = indexPath
+    
+    
+    init (word: Word, meaning: Meaning2, indexPath: IndexPath, imageFetcher: ImageFetching = ImageFetcher(), fileStoreManager: FileStoreManaging = FileStoreManager(), dataImporter: DataImporter = DataImporter(), realmManager: RealmManager? = RealmManager()) {
+        self.word = word
+        self.meaning = meaning
+        self.indexPath = indexPath
+        self.imageFetcher = imageFetcher
+        self.fileStoreManager = fileStoreManager
+        self.dataImporter = dataImporter
+        self.realmManager = realmManager
     }
-
+    
 }
 
 fileprivate enum PartOfSpeech: String {

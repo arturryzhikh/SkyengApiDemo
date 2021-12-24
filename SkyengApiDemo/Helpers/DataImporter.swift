@@ -14,25 +14,23 @@ enum DataImportError : Error {
    
 }
 
-protocol DataImporting {
+final class DataImporter {
     
-    associatedtype Item
-    func getDataFor(_ object: Item, completion: @escaping(Result<Item,Error>) -> Void)
+    internal let imageFetcher: ImageFetching
+    internal let fileStoreManager: FileStoreManaging
     
-}
-
-final class DataImporter: DataImporting {
-    static let shared = DataImporter()
-    private init() {}
+    init(fileStoreManager: FileStoreManaging = FileStoreManager(),
+         imageFetcher: ImageFetching = ImageFetcher()) {
+        self.imageFetcher = imageFetcher
+        self.fileStoreManager = fileStoreManager
+    }
     func getDataFor(_ object: Meaning2Object,
                     completion: @escaping( Result<Meaning2Object, Error> ) -> Void) {
         do {
             
         }
         
-        ImageFetcher
-            .shared
-            .downloadImage(request: ImageRequest(url: object.previewUrl)) { image, error in
+        imageFetcher.downloadImage(request: ImageRequest(url: object.previewUrl)) { image, error in
                 if let error = error {
                     completion(.failure(error))
                 }
@@ -44,12 +42,9 @@ final class DataImporter: DataImporting {
                     return
                 }
                 
-                guard let previewImageName = FileStoreManager.shared
-                        .save(image: image, name: "\(object.id)" + "p"),
-                      let imageName = FileStoreManager.shared
-                        .save(image: image,name: "\(object.id)" + "i"),
-                      let soundName = FileStoreManager.shared
-                        .saveSound(data: soundData, name: "\(object.id)") else {
+            guard let previewImageName = self.fileStoreManager.save(image: image, name: "\(object.id)" + "p"),
+                  let imageName = self.fileStoreManager.save(image: image,name: "\(object.id)" + "i"),
+                  let soundName = self.fileStoreManager.saveSound(data: soundData, name: "\(object.id)") else {
                             completion(.failure(DataImportError.savingImages))
                             return
                         }
@@ -60,6 +55,6 @@ final class DataImporter: DataImporting {
                 object.soundName = soundName
                 completion(.success(object))
                 
-            }
+        }
     }
 }
