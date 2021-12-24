@@ -195,7 +195,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
             return
         }
         let word = viewModel.sections[indexPath.section].word.text
-        let viewModel = MeaningDetailViewModel(word: word, meaning: meaning)
+        let viewModel = MeaningDetailViewModel(word: word, meaning: meaning, indexPath: indexPath)
         let meaningDetailVC = MeaningDetailViewController(viewModel: viewModel)
         navigationController?.show(meaningDetailVC, sender: nil)
         searchController.searchBar.resignFirstResponder()

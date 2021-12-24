@@ -8,7 +8,8 @@
 import UIKit
 import AVFoundation
 protocol MeaningDetailDelegate {
-    
+    func didDeleteMeaningAt(indexPath: IndexPath)
+    func didSaveMeaningAt(indexPath: IndexPath)
 }
 
 final class MeaningDetailViewController: UIViewController, ViewModelConfigurable {

@@ -25,7 +25,7 @@ extension UIView {
         self.addSubview(view)
         
     }
-    
+    //
     func roundCorners(corners: UIRectCorner, radius: CGFloat) {
         let path = UIBezierPath(roundedRect: bounds,
                                 byRoundingCorners: corners,
@@ -35,7 +35,7 @@ extension UIView {
         layer.mask = mask
         
     }
-    
+    //
     func rotate(_ toValue: CGFloat, duration: CFTimeInterval = 0.2) {
         let animation = CABasicAnimation(keyPath: "transform.rotation")
         animation.toValue = toValue

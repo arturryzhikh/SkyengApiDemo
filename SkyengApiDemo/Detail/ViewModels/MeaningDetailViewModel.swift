@@ -11,7 +11,7 @@ import UIKit
 final class MeaningDetailViewModel {
     
     let word: String
-    
+    let indexPath: IndexPath
     let meaning: Meaning2
     
     var isSaved: Bool {
@@ -79,9 +79,10 @@ final class MeaningDetailViewModel {
         
     }
     
-    init (word: String, meaning: Meaning2) {
+    init (word: String, meaning: Meaning2, indexPath: IndexPath) {
         self.word = word
         self.meaning = meaning
+        self.indexPath = indexPath
     }
 }
 
