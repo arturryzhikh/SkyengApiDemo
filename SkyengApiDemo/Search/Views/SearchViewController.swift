@@ -191,14 +191,11 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let meaning = viewModel.cellViewModel(at: indexPath)?.meaning else {
+        guard let detailVM = viewModel.makeMeaningDetail(for: indexPath) else {
             return
         }
-        let word = viewModel.sections[indexPath.section].word
-        let viewModel = MeaningDetailViewModel(word: word, meaning: meaning, indexPath: indexPath)
-        let meaningDetailVC = MeaningDetailViewController(viewModel: viewModel)
-        meaningDetailVC.delegate = self.viewModel
-        navigationController?.show(meaningDetailVC, sender: nil)
+        let meaningDetailCoordinator = MeaningDetaiCoordinator(presenter: navigationController, meaningDetailViewModel: detailVM, meaningDetailDelegate: viewModel)
+        meaningDetailCoordinator.start()
         searchController.searchBar.resignFirstResponder()
     }
   
