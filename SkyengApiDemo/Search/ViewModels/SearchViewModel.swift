@@ -8,7 +8,6 @@
 import Foundation
 import RealmSwift
 
-
 final class SearchViewModel: TableViewModel {
     
     //MARK: Properties
@@ -89,6 +88,10 @@ extension SearchViewModel {
         let word = sections[indexPath.section].word
         let meaning = sections[indexPath.section].cellViewModels[indexPath.row].meaning.managedObject()
         //check if word is exits
+        guard !Meaning2Object.isSaved(forPrimaryKey: meaning.id) else {
+            onSavingError?()
+            return
+        }
         var wordToSave: WordObject
         if let cached = realm.object(ofType: WordObject.self, forPrimaryKey: word.text) {
             wordToSave = cached
@@ -98,7 +101,8 @@ extension SearchViewModel {
             wordToSave.text = word.text
         }
         //fetch additional data
-       DataImporter().getDataFor(meaning) { [weak self] result in
+        let dataImporter = DataImporter.shared
+        dataImporter.getDataFor(meaning) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):
@@ -121,6 +125,13 @@ extension SearchViewModel {
         }
     }
     
+}
+//MARK: MeaningDetailDelegate
+extension SearchViewModel: MeaningDetailDelegate {
+    func didManage(meaning: Meaning2, at indexPath: IndexPath) {
+        sections[indexPath.section].cellViewModels[indexPath.row].meaning = meaning
+        onSavingSucceed?([indexPath])
+    }
 }
 //MARK: Read from db
 extension SearchViewModel {

@@ -17,10 +17,7 @@ class MeaningViewModel {
     var isSaved: Bool {
         return Meaning2Object.isSaved(forPrimaryKey: meaning.id)
     }
-    var previewUrl: String {
-        return meaning.previewUrl
-    }
-   
+    
     var translation: String {
         return meaning.translation.text
         
@@ -28,10 +25,10 @@ class MeaningViewModel {
     func previewImage(completion: @escaping (UIImage?) -> Void) {
         //get images from network or local
         if isSaved {
-            let image = FileStoreManager.shared.loadImage(named: previewUrl)
+            let image = FileStoreManager.shared.loadImage(named: meaning.previewName)
             completion(image)
         } else {
-            ImageFetcher.shared.setImage(from: previewUrl) { image in
+            ImageFetcher.shared.setImage(from: meaning.previewUrl) { image in
                 completion(image)
             }
         }

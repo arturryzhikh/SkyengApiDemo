@@ -21,6 +21,13 @@ struct Meaning2: Decodable {
     var previewUrl: String = ""
     var imageUrl: String = ""
     var soundUrl: String = ""
+   
+    
+    
+    var previewName: String = ""
+    var imageName: String = ""
+    var soundName: String = ""
+    
     enum CodingKeys: String, CodingKey {
         case id,partOfSpeechCode, translation,
              transcription, previewUrl, imageUrl, soundUrl
@@ -80,6 +87,9 @@ extension Meaning2: RealmManagable {
         object.previewUrl = self.previewUrl
         object.imageUrl = self.imageUrl
         object.soundUrl = self.soundUrl
+        object.previewName = self.previewName
+        object.imageName = self.imageName
+        object.soundName = self.soundName
         return object
     }
     
@@ -94,6 +104,9 @@ extension Meaning2: RealmManagable {
         self.previewUrl = managedObject.previewUrl
         self.imageUrl = managedObject.imageUrl
         self.soundUrl = managedObject.soundUrl
+        self.previewName = managedObject.previewName
+        self.imageName = managedObject.imageName
+        self.soundName = managedObject.soundName
     }
 }
 

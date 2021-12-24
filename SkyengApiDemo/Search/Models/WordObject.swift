@@ -34,6 +34,10 @@ import Realm
     dynamic var previewUrl: String = ""
     dynamic var imageUrl: String = ""
     dynamic var soundUrl: String = "" 
+
+    dynamic var previewName: String = ""
+    dynamic var imageName: String = ""
+    dynamic var soundName: String = ""
     
     public override class func primaryKey() -> String? {
         return "id"

@@ -10,10 +10,11 @@ import UIKit
 
 final class MeaningDetailViewModel {
     
-    let word: String
+    let word: Word
     let indexPath: IndexPath
-    let meaning: Meaning2
+    var meaning: Meaning2
     
+    weak var delegate: MeaningDetailDelegate?
     var isSaved: Bool {
         return Meaning2Object.isSaved(forPrimaryKey: meaning.id)
     }
@@ -39,7 +40,7 @@ final class MeaningDetailViewModel {
     func image(completion: @escaping (UIImage?) -> Void) {
         //get images from network or local
         if isSaved {
-            let image = FileStoreManager.shared.loadImage(named: imageUrl)
+            let image = FileStoreManager.shared.loadImage(named: meaning.imageName)
             completion(image)
         } else {
             ImageFetcher.shared.setImage(from: imageUrl) { image in
@@ -50,7 +51,7 @@ final class MeaningDetailViewModel {
     
     func soundData(completion: @escaping (Data?) -> Void) {
         if isSaved {
-            let data = FileStoreManager.shared.loadSound(named: soundUrl)
+            let data = FileStoreManager.shared.loadSound(named: meaning.soundName)
             completion(data)
         } else {
             guard let url = URL(string: meaning.soundUrl) else {
@@ -70,20 +71,60 @@ final class MeaningDetailViewModel {
             }
         }
     }
-    
-    func save() {
-        
+    //Delete object / save object if its not saved
+    func manageModel(_ completion: @escaping (Meaning2?) -> Void) {
+        guard let realmManager = RealmManager.shared else {return}
+        if isSaved {
+            realmManager.deleteMeaning(with: meaning.id, for: word.text) { meaning in
+                guard let meaning = meaning else {
+                    completion(nil)
+                    return
+                }
+                self.meaning = meaning
+                completion(meaning)
+            }
+        } else {
+            var wordToSave: WordObject
+            if let cached = realmManager.object(ofType: WordObject.self, forPrimaryKey: word.text) {
+                wordToSave = cached
+            } else {//create new one with data from word from internet ,but without meanings
+                wordToSave = WordObject()
+                wordToSave.id = word.id
+                wordToSave.text = word.text
+            }
+            let dataImporter = DataImporter.shared
+            dataImporter.getDataFor(meaning.managedObject()) { result in
+                switch result {
+                case .failure(let error):
+                    print("\(error)")
+                    completion(nil)
+                    return
+                case.success(let meaning):
+                    realmManager.update(wordToSave, with: [meaning] ) { error in
+                        guard error == nil else {
+                            completion(nil)
+                            return
+                        }
+                        let meaning = Meaning2(managedObject: meaning)
+                        self.meaning = meaning
+                        completion(meaning)
+                    }
+                    
+                }
+            }
+        }
     }
     
-    func delete() {
-        
-    }
     
-    init (word: String, meaning: Meaning2, indexPath: IndexPath) {
-        self.word = word
-        self.meaning = meaning
-        self.indexPath = indexPath
+    
+
+
+init (word: Word, meaning: Meaning2, indexPath: IndexPath) {
+    self.word = word
+    self.meaning = meaning
+    self.indexPath = indexPath
     }
+
 }
 
 fileprivate enum PartOfSpeech: String {

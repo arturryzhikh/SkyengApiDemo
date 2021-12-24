@@ -22,7 +22,8 @@ protocol DataImporting {
 }
 
 final class DataImporter: DataImporting {
-    
+    static let shared = DataImporter()
+    private init() {}
     func getDataFor(_ object: Meaning2Object,
                     completion: @escaping( Result<Meaning2Object, Error> ) -> Void) {
         do {
@@ -54,9 +55,9 @@ final class DataImporter: DataImporting {
                         }
                 
                 //set cached images names to meaning
-                object.previewUrl = previewImageName
-                object.imageUrl = imageName
-                object.soundUrl = soundName
+                object.previewName = previewImageName
+                object.imageName = imageName
+                object.soundName = soundName
                 completion(.success(object))
                 
             }

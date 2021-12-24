@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import RealmSwift
 final class SearchViewController: UIViewController {
     
     //MARK: Subviews
@@ -194,9 +194,10 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         guard let meaning = viewModel.cellViewModel(at: indexPath)?.meaning else {
             return
         }
-        let word = viewModel.sections[indexPath.section].word.text
+        let word = viewModel.sections[indexPath.section].word
         let viewModel = MeaningDetailViewModel(word: word, meaning: meaning, indexPath: indexPath)
         let meaningDetailVC = MeaningDetailViewController(viewModel: viewModel)
+        meaningDetailVC.delegate = self.viewModel
         navigationController?.show(meaningDetailVC, sender: nil)
         searchController.searchBar.resignFirstResponder()
     }
