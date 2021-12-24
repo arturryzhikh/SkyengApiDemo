@@ -89,7 +89,6 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
         }
     }
     @objc private func saveButtonPressed(sender: UIButton) {
-        print(viewModel.isSaved)
         viewModel.manageModel { [weak self] meaning in
             guard
                 let meaning = meaning ,
@@ -99,7 +98,7 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
             self.setupButton(isSaved: self.viewModel.isSaved)
             self.delegate?.didManage(meaning: meaning, at: self.viewModel.indexPath)
             self.coordinator?.popViewController(animated: true)
-           
+            
         }
         
         
