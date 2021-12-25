@@ -38,7 +38,7 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
     //MARK: Subviews
     private let previewImageView: UIImageView = {
         let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
+        iv.contentMode = .scaleAspectFill
         iv.image = UIImage.init(systemName: "photo.fill")
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 10
