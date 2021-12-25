@@ -43,7 +43,7 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 10
         iv.layer.masksToBounds = true
-        iv.tintColor = Colors.background
+        iv.tintColor = .secondarySystemBackground
         return iv
     }()
     
@@ -119,7 +119,7 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
         saveButton.addTarget(self,
                              action: #selector(saveButtonPressed(sender:)),
                              for: .touchUpInside)
-        contentView.backgroundColor = Colors.cellBackground
+        contentView.backgroundColor = .systemGroupedBackground
         setupConstraints()
       
     }

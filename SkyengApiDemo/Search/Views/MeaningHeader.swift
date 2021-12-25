@@ -38,8 +38,7 @@ final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 10
         iv.layer.masksToBounds = true
-        iv.tintColor = Colors.background
-    
+        iv.tintColor = .systemGroupedBackground
         return iv
     }()
     
@@ -129,7 +128,7 @@ final class MeaningHeader: UITableViewHeaderFooterView, ReuseIdentifiable {
         super.init(reuseIdentifier: reuseIdentifier)
         addGestureRecognizer(UITapGestureRecognizer(target: self,
                                                     action: #selector(didTapHeader)))
-        contentView.backgroundColor = Colors.selected
+        contentView.backgroundColor = .tertiarySystemBackground
         setupConstraints()
         
        

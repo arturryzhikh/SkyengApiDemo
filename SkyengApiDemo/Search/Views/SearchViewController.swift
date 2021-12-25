@@ -8,7 +8,7 @@
 import UIKit
 import RealmSwift
 final class SearchViewController: UIViewController {
-    
+   
     //MARK: Subviews
     private let savingAlert: UIAlertController = {
         let savingAlert = UIAlertController(title: "Saving word",
@@ -52,7 +52,7 @@ final class SearchViewController: UIViewController {
     }
     //MARK: Other Properties
     
-    private let rowHeight = (UIScreen.main.bounds.size.height * 0.09)
+    private let rowHeight = (UIScreen.main.bounds.size.height * 0.1)
     private let rowWidth = UIScreen.main.bounds.width
     private let viewModel: SearchViewModel!
     
@@ -69,7 +69,7 @@ final class SearchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Colors.cellBackground
+        view.backgroundColor = .systemGroupedBackground
         setupNavigationController(title: "Search")
         setupSearchController(placeholder: "Search new words")
         setupTableView()
@@ -98,6 +98,8 @@ final class SearchViewController: UIViewController {
     }
     private func setupNavigationController(title: String) {
         navigationItem.searchController = searchController
+        navigationController?.navigationBar.backgroundColor = .systemGroupedBackground
+        navigationController?.hidesBarsOnSwipe = false
         navigationItem.title = title
         navigationController?.navigationBar.prefersLargeTitles = true
     }
@@ -210,9 +212,7 @@ extension SearchViewController {
         viewModel.onSectionsReload = { [weak self] sections in
             guard let self = self else {return}
             DispatchQueue.main.async {
-                self.tableView.beginUpdates()
-                self.tableView.reloadSections(sections, with: .fade)
-                self.tableView.endUpdates()
+                self.tableView.reloadSections(sections, with: .automatic)
                 self.backgroundView.isHidden = true
                 
             }
@@ -243,9 +243,7 @@ extension SearchViewController {
         viewModel.onSavingSucceed = { [weak self] indexPaths in
             guard let self = self else {return}
             DispatchQueue.main.async {
-                self.tableView.beginUpdates()
-                self.tableView.reloadRows(at: indexPaths, with: .none)
-                self.tableView.endUpdates()
+                self.tableView.reloadRows(at: indexPaths, with: .automatic)
                 self.savingAlert.dismiss(animated: true)
             }
         }

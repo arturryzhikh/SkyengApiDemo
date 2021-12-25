@@ -10,7 +10,7 @@ class AppCoordinator: Coordinator {
     let window: UIWindow
     let rootViewController: UINavigationController
     
-    init(window: UIWindow) { //4
+    init(window: UIWindow) { 
         self.window = window
         rootViewController = UINavigationController()
         let searchVC = SearchViewController(viewModel: SearchViewModel())

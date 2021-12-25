@@ -53,7 +53,7 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemGroupedBackground
         speakerButton.addTarget(self,
                                 action: #selector(speakerButtonPressed(sender:)),
                                 for: .touchUpInside)
@@ -112,12 +112,11 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 12
         iv.layer.masksToBounds = true
-        iv.tintColor = Colors.background
+        iv.tintColor = .secondarySystemBackground
         return iv
     }()
     private let meaningDetailView: UIView = {
         let v = UIView()
-        v.backgroundColor = Colors.link
         v.clipsToBounds = true
         v.layer.masksToBounds = true
         return v
@@ -189,7 +188,6 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
     }()
     private func setupNavigationController(title: String) {
         navigationItem.title = title
-        navigationController?.view.backgroundColor = Colors.cellBackground
         navigationController?.navigationBar.prefersLargeTitles = false
         
     }
