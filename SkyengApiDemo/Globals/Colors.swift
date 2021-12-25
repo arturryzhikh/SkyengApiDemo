@@ -15,6 +15,6 @@ enum Colors {
     }
     
     static var delete: UIColor {
-        return #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1)
+        return #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1)
     }
 }
