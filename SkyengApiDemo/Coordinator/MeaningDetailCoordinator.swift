@@ -6,6 +6,7 @@
 //
 
 import UIKit
+
 class MeaningDetaiCoordinator: Coordinator {
     
     private var presenter: UINavigationController?
@@ -20,7 +21,8 @@ class MeaningDetaiCoordinator: Coordinator {
     }
     
     func start() {
-        let meaningDetailVC = MeaningDetailViewController(viewModel: meaningDetailViewModel, coordinator: self)
+        let meaningDetailVC = MeaningDetailViewController(viewModel: meaningDetailViewModel,
+                                                          coordinator: self)
         meaningDetailVC.delegate = meaningDetailDelegate
         presenter?.pushViewController(meaningDetailVC, animated: true)
     }

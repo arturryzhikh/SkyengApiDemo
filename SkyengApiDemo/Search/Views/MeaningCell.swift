@@ -23,7 +23,7 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
     private let saveImage: UIImage? = {
         let config = UIImage.SymbolConfiguration(
             pointSize: 32, weight: .light, scale: .default)
-        let image = UIImage(systemName: "plus.circle.fill", withConfiguration: config)
+        let image = UIImage(systemName: "plus.circle", withConfiguration: config)
         
         return image
     }()
