@@ -30,9 +30,9 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
     
     private func setupButton(isSaved: Bool) {
         let saveButtonTitle = isSaved ? "Delete from favorites" : "Add to favorites"
-        let buttonColor = isSaved ? Colors.delete : Colors.link
+        let borderColor = isSaved ? Colors.delete : Colors.link
         saveButton.setTitle(saveButtonTitle, for: .normal)
-        saveButton.backgroundColor = buttonColor
+        saveButton.layer.borderColor = borderColor.cgColor
     }
     
     func fillContent(with: MeaningDetailViewModel) {
@@ -115,17 +115,18 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
         iv.tintColor = .secondarySystemBackground
         return iv
     }()
-    private let meaningDetailView: UIView = {
-        let v = UIView()
-        v.clipsToBounds = true
-        v.layer.masksToBounds = true
-        return v
-    }()
+    
     private lazy var labelsStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [wordLabel,translationLabel,noteLabel])
+        let stack = UIStackView(arrangedSubviews: [
+            horizontalStack,
+            translationLabel,
+            noteLabel,
+            transcriptionLabel,
+            partOfSpeechLabel
+        ])
         stack.axis = .vertical
-        stack.alignment = .leading
-        stack.distribution = .fill
+        stack.alignment = .center
+        stack.distribution = .fillProportionally
         return stack
     }()
     
@@ -133,47 +134,46 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
         let lbl = UILabel()
         lbl.textAlignment = .center
         lbl.text = "Word"
-        lbl.textColor = .white
-        lbl.font = UIFont.systemFont(ofSize: 22, weight: .medium)
+        lbl.font = UIFont.systemFont(ofSize: 20, weight: .heavy)
         return lbl
     }()
     
     private let translationLabel: UILabel = {
         let lbl = UILabel()
         lbl.textAlignment = .left
-        lbl.textColor = .white
         lbl.numberOfLines = 0
         lbl.lineBreakMode = .byWordWrapping
+        lbl.font = UIFont.systemFont(ofSize: 20, weight: .regular)
         lbl.sizeToFit()
         return lbl
     }()
     private let noteLabel: UILabel = {
         let lbl = UILabel()
         lbl.textAlignment = .left
-        lbl.textColor = .white
+        lbl.font = UIFont.systemFont(ofSize: 18, weight: .light)
         return lbl
     }()
     private let speakerImage: UIImage? = {
         let config = UIImage.SymbolConfiguration(
-            pointSize: 32, weight: .light, scale: .default)
-        let image = UIImage(systemName: "speaker.wave.2.fill", withConfiguration: config)
+            pointSize: 24, weight: .light, scale: .default)
+        let image = UIImage(systemName: "speaker.wave.2", withConfiguration: config)
         
         return image
     }()
+    private lazy var horizontalStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [wordLabel,speakerButton])
+        stack.spacing = 10
+        stack.axis = .horizontal
+        return stack
+    }()
     private lazy var speakerButton: UIButton = {
         let button = UIButton()
-        button.tintColor = .white
+        button.tintColor = Colors.link
         button.setImage(speakerImage, for: .normal)
         button.contentMode = .scaleAspectFit
         return button
     }()
-    private lazy var transcriptionPartOfSpeechStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [transcriptionLabel,partOfSpeechLabel])
-        stack.axis = .vertical
-        stack.alignment = .leading
-        stack.distribution = .equalSpacing
-        return stack
-    }()
+    
     private let transcriptionLabel: UILabel = {
         let lbl = UILabel()
         lbl.textAlignment = .left
@@ -193,8 +193,11 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
     }
     private lazy var saveButton: UIButton = {
         let b = UIButton()
-        b.setTitleColor(.white, for: .normal)
-        b.setTitleColor(.lightText, for: .highlighted)
+        b.setTitleColor(.label, for: .normal)
+        b.setTitleColor(.secondaryLabel, for: .highlighted)
+        b.backgroundColor = .clear
+        b.layer.cornerRadius = 20
+        b.layer.borderWidth = 1
         b.layer.cornerRadius = 12
         return b
     }()
@@ -203,17 +206,10 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
     private func setupConstraints() {
         view.addSubviewsForAutolayout([
             meaningImageView,
+            labelsStack,
             saveButton,
-            transcriptionPartOfSpeechStack
+           
             
-        ])
-        
-        //save button
-        NSLayoutConstraint.activate([
-            saveButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            saveButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,constant: -16),
-            saveButton.heightAnchor.constraint(equalTo: view.heightAnchor,multiplier: 0.064)
         ])
         //meaning image view
         NSLayoutConstraint.activate([
@@ -222,38 +218,22 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
             meaningImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -16),
             meaningImageView.heightAnchor.constraint(equalTo: view.heightAnchor,multiplier: 0.4)
         ])
-        meaningImageView.addSubviewsForAutolayout([
-            meaningDetailView,
-            labelsStack
-            
-        ])
-        //meaning detail view
         NSLayoutConstraint.activate([
-            meaningDetailView.leadingAnchor.constraint(equalTo: meaningImageView.leadingAnchor),
-            meaningDetailView.trailingAnchor.constraint(equalTo: meaningImageView.trailingAnchor),
-            meaningDetailView.bottomAnchor.constraint(equalTo: meaningImageView.bottomAnchor),
-            meaningDetailView.heightAnchor.constraint(equalTo: meaningImageView.heightAnchor, multiplier: 0.3)
+            labelsStack.leadingAnchor.constraint(equalTo: meaningImageView.leadingAnchor),
+            labelsStack.trailingAnchor.constraint(equalTo: meaningImageView.trailingAnchor),
+            labelsStack.topAnchor.constraint(equalTo: meaningImageView.bottomAnchor,constant: 16),
+            labelsStack.bottomAnchor.constraint(equalTo: saveButton.topAnchor,constant: -16)
         ])
-        //labeles stack
-        meaningDetailView.addSubviewsForAutolayout([labelsStack,speakerButton])
+     
+        //save button
         NSLayoutConstraint.activate([
-            labelsStack.leadingAnchor.constraint(equalTo: meaningDetailView.leadingAnchor,constant: 16),
-            labelsStack.centerYAnchor.constraint(equalTo: meaningDetailView.centerYAnchor),
-            labelsStack.widthAnchor.constraint(equalTo: meaningImageView.widthAnchor, multiplier: 0.85)
+            saveButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            saveButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,constant: -16),
+            saveButton.heightAnchor.constraint(equalTo: view.heightAnchor,multiplier: 0.064)
         ])
-        //speaker button
-        view.insertSubviewForAutoLayout(speakerButton, aboveSubview: meaningImageView)
-        NSLayoutConstraint.activate([
-            speakerButton.centerYAnchor.constraint(equalTo: labelsStack.centerYAnchor),
-            speakerButton.trailingAnchor.constraint(equalTo: meaningDetailView.trailingAnchor,constant: -6)
-            
-        ])
-        //transcription
-        NSLayoutConstraint.activate([
-            transcriptionPartOfSpeechStack.leadingAnchor.constraint(equalTo: meaningImageView.leadingAnchor),
-            transcriptionPartOfSpeechStack.topAnchor.constraint(equalTo: meaningImageView.bottomAnchor,constant: 16),
-            
-        ])
+        
+        
     }
 }
 

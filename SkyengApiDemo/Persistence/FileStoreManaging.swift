@@ -17,10 +17,6 @@ protocol FileStoreManaging: AnyObject {
     
 }
 
-protocol FileSystemStoreManagable {
-    var fileManager: FileStoreManaging { get }
-}
-
 
 extension FileStoreManaging {
     

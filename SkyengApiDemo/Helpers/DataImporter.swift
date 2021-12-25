@@ -16,8 +16,8 @@ enum DataImportError : Error {
 
 final class DataImporter {
     
-    internal let imageFetcher: ImageFetching
-    internal let fileStoreManager: FileStoreManaging
+    let imageFetcher: ImageFetching
+    let fileStoreManager: FileStoreManaging
     
     init(fileStoreManager: FileStoreManaging = FileStoreManager(),
          imageFetcher: ImageFetching = ImageFetcher()) {

@@ -88,6 +88,8 @@ final class SearchViewController: UIViewController {
         tableView.dataSource = self
         tableView.rowHeight = rowHeight
         tableView.estimatedRowHeight = rowHeight
+        tableView.estimatedSectionHeaderHeight = rowHeight
+        tableView.estimatedSectionFooterHeight = .zero
         tableView.sectionFooterHeight = .zero
         tableView.backgroundView = BackgroundView()
     }

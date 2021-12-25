@@ -29,7 +29,7 @@ final class MeaningDetailViewModel {
     }
     var transcription: String {
         guard !meaning.transcription.isEmpty else { return ""}
-        return "· Transcription: [ \(meaning.transcription) ]"
+        return "[ \(meaning.transcription) ]"
     }
     var note: String {
         guard let note = meaning.translation.note else { return "" }
@@ -37,7 +37,7 @@ final class MeaningDetailViewModel {
     }
     var partOfSpeech: String {
         let text = PartOfSpeech(rawValue: meaning.partOfSpeechCode)?.text ?? ""
-        return  text.isEmpty ? "" : "· Part of speech: " + text
+        return  text.isEmpty ? "" : text
     }
     private var imageUrl: String {
         return meaning.imageUrl
