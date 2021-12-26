@@ -9,11 +9,11 @@
 
 class MeaningSectionViewModel: SectionWithHeaderViewModel {
     
-    let word: Word
-    private let realmManager: RealmManager?
     private var expandable: Bool {
-        return word.meanings.count > 1
+        return cellViewModels.count > 1
     }
+    let word: Word
+    
     var count: Int {
         if expandable {
             return collapsed ? 0 : cellViewModels.count
@@ -23,70 +23,21 @@ class MeaningSectionViewModel: SectionWithHeaderViewModel {
     }
     var collapsed: Bool = true {
         didSet {
-            headerViewModel?.collapsed = collapsed
-        }
-    }
-
-    var headerViewModel: MeaningsHeaderViewModel?  {
-        return expandable  ? makeHeader() : nil
-        
-    }
-   
-    var cellViewModels: [MeaningViewModel] = []
-    init(word: Word, realmManager: RealmManager? = RealmManager()) {
-        self.realmManager = realmManager
-        self.word = word
-        self.cellViewModels = makeMeaningViewModels()
-       
-    }
-    
-    
-}
-extension MeaningSectionViewModel {
-    
-    private func makeMeaningViewModels() -> [MeaningViewModel] {
-        
-        let wordText = expandable ? "" : word.text
-   
-        return word.meanings.map { meaning in
-            //check if the meaning already exists in db
-            if let cachedMeaning = realmManager?.object(ofType: Meaning2Object.self, forPrimaryKey: meaning.id) {
-                //if exists - create vm from that
-                return MeaningViewModel(word: wordText,
-                                        meaning: Meaning2(managedObject: cachedMeaning))
-            } else {
-                //if not - get meanig from fetched data
-                return MeaningViewModel(word: wordText,
-                                        meaning: meaning)
+            if expandable {
+                headerViewModel?.collapsed = collapsed
             }
         }
     }
+    var headerViewModel: MeaningsHeaderViewModel?
     
-    private func joinTranslationsIntoOneString(length: Int) -> String {
-        var result = (word.meanings.first?.translation.text ?? "") + ", "
-        //show only a FEW translations in on string ,separated by a comma
-        var start = 1
-        for index in start..<word.meanings.count {
-            guard result.count < length else { return result }
-            let translation = word.meanings[index].translation.text 
-                //add comma or don't if string larger then 30
-                let separator = (result.count + translation.count < length) ? ", " : ""
-                result.append(translation + separator)
-                start += 1
-            
-        }
-        //remove last comma and space
-        result.removeLast()
-        result.removeLast()
-        return result
+    let cellViewModels: [MeaningViewModel]
+    
+    init(cellViewModels: [MeaningViewModel],
+         headerViewModel: MeaningsHeaderViewModel?, word: Word) {
+        self.cellViewModels = cellViewModels
+        self.headerViewModel = headerViewModel
+        self.word = word
     }
-    private func makeHeader() -> MeaningsHeaderViewModel {
-        let count = "\(word.meanings.count)"
-        let translations = joinTranslationsIntoOneString(length: 26)
-        return MeaningsHeaderViewModel(word: word.text,
-                                       wordsCount: count,
-                                       translations: translations,
-                                       collapsed: collapsed)
-    }
+    
 }
 

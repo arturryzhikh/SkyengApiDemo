@@ -17,7 +17,7 @@ final class SearchViewModel: TableViewModel {
     private let networkService: Networking
     private let dataImporter: DataImporter
     private let realmManager: RealmManager?
-    private let sectionBuilder: SectionBuilder
+    private let sectionBuilder: ViewModelBuilder
     //MARK: Bindings
     var onSearchSucceed: (()-> Void)?
     var onSearchError: (() -> Void)?
@@ -28,7 +28,7 @@ final class SearchViewModel: TableViewModel {
     init(networkService: Networking = ApiService(),
           dataImporter: DataImporter = DataImporter(),
           realmManager: RealmManager? = RealmManager(),
-          sectionBuilder: SectionBuilder = SectionBuilder()) {
+          sectionBuilder: ViewModelBuilder = ViewModelBuilder()) {
         self.realmManager = realmManager
         self.dataImporter = dataImporter
         self.networkService = networkService
@@ -45,9 +45,11 @@ final class SearchViewModel: TableViewModel {
     func numberOfRowsIn(section: Int) -> Int {
         return sections[section].count
     }
+    
     private func sectionViewModel(at section: Int) -> MeaningSectionViewModel? {
         return sections[section]
     }
+    
     func makeMeaningDetail(for indexPath: IndexPath) -> MeaningDetailViewModel? {
         guard let meaning = cellViewModel(at: indexPath)?.meaning, let
                 word = sectionViewModel(at: indexPath.section)?.word else {
@@ -78,8 +80,7 @@ extension SearchViewModel {
                     return
                 }
                 DispatchQueue.main.async {
-                    self.sectionBuilder
-                        .makeSectionsOutOf(models: words) { sections in
+                    self.sectionBuilder.makeSectionsOutOf(words: words) { sections in
                         self.sections = sections
                         self.onSearchSucceed?()
                     }
@@ -99,7 +100,6 @@ extension SearchViewModel {
 extension SearchViewModel {
     
     func saveMeaning(at indexPath: IndexPath) {
-        //get corresponding word and meaning
         let word = sections[indexPath.section].word
         let meaning = sections[indexPath.section].cellViewModels[indexPath.row].meaning.managedObject()
         //check if word is exits

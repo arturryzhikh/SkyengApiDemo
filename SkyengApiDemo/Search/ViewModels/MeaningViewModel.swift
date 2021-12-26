@@ -11,8 +11,10 @@ import UIKit
 class MeaningViewModel {
     
     let word: String
+    
     private let imageFetcher: ImageFetching
     private let fileStoreManager: FileStoreManaging
+    
     var meaning: Meaning2
     
     var isSaved: Bool {

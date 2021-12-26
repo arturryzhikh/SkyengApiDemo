@@ -9,16 +9,17 @@ import Foundation
 
 
 class MeaningsHeaderViewModel {
-    var collapsed: Bool
+    
+    var collapsed: Bool = true
     let word: String
     let wordsCount: String
     let translations: String
     init(word: String,
          wordsCount: String,
-         translations: String, collapsed: Bool) {
+         translations: String) {
         self.word = word
         self.wordsCount = wordsCount
         self.translations = translations
-        self.collapsed = collapsed
+        
     }
 }
