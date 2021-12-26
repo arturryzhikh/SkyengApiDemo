@@ -11,6 +11,6 @@ public protocol ImageFetching {
     func downloadImage<Request: NetworkDataRequest>(request: Request,
                                                     completion: @escaping (UIImage?, Error?) -> Void)
    
-    func setImage(from url: String, placeholderImage: UIImage?, completion: @escaping (UIImage?) -> Void)
+    func setImage(from url: String, completion: @escaping (UIImage?) -> Void)
 }
 

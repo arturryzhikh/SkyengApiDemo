@@ -30,7 +30,7 @@ class MeaningViewModel {
             let image = fileStoreManager.loadImage(named: meaning.previewName)
             completion(image)
         case false:
-            imageFetcher.setImage(from: meaning.previewUrl, placeholderImage: nil) { image in
+            imageFetcher.setImage(from: meaning.previewUrl) { image in
                 completion(image)
                 }
             }

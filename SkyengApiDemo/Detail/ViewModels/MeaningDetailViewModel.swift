@@ -52,7 +52,7 @@ final class MeaningDetailViewModel {
             let image = fileStoreManager.loadImage(named: meaning.imageName)
             completion(image)
         case false:
-            imageFetcher.setImage(from: imageUrl, placeholderImage: nil) { image in
+            imageFetcher.setImage(from: imageUrl) { image in
                 completion(image)
             }
         }
