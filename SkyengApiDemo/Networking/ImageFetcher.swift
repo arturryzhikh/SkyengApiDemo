@@ -68,8 +68,7 @@ extension ImageFetcher: ImageFetching {
     
     
     
-    func setImage(from url: String, placeholderImage: UIImage? = nil,
-                  completion: @escaping (UIImage?) -> Void) {
+    func setImage(from url: String, completion: @escaping (UIImage?) -> Void) {
         let request = ImageRequest(url: url)
         if let cacheImage = cachedImageForURL[url] {
             completion(cacheImage)

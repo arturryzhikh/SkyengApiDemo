@@ -11,8 +11,7 @@ import Realm
 
 
 @objcMembers public class WordObject: Object  {
-    
-    dynamic var id: Int = 0
+    dynamic var id = 0
     dynamic var text: String = ""
     let meanings = List<Meaning2Object>()
     

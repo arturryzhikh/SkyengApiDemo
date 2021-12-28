@@ -11,8 +11,10 @@ import UIKit
 class MeaningViewModel {
     
     let word: String
+    
     private let imageFetcher: ImageFetching
     private let fileStoreManager: FileStoreManaging
+    
     var meaning: Meaning2
     
     var isSaved: Bool {
@@ -28,7 +30,7 @@ class MeaningViewModel {
             let image = fileStoreManager.loadImage(named: meaning.previewName)
             completion(image)
         case false:
-            imageFetcher.setImage(from: meaning.previewUrl, placeholderImage: nil) { image in
+            imageFetcher.setImage(from: meaning.previewUrl) { image in
                 completion(image)
                 }
             }
