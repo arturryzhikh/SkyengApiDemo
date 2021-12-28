@@ -147,9 +147,11 @@ extension SearchViewModel {
 }
 
 //MARK: MeaningDetailDelegate
+
 extension SearchViewModel: MeaningDetailDelegate {
     func didManage(meaning: Meaning2, at indexPath: IndexPath) {
-        sections[indexPath.section].cellViewModels[indexPath.row].meaning = meaning
+        guard let cellVM = cellViewModel(at: indexPath) else {return}
+        cellVM.meaning = meaning
         onSavingSucceed?([indexPath])
     }
 }
