@@ -17,6 +17,7 @@ enum DataImportError : Error {
 final class DataImporter {
     
     let imageFetcher: ImageFetching
+    
     let fileStoreManager: FileStoreManaging
     
     init(fileStoreManager: FileStoreManaging = FileStoreManager(),
@@ -26,10 +27,7 @@ final class DataImporter {
     }
     func getDataFor(_ object: Meaning2Object,
                     completion: @escaping( Result<Meaning2Object, Error> ) -> Void) {
-        do {
-            
-        }
-        
+       
         imageFetcher.downloadImage(request: ImageRequest(url: object.previewUrl)) { image, error in
                 if let error = error {
                     completion(.failure(error))

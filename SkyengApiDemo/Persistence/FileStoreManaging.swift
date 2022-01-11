@@ -9,11 +9,18 @@ import UIKit
 
 protocol FileStoreManaging: AnyObject {
     
+    var documentsDirectory: URL? { get }
+    
     func loadImage(named: String) -> UIImage?
+    
     func save(image: UIImage,
               name: String,
               compressionQuality: CGFloat) -> String?
-    var documentsDirectory: URL? { get }
+    
+    func loadSound(named: String) -> Data?
+    
+    func saveSound(data: Data, name: String) -> String?
+    
     
 }
 
