@@ -52,7 +52,7 @@ final class SearchViewController: UIViewController {
     }
     //MARK: Other Properties
     
-    private let rowHeight = (UIScreen.main.bounds.size.height * 0.085)
+    private let rowHeight = (UIScreen.main.bounds.size.height * 0.1)
     private let rowWidth = UIScreen.main.bounds.width
     private let viewModel: SearchViewModel!
     

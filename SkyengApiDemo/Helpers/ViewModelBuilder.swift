@@ -56,21 +56,19 @@ final class ViewModelBuilder {
                                        wordsCount: count,
                                        translations: translations)
     }
-    
+    ///show only a FEW translations in one string ,separated by a comma
     private func joinTranslationsIntoOneString(word: Word ,length: Int) -> String {
-        var result = (word.meanings.first?.translation.text ?? "") + ", "
-        //show only a FEW translations in on string ,separated by a comma
+        let separator = ", "
+        var result = (word.meanings.first?.translation.text ?? "") + separator
+       
         var start = 1
         for index in start..<word.meanings.count {
             guard result.count < length else { return result }
             let translation = word.meanings[index].translation.text
-            //add comma or don't if string larger then length
-            let separator = (result.count + translation.count < length) ? ", " : ""
             result.append(translation + separator)
             start += 1
             
         }
-        //remove last comma and space
         result.removeLast()
         result.removeLast()
         return result

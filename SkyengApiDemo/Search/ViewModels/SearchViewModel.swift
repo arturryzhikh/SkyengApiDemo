@@ -75,7 +75,7 @@ extension SearchViewModel {
         }
         
         let request = SearchRequest(text)
-        networkService.request(request) { [weak self ]result in
+        networkService.request(request) { [weak self] result in
             guard let self = self else {return}
             switch result {
             case .success(let words):
@@ -154,6 +154,7 @@ extension SearchViewModel {
 //MARK: MeaningDetailDelegate
 
 extension SearchViewModel: MeaningDetailDelegate {
+    
     func didManage(meaning: Meaning2, at indexPath: IndexPath) {
         guard let cellVM = cellViewModel(at: indexPath) else {return}
         cellVM.meaning = meaning
