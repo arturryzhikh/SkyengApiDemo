@@ -4,7 +4,7 @@ Search words and phrases, translate them from english into russian and vice vers
 Get all the meanings of the words\
 Get sound , memo image and details info of meaning\
 Save words for offline learning
-Support light and dark themes
+Supports light and dark themes
 
 
 
