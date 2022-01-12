@@ -7,6 +7,7 @@
 
 import UIKit
 import AVFoundation
+
 protocol MeaningDetailDelegate: AnyObject {
     
     func didManage(meaning: Meaning2, at indexPath: IndexPath)
@@ -65,7 +66,7 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
         setupConstraints()
     }
     
-    func playSound(data: Data) {
+    private func playSound(data: Data) {
         do {
             player = try AVAudioPlayer(data: data)
             guard let player = player else { return }
