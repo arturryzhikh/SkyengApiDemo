@@ -63,7 +63,12 @@ final class SearchViewModel: TableViewModel {
 extension SearchViewModel {
     //MARK: Searching
     func search(_ text: String) {
-        guard text.isValid else {
+      guard text.isValid else {
+            clear()
+            onSearchError?()
+            return
+        }
+        if text.isEmpty {
             clear()
             onSearchSucceed?()
             return

@@ -135,9 +135,7 @@ final class SearchViewController: UIViewController {
 extension SearchViewController: UISearchResultsUpdating  {
     
     func updateSearchResults(for searchController: UISearchController) {
-        var lastSearchedText: String = ""
-        guard let text = searchController.searchBar.text, text != lastSearchedText else { return }
-        lastSearchedText = text
+        guard let text = searchController.searchBar.text else { return }
         viewModel.search(text)
         activityIndicator.startAnimating()
         

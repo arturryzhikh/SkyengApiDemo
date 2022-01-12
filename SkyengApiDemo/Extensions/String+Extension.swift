@@ -7,6 +7,6 @@
 
 extension String {
     var isValid: Bool {
-        return !self.isEmpty && self.first != " " && self.last != " "
+        return self.first != " " && self.last != " "
     }
 }
