@@ -9,10 +9,6 @@ import Foundation
 
 public final class ApiService: Networking {
     
-   
-    
-   
-    
     public func request<Request: NetworkDataRequest>(_ request: Request, completion: @escaping (Result<Request.Response, Error>) -> Void) {
         
         guard var urlComponent = URLComponents(string: request.url) else {

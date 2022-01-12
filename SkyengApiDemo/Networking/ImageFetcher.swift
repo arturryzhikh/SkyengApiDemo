@@ -10,9 +10,7 @@ import UIKit
 
 final class ImageFetcher {
     
-    
     private(set) var cachedImageForURL: [String: UIImage]
-    private(set) var cachedTaskForImageView: [UIImageView : Networking]
     
     let responseQueue: DispatchQueue?
     let session: URLSession
@@ -22,7 +20,6 @@ final class ImageFetcher {
          session: URLSession = .shared,
          networkService: Networking = ApiService()) {
         self.cachedImageForURL = [:]
-        self.cachedTaskForImageView = [:]
         self.responseQueue = responseQueue
         self.session = session
         self.networkService = networkService

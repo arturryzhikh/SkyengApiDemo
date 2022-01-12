@@ -23,9 +23,11 @@ class MeaningDetaiCoordinator: Coordinator {
     func start() {
         let meaningDetailVC = MeaningDetailViewController(viewModel: meaningDetailViewModel,
                                                           coordinator: self)
+       
         meaningDetailVC.delegate = meaningDetailDelegate
         presenter?.pushViewController(meaningDetailVC, animated: true)
     }
+    
     func popViewController(animated: Bool) {
         presenter?.popViewController(animated: animated)
     }
