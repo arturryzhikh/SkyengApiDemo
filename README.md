@@ -6,7 +6,8 @@ Group meanings by words\
 Get sound , memo image and details info of meaning\
 Save words for offline learning\
 Supports light and dark themes\
-App uses skyeng api https://dictionary.skyeng.ru/doc/api/external. 
+App uses skyeng api https://dictionary.skyeng.ru/doc/api/external. /
+Project uses Realm via Swift package manager.
 
 https://user-images.githubusercontent.com/39170861/149334154-b7732805-c31d-41b8-b4cd-2c473484368f.mov
 
