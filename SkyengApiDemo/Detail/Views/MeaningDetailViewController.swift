@@ -189,6 +189,7 @@ final class MeaningDetailViewController: UIViewController, ViewModelConfigurable
     }()
     private func setupNavigationController(title: String) {
         navigationItem.title = title
+        navigationController?.navigationBar.backgroundColor = .systemGroupedBackground
         navigationController?.navigationBar.prefersLargeTitles = false
         
     }

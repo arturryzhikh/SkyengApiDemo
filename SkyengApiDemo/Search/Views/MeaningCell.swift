@@ -43,7 +43,7 @@ class MeaningCell: UITableViewCell, ReuseIdentifiable {
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 10
         iv.layer.masksToBounds = true
-        iv.tintColor = .secondarySystemBackground
+        iv.tintColor = .tertiarySystemBackground
         return iv
     }()
     
