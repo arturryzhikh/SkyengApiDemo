@@ -2,16 +2,6 @@
 
 SkyengApiDemo is an app that allows people to search words and phrases and get their meanings in english and russian
 
-Additional line of information text about what the project does. Your introduction should be around 2 or 3 sentences. Don't go overboard, people won't read it.
-## Features
-
-## Prerequisites
-
-iOS 13+
-Swift 4+
-Xcode 12+
-
-
 ##Features
 App uses MVVM with DIY bindings
 Supports search in english and russian\
@@ -20,6 +10,11 @@ Group meanings by words\
 Get sound , memo image and details info of meaning\
 Save words for offline learning\
 Supports light and dark themes\
+## Prerequisites
+
+iOS 13+
+Swift 4+
+Xcode 12+
 
 ## Dependencies
 Realm with swift package manager
