@@ -1,13 +1,16 @@
 # SkyengApiDemo
 
-SkyengApiDemo is an app that allows people to search words and phrases and get their meanings in english and russian
-The goal of this project was to learn how to use MVVM design pattern with table view representation
+SkyengApiDemo is an app that allows people to search words and phrases and get their meanings in english and russian.
+
+The goal of this project was to learn how to use MVVM, Memento, Singleton, Builder, Generics, Protocol oriented programming.
+App uses UIKit for view layer.
+
 
 ## Features
 Supports search in english and russian\
 Get all the meanings of the words\
 Group meanings by words\
-Get sound , memo image and details info of meaning\
+Get sound , memo image and details of meaning\
 Save words for offline learning\
 Supports light and dark themes\
 ## Prerequisites
@@ -19,9 +22,7 @@ Xcode 12+
 ## Dependencies
 Realm with swift package manager
 
-
 ## Contacts
-
 If you want to contact me you can reach me at <ryzhiha@gmail.com>.
 
 
