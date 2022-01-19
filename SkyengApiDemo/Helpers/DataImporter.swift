@@ -28,7 +28,7 @@ final class DataImporter {
     func getDataFor(_ object: Meaning2Object,
                     completion: @escaping( Result<Meaning2Object, Error> ) -> Void) {
        
-        imageFetcher.downloadImage(request: ImageRequest(url: object.previewUrl)) { image, error in
+        imageFetcher.downloadImage(request: ImageRequest(url: object.imageUrl)) { image, error in
                 if let error = error {
                     completion(.failure(error))
                 }
