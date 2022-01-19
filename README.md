@@ -4,7 +4,7 @@ SkyengApiDemo is an app that allows people to search words and phrases and get t
 
 The goal of this project was to learn how to use MVVM, Memento, Singleton, Builder, Generics, Protocol oriented programming, data persistence, Realm.\
 
-App uses  [UIKit](https://developer.apple.com/documentation/uikit) for view layer.
+App uses  [UIKit](https://developer.apple.com/documentation/uikit) for view layer.\
 Api: [Skyeng API](https://dictionary.skyeng.ru/doc/api/external)
 
 
