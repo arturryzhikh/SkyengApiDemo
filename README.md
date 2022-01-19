@@ -4,6 +4,7 @@ SkyengApiDemo is an app that allows people to search words and phrases and get t
 
 The goal of this project was to learn how to use MVVM, Memento, Singleton, Builder, Generics, Protocol oriented programming.
 App uses UIKit for view layer.
+[Skyeng API](https://dictionary.skyeng.ru/doc/api/external)
 
 
 ## Features
