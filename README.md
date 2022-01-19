@@ -2,8 +2,8 @@
 
 SkyengApiDemo is an app that allows people to search words and phrases and get their meanings in english and russian
 
-##Features
-App uses MVVM with DIY bindings
+## Features
+App uses MVVM with DIY bindings\
 Supports search in english and russian\
 Get all the meanings of the words\
 Group meanings by words\
