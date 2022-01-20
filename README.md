@@ -18,8 +18,6 @@ Supports light and dark themes\
 ## Prerequisites
 
 iOS 13+
-Swift 4+
-Xcode 12+
 
 ## Dependencies
 Realm with swift package manager
