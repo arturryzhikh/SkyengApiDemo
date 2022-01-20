@@ -1,6 +1,6 @@
 # SkyengApiDemo
 
-SkyengApiDemo is an app that allows people to search words and phrases and get their meanings in english and russian.
+SkyengApiDemo is an app that allows people to search words and phrases and get their meanings to translate
 
 
 
