@@ -2,7 +2,7 @@
 
 SkyengApiDemo is an app that allows people to search words and phrases and get their meanings to translate\
 
-I used mvvm + DIY bindings for maiin architecture\
+I used mvvm + DIY bindings for main architecture\
 Realm to store data\
 Memento,Builder,Delegation,Coordinator design paterns.
 
