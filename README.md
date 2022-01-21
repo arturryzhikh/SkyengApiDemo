@@ -18,7 +18,7 @@ Get all the meanings of the words\
 Group meanings by words\
 Get sound , memo image and details of meaning\
 Save words for offline learning\
-Supports light and dark themes\
+Supports light and dark themes
 ## Prerequisites
 
 iOS 13+
